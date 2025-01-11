@@ -1,91 +1,94 @@
-# AI Agent Workflow
+# Madness Interactive
 
-A project to manage and orchestrate AI agent workflows and interactions.
+A collection of project templates and interactive development tools for various programming languages and frameworks.
 
 ## Overview
 
-This project provides a framework for creating, managing, and monitoring AI agent workflows. It helps streamline the process of setting up AI agents and managing their interactions.
+This repository serves as a template hub for creating new projects with predefined structures, best practices, and development workflows. It supports multiple programming languages and frameworks, making it easy to start new projects with consistent organization and tooling.
 
-## Features
+## Template Languages
 
-- AI Agent Management
-- Workflow Orchestration
-- Task Distribution
-- Performance Monitoring
-- Integration Capabilities
+### Python
+- Game Development (Pygame)
+- Web Applications
+- CLI Tools
+- Data Science Projects
 
-## Getting Started
-
-### Prerequisites
-
-- Python 3.8 or higher
-- pip (Python package manager)
-- virtualenv (recommended)
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/ai-agent-workflow.git
-
-# Navigate to project directory
-cd ai-agent-workflow
-
-# Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### Usage
-
-```python
-# Basic usage example
-from workflow import AIWorkflow
-
-workflow = AIWorkflow(
-    # configuration options
-)
-
-workflow.start()
-```
+### Rust
+- System Tools
+- Web Browsers
+- Network Applications
+- Game Development
 
 ## Project Structure
 
 ```
-ai-agent-workflow/
-├── src/
-│   ├── agents/
-│   ├── workflows/
-│   └── utils/
-├── tests/
+madness_interactive/
+├── templates/
+│   ├── python/
+│   │   ├── games/
+│   │   │   └── snowball_snowman/
+│   │   └── [other-python-templates]/
+│   ├── rust/
+│   │   ├── tinker_template/
+│   │   └── [other-rust-templates]/
+│   └── [future-languages]/
 ├── docs/
-└── examples/
+│   ├── python/
+│   └── rust/
+└── scripts/
+    ├── init_python_project.sh
+    └── init_rust_project.sh
 ```
 
-## Documentation
+## Features
 
-Detailed documentation can be found in the [docs](./docs) directory.
+- 📁 Organized template structure for multiple languages
+- 🔧 Project initialization scripts
+- 📝 Comprehensive documentation templates
+- 🧪 Testing frameworks setup
+- 🚀 CI/CD configurations
+- 📊 Project management tools
+
+## Getting Started
+
+### Creating a New Project
+
+1. Choose a language template:
+   ```bash
+   # For Python projects
+   ./scripts/init_python_project.sh [template-name] [project-name]
+
+   # For Rust projects
+   ./scripts/init_rust_project.sh [template-name] [project-name]
+   ```
+
+2. Follow the template-specific README for additional setup steps
 
 ## Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+We welcome contributions! Whether it's:
+- Adding new language templates
+- Improving existing templates
+- Fixing bugs
+- Enhancing documentation
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## Template Standards
+
+Each template should include:
+- README.md with clear instructions
+- Documentation templates
+- Testing setup
+- Development environment configuration
+- CI/CD setup where applicable
+- .gitignore and other necessary configurations
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Contact
+## Lessons Learned
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
-Project Link: [https://github.com/yourusername/ai-agent-workflow](https://github.com/yourusername/ai-agent-workflow)
-
-## Acknowledgments
-
-- List any resources, libraries, or inspiration you used
+See [LESSONS_LEARNED.md](LESSONS_LEARNED.md) for insights and best practices gathered during development.
