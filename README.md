@@ -18,9 +18,9 @@ This project provides a framework for creating, managing, and monitoring AI agen
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
-- npm or yarn
-- [Other dependencies...]
+- Python 3.8 or higher
+- pip (Python package manager)
+- virtualenv (recommended)
 
 ### Installation
 
@@ -31,21 +31,25 @@ git clone https://github.com/yourusername/ai-agent-workflow.git
 # Navigate to project directory
 cd ai-agent-workflow
 
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+
 # Install dependencies
-npm install
+pip install -r requirements.txt
 ```
 
 ### Usage
 
-```javascript
-// Basic usage example
-const AIWorkflow = require('./src/workflow');
+```python
+# Basic usage example
+from workflow import AIWorkflow
 
-const workflow = new AIWorkflow({
-    // configuration options
-});
+workflow = AIWorkflow(
+    # configuration options
+)
 
-workflow.start();
+workflow.start()
 ```
 
 ## Project Structure
@@ -84,4 +88,4 @@ Project Link: [https://github.com/yourusername/ai-agent-workflow](https://github
 
 ## Acknowledgments
 
-- List any resources, libraries, or inspiration you used 
+- List any resources, libraries, or inspiration you used
