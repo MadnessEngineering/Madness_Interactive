@@ -1,3 +1,6 @@
 [submodule "tinker_template"]
 	path = tinker_template
 	url = https://github.com/DanEdens/Tinker.git
+[submodule "templates/python/games/snowball_snowman"]
+	path = templates/python/games/snowball_snowman
+	url = https://github.com/DanEdens/snowball_snowman.git
