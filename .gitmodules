@@ -2,8 +2,8 @@
 	path = tinker_template
 	url = https://github.com/DanEdens/Tinker.git
 [submodule "templates/python/games/snowball_snowman"]
-	path = templates/python/games/snowball_snowman
+	path = projects/python/games/snowball_snowman
 	url = https://github.com/DanEdens/snowball_snowman.git
 [submodule "EventGhost-Rust"]
-	path = EventGhost-Rust
+	path = projects/rust/EventGhost-Rust
 	url = git@github.com:DanEdens/EventGhost-Rust.git
