@@ -6,11 +6,53 @@ A collection of project templates and interactive development tools for various 
 
 This repository serves as a template hub for creating new projects with predefined structures, best practices, and development workflows. It supports multiple programming languages and frameworks, making it easy to start new projects with consistent organization and tooling.
 
+# Human readable .cursorrules
+
+env = windows cmd. wsl and powershell are available You can check for the availability of the commands in the environment at will
+0. Use trunk-based development with feature branches. use gh cli as needed. Be detailed, I love traciability.
+1. Work on the problem as asked here. Be careful not to backtrack on progress for existing methods.
+2. Run available tests (e.g. 'cargo test') and iterate (word for new stuff that doesnt have to mess up other stuff)  
+3. Maintain a "Lessons Learned" section in readme.md
+4. Update readme.md with progress after completing features
+5. Git workflow rules:
+   - Always append '| cat' to commands that might trigger a pager (git diff, git log, etc.)
+   - Use --no-pager flag for git commands when possible
+   - Keep commit messages single-line or use multiple -m flags
+   - Include ticket/issue numbers in commit messages when applicable
+   - Write detailed commit messages for future debugging reference
+6. Command execution rules:
+   - Avoid newlines in command strings
+   - Use semicolons or && for multiple commands instead of newlines
+   - Escape special characters in command strings
+   - Set appropriate flags to prevent interactive prompts
+7. Test failure triage process:
+   - Analyze the root cause without immediately modifying the test
+   - Identify which components or features are impacted
+   - Assess the broader architectural implications
+   - Prioritize preservation of existing functionality
+   - Propose minimal, targeted fixes that maintain system integrity
+
+Evaluation Criteria:
+- Does the proposed fix preserve existing features?
+- Is the change minimal and focused?
+- Does it address the underlying architectural concern?
+- Will it introduce new complexity or potential regressions?
+
+Recommended Actions:
+- Comment out problematic code instead of deleting
+- Create feature flags for experimental changes
+- Document the issue in "Lessons Learned"
+- Discuss potential systemic improvements
+
+
+
 ## Template Languages
 
 ### Python
 - Game Development (Pygame)
 - Web Applications
+
+
 - CLI Tools
 - Data Science Projects
 
