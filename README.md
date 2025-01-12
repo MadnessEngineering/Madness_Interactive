@@ -46,7 +46,7 @@ Recommended Actions:
 
 
 
-## Template Languages
+## Project Languages
 
 ### Python
 - Game Development (Pygame)
