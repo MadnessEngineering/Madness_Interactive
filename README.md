@@ -11,7 +11,7 @@ This repository serves as a template hub for creating new projects with predefin
 env = windows cmd. wsl and powershell are available You can check for the availability of the commands in the environment at will
 0. Use trunk-based development with feature branches. use gh cli as needed. Be detailed, I love traciability.
 1. Work on the problem as asked here. Be careful not to backtrack on progress for existing methods.
-2. Run available tests (e.g. 'cargo test') and iterate (word for new stuff that doesnt have to mess up other stuff)  
+2. Run available tests (e.g. 'cargo test') and iterate (word for new stuff that doesnt have to mess up other stuff)
 3. Maintain a "Lessons Learned" section in readme.md
 4. Update readme.md with progress after completing features
 5. Git workflow rules:
@@ -48,19 +48,13 @@ Recommended Actions:
 
 ## Project Languages
 
-### Python
-- Game Development (Pygame)
-- Web Applications
+[X] Python
+[X] Rust
+[ ] Powershell
+[ ] C#
+[ ] JavaScript
 
 
-- CLI Tools
-- Data Science Projects
-
-### Rust
-- System Tools
-- Web Browsers
-- Network Applications
-- Game Development
 
 ## Project Structure
 
