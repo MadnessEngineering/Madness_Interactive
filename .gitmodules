@@ -7,3 +7,6 @@
 [submodule "projects/rust/Tinker"]
 	path = projects/rust/Tinker
 	url = https://github.com/DanEdens/Tinker.git
+[submodule "projects/lua/hammerspoon"]
+	path = projects/lua/hammerspoon
+	url = https://github.com/DanEdens/DansHammerSpoon.git
