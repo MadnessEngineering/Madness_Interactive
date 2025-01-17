@@ -26,6 +26,33 @@ env=win_cmd+wsl+pshell;
    - keep_exist_funcs
    - min_focused_fix
 
+8. ai_dev_workflow:
+   - check_arch_first
+   - feat_branch_prefix='ai/'
+   - draft_pr_early
+   - arch_doc_required
+   - compare_via_pr
+   - error_triage_rules:
+     * categorize_by_phase
+     * skip_premature_tests
+     * doc_skipped_tests
+     * track_in_arch_docs
+     * revisit_on_milestone
+
+9. ai_branch_rules:
+   - branch_per_feature
+   - save_context_state
+   - doc_decisions
+   - track_alternatives
+   - merge_via_pr
+
+10. ai_pr_process:
+    - draft_first
+    - arch_review
+    - human_review_req
+    - test_coverage
+    - merge_strategy
+
 eval_crit:
 - preserve_feats?
 - min_focused_chg?
@@ -37,3 +64,12 @@ rec_actions:
 - use_feat_flags
 - doc_in_lessons
 - discuss_sys_improv
+
+ai_workflow_steps:
+1. check_arch_docs
+2. create_feat_branch
+3. draft_pr_early
+4. implement_with_tests
+5. update_arch_docs
+6. human_review
+7. merge_main
