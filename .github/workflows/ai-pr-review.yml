@@ -1,0 +1,116 @@
+name: AI PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'projects/rust/EventGhost-Rust/**'
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for feature comparison
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openai pytest
+
+      - name: Run AI Review
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          cat > review.py << 'EOL'
+          import os
+          import sys
+          import subprocess
+          from openai import OpenAI
+
+          def get_pr_changes():
+              pr_number = os.getenv('PR_NUMBER')
+              base_sha = subprocess.check_output(['git', 'merge-base', 'HEAD', 'origin/master']).decode().strip()
+              diff = subprocess.check_output(['git', 'diff', base_sha, 'HEAD', '--', 'projects/rust/EventGhost-Rust']).decode()
+              return diff
+
+          def get_existing_features():
+              # Get list of existing features from test files
+              test_files = subprocess.check_output(['git', 'ls-files', '**/test_*.rs']).decode().splitlines()
+              features = []
+              for test_file in test_files:
+                  with open(test_file) as f:
+                      content = f.read()
+                      # Extract test function names as feature indicators
+                      features.extend([line.split('fn ')[-1].split('(')[0] 
+                                    for line in content.splitlines() 
+                                    if line.strip().startswith('#[test]')])
+              return features
+
+          def analyze_changes(diff, features):
+              client = OpenAI()
+              
+              prompt = f"""
+              Analyze this PR's changes to determine if they accomplish their goals while preserving existing functionality.
+
+              Changes:
+              {diff}
+
+              Existing Features (from tests):
+              {features}
+
+              Evaluate:
+              1. Do the changes maintain or improve existing functionality?
+              2. Are there any potential regressions?
+              3. Do the changes follow Rust best practices?
+              4. Are there any suggestions for improvement?
+
+              Format your response as a structured review with clear sections.
+              """
+
+              response = client.chat.completions.create(
+                  model="gpt-4-turbo-preview",
+                  messages=[{"role": "user", "content": prompt}]
+              )
+
+              return response.choices[0].message.content
+
+          def main():
+              try:
+                  diff = get_pr_changes()
+                  features = get_existing_features()
+                  review = analyze_changes(diff, features)
+                  
+                  # Create or update PR comment
+                  with open(os.getenv('GITHUB_STEP_SUMMARY'), 'w') as f:
+                      f.write("## AI Review Summary\n\n")
+                      f.write(review)
+                  
+                  return 0
+              except Exception as e:
+                  print(f"Error: {e}", file=sys.stderr)
+                  return 1
+
+          if __name__ == '__main__':
+              sys.exit(main())
+          EOL
+
+          python review.py
+
+      - name: Check Review Status
+        if: ${{ failure() }}
+        run: |
+          echo "AI review found potential issues. Please check the review comments."
+          exit 1 
