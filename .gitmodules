@@ -7,3 +7,6 @@
 [submodule "projects/rust/Tinker"]
 	path = projects/rust/Tinker
 	url = https://github.com/DanEdens/Tinker.git
+[submodule "projects/python/dvtTestKit"]
+	path = projects/python/dvtTestKit
+	url = git@github.com:DanEdens/dvtTestKit.git
