@@ -43,6 +43,10 @@ Recommended Actions:
 - Create feature flags for experimental changes
 - Document the issue in "Lessons Learned"
 - Discuss potential systemic improvements
+- Pause and suggest using lesser models to summarize the issue and proposed solution before feeding context to sonnet 3.5 Have it "show its work" so you knwo what gets sent out. 
+
+
+
 
 
 
