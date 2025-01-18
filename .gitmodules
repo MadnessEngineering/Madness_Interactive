@@ -13,3 +13,21 @@
 [submodule "projects/lua/hammerspoon"]
 	path = projects/lua/hammerspoon
 	url = https://github.com/DanEdens/DansHammerSpoon.git
+[submodule "projects/python/SeleniumPageUtilities"]
+	path = projects/python/SeleniumPageUtilities
+	url = https://gist.github.com/DanEdens/ed5cb453bd97f6ee3eeb5b180a997502
+[submodule "projects/powershell/WinSystemSnapshot"]
+	path = projects/powershell/WinSystemSnapshot
+	url = git@gist.github.com:3ac7ab5a9235dfc6260e1600e8efaba5.git
+[submodule "projects/python/simple-mqtt-server-agent"]
+	path = projects/python/simple-mqtt-server-agent
+	url = git@gist.github.com:1e2a7524d171ffa4f8cca1fb18a29822.git
+[submodule "projects/python/MqttLogger"]
+	path = projects/python/MqttLogger
+	url = git@gist.github.com:da2ca365b91fdfc0baada8c503479971.git
+[submodule "projects/python/mqtt-get-var"]
+	path = projects/python/mqtt-get-var
+	url = git@gist.github.com:7df817f5af197aec6ea283636b843a6b.git
+[submodule "projects/lua/LGS_script_template"]
+	path = projects/lua/LGS_script_template
+	url = git@gist.github.com:7df817f5af197aec6ea283636b843a6b.git
