@@ -50,10 +50,17 @@ Recommended Actions:
 
 [X] Python
 [X] Rust
-[ ] Powershell
+[X] Powershell
+[X] Lua
+[X] OS
+[ ] Go
 [ ] C#
 [ ] JavaScript
-
+[ ] C++
+[ ] Java
+[ ] Ruby
+[ ] PHP
+[ ] TypeScript
 
 
 ## Project Structure

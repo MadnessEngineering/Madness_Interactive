@@ -1,123 +1,172 @@
-## API Proxy Setup
+# The Mad Tinker's AI Laboratory 🧪
 
-The repository includes a tool to help you set up a proxy that routes AI API calls through local models to check content for secrets. This is particularly useful when you want to ensure no sensitive information is accidentally sent to external API providers.
+A collection of experimental tools for tinkering with AI models locally. Part of the Mad Tinker's Workshop series, focusing on privacy, control, and the art of AI experimentation.
 
-### Setup Instructions
+## The Mad Tinker's Toolbox 🛠️
 
-1. Navigate to the tools directory:
-```bash
-cd tools
+### 1. The Knowledge Extractor (`setup_rag.py`)
+Your personal document dissection and reanimation system:
+- Dissect and catalog local documents with surgical precision
+- Embed knowledge fragments into a neural matrix
+- Store memories in a local vault (ChromaDB)
+- Query your collection using home-grown AI constructs
+
+**Laboratory Use**: Perfect for experimenting with document vivisection and knowledge extraction.
+
+### 2. The Neural Guardian (`setup_proxy.py`)
+A protective barrier for your AI communications:
+- Intercept and inspect neural transmissions
+- Filter through local cognitive safeguards
+- Quarantine potentially hazardous content
+- Maintain laboratory containment protocols
+
+**Laboratory Use**: Essential when dealing with external neural networks while maintaining specimen integrity.
+
+### 3. The Memory Vault (`setup_knowledge.py`)
+Your personal knowledge preservation system:
+- Web specimen collection with containment protocols
+- Automatic knowledge preservation procedures
+- Structured memory crystallization
+- Secure local archival storage
+
+**Laboratory Use**: For building your own repository of preserved knowledge specimens.
+
+### 4. The Neural Router (`setup_gateway.py`)
+Advanced neural pathway management:
+- Load distribution across multiple neural constructs
+- Automatic failsafe protocols
+- Response preservation mechanisms
+- Performance enhancement procedures
+
+**Laboratory Use**: When juggling multiple AI constructs in your experiments.
+
+### 5. The Observation Chamber (`setup_monitoring.py`)
+Monitor your creations with precision:
+- Neural activity monitoring
+- Response time analysis
+- Resource consumption tracking
+- Performance metrics collection
+
+**Laboratory Use**: For keeping your experiments under careful observation.
+
+### 6. The Specimen Processor (`setup_dataset.py`)
+Data specimen management facility:
+- Specimen format transmutation
+- Purification and preprocessing
+- Training/validation bifurcation
+- Quality assurance protocols
+
+**Laboratory Use**: When preparing specimens for neural adaptation procedures.
+
+### 7. The Testing Chamber (`setup_evaluation.py`)
+Rigorous construct evaluation facility:
+- Standardized neural stress testing
+- Performance threshold analysis
+- Comparative specimen studies
+- Quality metric extraction
+
+**Laboratory Use**: For evaluating your neural constructs under controlled conditions.
+
+### 8. The Neural Forge (`setup_finetuning.py`)
+Neural construct customization laboratory:
+- Specimen preparation protocols
+- Training configuration matrices
+- Performance monitoring arrays
+- Model preservation procedures
+
+**Laboratory Use**: When modifying neural constructs for specific experiments.
+
+## Laboratory Prerequisites 🧬
+
+- Python 3.8+ neural interface
+- [Ollama](https://ollama.ai/) neural construct containment system
+- Sufficient quantum storage capacity for specimens and constructs
+
+## Quick Start Guide 🧮
+
+1. Enter the laboratory:
+   ```bash
+   cd tools
+   ```
+
+2. View available experimental procedures:
+   ```bash
+   make help
+   ```
+
+3. Initialize specific apparatus:
+   ```bash
+   make rag        # Activate Knowledge Extractor
+   make proxy      # Deploy Neural Guardian
+   make knowledge  # Initialize Memory Vault
+   # ... additional procedures available
+   ```
+
+4. Or activate all systems:
+   ```bash
+   make all
+   ```
+
+## Laboratory Layout 📐
+
+```
+mad-tinker-ai-lab/
+├── tools/                   # The Mad Tinker's Apparatus
+│   ├── setup_rag.py         # Knowledge Extractor
+│   ├── setup_proxy.py       # Neural Guardian
+│   ├── setup_knowledge.py   # Memory Vault
+│   ├── setup_gateway.py     # Neural Router
+│   ├── setup_monitoring.py  # Observation Chamber
+│   ├── setup_dataset.py     # Specimen Processor
+│   ├── setup_evaluation.py  # Testing Chamber
+│   ├── setup_finetuning.py  # Neural Forge
+│   └── Makefile            # Laboratory Control Panel
+├── data/                    # Specimen Storage
+└── requirements.txt         # Required Neural Interfaces
 ```
 
-2. Run the setup script:
-```bash
-python setup_proxy.py
-```
+## Configuration Protocols
 
-The script will:
-- Install required dependencies
-- Create a `.env` file with default settings
-- Set up a proxy server that intercepts API calls
+Each apparatus generates its own `.env` configuration matrix. Modify these settings through:
+1. Direct `.env` matrix manipulation
+2. Command line parameter injection
+3. Core protocol modifications
 
-### Configuration
+## Laboratory Best Practices 🧫
 
-The default configuration uses:
-- Port 8080 for the proxy server
-- Port 11434 for the local model (Ollama)
-- CodeLlama as the default model for content checking
+1. **Containment Protocols**:
+   - Begin with locally contained neural constructs
+   - Deploy the Neural Guardian for external communications
+   - Maintain specimen isolation in local storage
 
-You can customize these settings by:
-- Editing the `.env` file
-- Using command line arguments:
-```bash
-python setup_proxy.py --port 9000 --model mistral
-```
+2. **Resource Management**:
+   - Monitor neural activity levels
+   - Select appropriate construct sizes
+   - Implement memory caching protocols
 
-### How It Works
+3. **Specimen Organization**:
+   - Version control all specimens
+   - Document all experimental procedures
+   - Maintain clear specimen hierarchies
 
-1. The proxy intercepts OpenAI API calls
-2. Before forwarding the request, it uses your local model to check for sensitive content
-3. If sensitive information is detected, the request is blocked
-4. Otherwise, the request is forwarded to your local model
+## Troubleshooting Guide 🔧
 
-This provides an extra layer of security when using AI APIs while keeping your data private. 
+1. **General Malfunctions**:
+   - Verify Ollama containment system status
+   - Check neural interface integrity
+   - Monitor quantum storage capacity
 
-## Local RAG System
+2. **Apparatus-Specific Issues**:
+   - Consult individual apparatus documentation
+   - Check experimental logs
+   - Verify component dependencies
 
-The repository includes a tool to set up a local RAG (Retrieval Augmented Generation) system. This allows you to query your documents using AI while keeping all processing and data local.
+## Join the Mad Science! 🧬
 
-### Setup Instructions
+Feel free to:
+- Report unexpected mutations
+- Propose new experimental apparatus
+- Contribute procedural improvements
+- Share your mad science results
 
-1. Navigate to the tools directory:
-```bash
-cd tools
-```
-
-2. Run the setup script:
-```bash
-python setup_rag.py
-```
-
-The script will:
-- Install required dependencies (ChromaDB, SentenceTransformers, etc.)
-- Create necessary directories for documents and vector storage
-- Set up a RAG system with local embeddings and model integration
-
-### Usage
-
-1. Place your documents (PDFs or text files) in the `data/documents` directory
-2. Start your local model (e.g., `ollama run codellama`)
-3. Run the RAG system: `python rag_system.py`
-4. Ask questions about your documents
-
-The system uses:
-- Local embeddings (SentenceTransformers)
-- Local vector storage (ChromaDB)
-- Local LLM for answer generation
-- Completely offline operation
-
-## Other Potential Tools
-
-Here are some other tools we could add to enhance local AI development:
-
-1. **Fine-tuning Setup**
-   - Tool to prepare datasets
-   - Configure and run fine-tuning on local models
-   - Evaluate model performance
-
-2. **Model Quantization**
-   - Convert models to different quantization levels
-   - Benchmark performance vs. memory usage
-   - Easy switching between quantized versions
-
-3. **Prompt Engineering Lab**
-   - Test prompts with different models
-   - Compare responses and performance
-   - Save and version control prompts
-
-4. **Model Evaluation Suite**
-   - Run standardized tests
-   - Compare different models
-   - Generate performance reports
-
-5. **Dataset Creation Tools**
-   - Convert various data formats
-   - Clean and preprocess data
-   - Create training/validation splits
-
-6. **Model API Gateway**
-   - Load balance between models
-   - Fallback handling
-   - Response caching
-
-7. **Cost & Performance Monitoring**
-   - Track token usage
-   - Monitor response times
-   - Compare model efficiency
-
-8. **Local Knowledge Base**
-   - Web scraping to local storage
-   - Automatic document processing
-   - Structured data extraction
-
-Each of these tools would help developers work more effectively with local AI models while maintaining data privacy and control. 
+*Remember: A good mad scientist documents everything... especially the explosions!* 💥 
