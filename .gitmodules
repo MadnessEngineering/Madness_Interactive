@@ -31,3 +31,6 @@
 [submodule "projects/lua/LGS_script_template"]
 	path = projects/lua/LGS_script_template
 	url = git@gist.github.com:7df817f5af197aec6ea283636b843a6b.git
+[submodule "projects/OS/windows/DisplayPhotoTime"]
+	path = projects/OS/windows/DisplayPhotoTime
+	url = git@gist.github.com:140058b1b53911087b56bec854379892.git
