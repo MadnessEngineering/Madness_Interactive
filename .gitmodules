@@ -37,3 +37,6 @@
 [submodule "projects/python/EventGhost"]
 	path = projects/python/EventGhost
 	url = https://github.com/EventGhost/EventGhost.git
+[submodule "projects/local-ai/Swarmonomicon"]
+	path = projects/local-ai/Swarmonomicon
+	url = git@github.com:DanEdens/Swarmonomicon.git
