@@ -1,0 +1,4 @@
+Can you add the nessisary components for testing this using a specific flag in cargo check? I don't think we can get the whole build running as easily as we can just check if the UI looks like what we expect. That would be a good start. 
+
+Feature Selection:
+  cargo check --quiet -F <FEATURES>  
