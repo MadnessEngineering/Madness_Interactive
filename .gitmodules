@@ -34,3 +34,6 @@
 [submodule "projects/OS/windows/DisplayPhotoTime"]
 	path = projects/OS/windows/DisplayPhotoTime
 	url = git@gist.github.com:140058b1b53911087b56bec854379892.git
+[submodule "projects/python/EventGhost"]
+	path = projects/python/EventGhost
+	url = https://github.com/EventGhost/EventGhost.git
