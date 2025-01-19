@@ -110,7 +110,7 @@ Neural construct customization laboratory:
 ## Laboratory Layout 📐
 
 ```
-mad-tinker-ai-lab/
+local-ai/
 ├── tools/                   # The Mad Tinker's Apparatus
 │   ├── setup_rag.py         # Knowledge Extractor
 │   ├── setup_proxy.py       # Neural Guardian
@@ -161,7 +161,7 @@ Each apparatus generates its own `.env` configuration matrix. Modify these setti
    - Check experimental logs
    - Verify component dependencies
 
-## Join the Mad Science! 🧬
+## Join the Madness! 🧬
 
 Feel free to:
 - Report unexpected mutations
