@@ -17,28 +17,28 @@ help:
 all: rag proxy knowledge gateway monitoring dataset evaluation finetuning
 
 rag:
-	python setup_rag.py
+	python3 tools/setup_rag.py
 
 proxy:
-	python setup_proxy.py
+	python3 tools/setup_proxy.py
 
 knowledge:
-	python setup_knowledge.py
+	python3 tools/setup_knowledge.py
 
 gateway:
-	python setup_gateway.py
+	python3 tools/setup_gateway.py
 
 monitoring:
-	python setup_monitoring.py
+	python3 tools/setup_monitoring.py
 
 dataset:
-	python setup_dataset.py
+	python3 tools/setup_dataset.py
 
 evaluation:
-	python setup_evaluation.py
+	python3 tools/setup_evaluation.py
 
 finetuning:
-	python setup_finetuning.py
+	python3 tools/setup_finetuning.py
 
 clean:
 	if exist ".env" del /f ".env"
@@ -46,4 +46,4 @@ clean:
 	if exist "data" rd /s /q "data"
 	if exist "*.log" del /f "*.log"
 	if exist "*.db" del /f "*.db"
-	if exist "*.sqlite" del /f "*.sqlite" 
+	if exist "*.sqlite" del /f "*.sqlite"
