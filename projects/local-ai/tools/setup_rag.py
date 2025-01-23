@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Setup script for configuring a local RAG (Retrieval Augmented Generation) system.
 This tool helps set up a simple RAG system using local embeddings and models.
@@ -9,6 +9,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from common import setup_env  # Import the common setup_env function
 
 def check_requirements():
     """Check if required packages are installed."""
@@ -25,14 +26,9 @@ def check_requirements():
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
 
-def setup_env():
-    """Setup environment configuration."""
-    env_path = Path(".env")
-    
-    if not env_path.exists():
-        print("Creating .env file...")
-        with open(env_path, "w") as f:
-            f.write("""# RAG Settings
+def setup_env_rag():
+    """Setup environment for RAG."""
+    env_string = """# RAG Settings
 OLLAMA_API_URL=http://localhost:11434/v1
 EMBEDDINGS_MODEL=all-MiniLM-L6-v2
 VECTOR_DB_PATH=./data/vectordb
@@ -40,10 +36,8 @@ DOCUMENTS_PATH=./data/documents
 LOCAL_MODEL_NAME=codellama
 CHUNK_SIZE=500
 CHUNK_OVERLAP=50
-""")
-        print("Created .env file with default settings")
-    else:
-        print(".env file already exists")
+"""
+    setup_env(env_string)  # Call the common setup_env function
 
 def setup_rag():
     """Setup the RAG system files."""
@@ -142,27 +136,6 @@ class LocalRAG:
         return chunks
 
 def main():
-    rag = LocalRAG()
-    
-    # Example usage
-    docs_path = Path(os.getenv("DOCUMENTS_PATH"))
-    for file_path in docs_path.glob("*.*"):
-        if file_path.suffix in ['.txt', '.pdf']:
-            rag.process_document(str(file_path))
-    
-    while True:
-        question = input("\\nEnter your question (or 'quit' to exit): ")
-        if question.lower() == 'quit':
-            break
-        
-        answer = rag.query(question)
-        print(f"\\nAnswer: {answer}")
-
-if __name__ == "__main__":
-    main()
-""")
-
-def main():
     parser = argparse.ArgumentParser(description="Setup local RAG system")
     parser.add_argument("--model", default="codellama", help="Local model to use (default: codellama)")
     args = parser.parse_args()
@@ -173,7 +146,7 @@ def main():
     check_requirements()
     
     # Setup environment
-    setup_env()
+    setup_env_rag()
     
     # Setup RAG system
     setup_rag()

@@ -10,6 +10,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from common import setup_env  # Import the common setup_env function
 from typing import List, Dict
 
 def check_requirements():
@@ -27,14 +28,9 @@ def check_requirements():
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
 
-def setup_env():
-    """Setup environment configuration."""
-    env_path = Path(".env")
-    
-    if not env_path.exists():
-        print("Creating .env file...")
-        with open(env_path, "w") as f:
-            f.write("""# Monitoring Settings
+def setup_env_monitoring():
+    """Setup environment for monitoring."""
+    env_string = """# Monitoring Settings
 PROMETHEUS_PORT=9090
 GRAFANA_PORT=3000
 METRICS_PORT=8080
@@ -44,10 +40,8 @@ COST_PER_TOKEN=0.000001
 ALERT_THRESHOLD_CPU=80
 ALERT_THRESHOLD_MEMORY=85
 ALERT_THRESHOLD_LATENCY=2000
-""")
-        print("Created .env file with default settings")
-    else:
-        print(".env file already exists")
+"""
+    setup_env(env_string)  # Call the common setup_env function
 
 def setup_monitoring():
     """Setup the monitoring system files."""
@@ -283,7 +277,7 @@ def main():
     check_requirements()
     
     # Setup environment
-    setup_env()
+    setup_env_monitoring()
     
     # Setup monitoring
     setup_monitoring()

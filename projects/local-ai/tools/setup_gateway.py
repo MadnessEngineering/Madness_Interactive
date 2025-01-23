@@ -10,7 +10,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Dict
+from common import setup_env  # Import the common setup_env function
 
 def check_requirements():
     """Check if required packages are installed."""
@@ -27,14 +27,9 @@ def check_requirements():
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
 
-def setup_env():
-    """Setup environment configuration."""
-    env_path = Path(".env")
-    
-    if not env_path.exists():
-        print("Creating .env file...")
-        with open(env_path, "w") as f:
-            f.write("""# Gateway Settings
+def setup_env_gateway():
+    """Setup environment for gateway."""
+    env_string = """# Gateway Settings
 GATEWAY_PORT=8000
 REDIS_URL=redis://localhost:6379
 CACHE_TTL=3600
@@ -54,10 +49,8 @@ MODELS=[
         "max_tokens": 2048
     }
 ]
-""")
-        print("Created .env file with default settings")
-    else:
-        print(".env file already exists")
+"""
+    setup_env(env_string)  # Call the common setup_env function
 
 def setup_gateway():
     """Setup the API gateway files."""
@@ -238,7 +231,7 @@ def main():
     check_requirements()
     
     # Setup environment
-    setup_env()
+    setup_env_gateway()
     
     # Setup gateway
     setup_gateway()

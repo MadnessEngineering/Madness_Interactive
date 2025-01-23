@@ -10,7 +10,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Dict
+from common import setup_env  # Import the common setup_env function
 
 def check_requirements():
     """Check if required packages are installed."""
@@ -27,14 +27,9 @@ def check_requirements():
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
 
-def setup_env():
-    """Setup environment configuration."""
-    env_path = Path(".env")
-    
-    if not env_path.exists():
-        print("Creating .env file...")
-        with open(env_path, "w") as f:
-            f.write("""# Dataset Creation Settings
+def setup_env_dataset():
+    """Setup environment for dataset tools."""
+    env_string = """# Dataset Creation Settings
 RAW_DATA_PATH=./data/raw
 PROCESSED_DATA_PATH=./data/processed
 TRAIN_SPLIT=0.8
@@ -43,10 +38,8 @@ TEST_SPLIT=0.1
 MAX_SAMPLES=10000
 MIN_TOKENS=10
 MAX_TOKENS=2048
-""")
-        print("Created .env file with default settings")
-    else:
-        print(".env file already exists")
+"""
+    setup_env(env_string)  # Call the common setup_env function
 
 def setup_dataset_tools():
     """Setup the dataset creation and processing tools."""
@@ -343,7 +336,7 @@ def main():
     check_requirements()
     
     # Setup environment
-    setup_env()
+    setup_env_dataset()
     
     # Setup dataset tools
     setup_dataset_tools()

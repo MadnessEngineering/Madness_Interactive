@@ -10,7 +10,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Dict
+from common import setup_env  # Import the common setup_env function
 
 def check_requirements():
     """Check if required packages are installed."""
@@ -27,14 +27,9 @@ def check_requirements():
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
 
-def setup_env():
-    """Setup environment configuration."""
-    env_path = Path(".env")
-    
-    if not env_path.exists():
-        print("Creating .env file...")
-        with open(env_path, "w") as f:
-            f.write("""# Fine-tuning Settings
+def setup_env_finetuning():
+    """Setup environment for fine-tuning."""
+    env_string = """# Fine-tuning Settings
 BASE_MODEL=codellama
 DATASET_PATH=./data/training
 OUTPUT_PATH=./data/finetuned
@@ -43,10 +38,8 @@ LEARNING_RATE=2e-5
 NUM_EPOCHS=3
 MAX_LENGTH=512
 GRADIENT_ACCUMULATION=4
-""")
-        print("Created .env file with default settings")
-    else:
-        print(".env file already exists")
+"""
+    setup_env(env_string)  # Call the common setup_env function
 
 def setup_finetune():
     """Setup the fine-tuning system files."""
@@ -216,7 +209,7 @@ def main():
     check_requirements()
     
     # Setup environment
-    setup_env()
+    setup_env_finetuning()
     
     # Setup fine-tuning system
     setup_finetune()

@@ -10,7 +10,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Dict
+from common import setup_env  # Import the common setup_env function
 
 def check_requirements():
     """Check if required packages are installed."""
@@ -27,14 +27,9 @@ def check_requirements():
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
 
-def setup_env():
-    """Setup environment configuration."""
-    env_path = Path(".env")
-    
-    if not env_path.exists():
-        print("Creating .env file...")
-        with open(env_path, "w") as f:
-            f.write("""# Knowledge Base Settings
+def setup_env_knowledge():
+    """Setup environment for knowledge base."""
+    env_string = """# Knowledge Base Settings
 KB_PORT=8000
 EMBEDDINGS_MODEL=all-MiniLM-L6-v2
 VECTOR_DB_PATH=./data/knowledge
@@ -43,10 +38,8 @@ MAX_CHUNK_SIZE=500
 CHUNK_OVERLAP=50
 SCRAPE_DEPTH=2
 MAX_URLS_PER_DOMAIN=10
-""")
-        print("Created .env file with default settings")
-    else:
-        print(".env file already exists")
+"""
+    setup_env(env_string)  # Call the common setup_env function
 
 def setup_knowledge_base():
     """Setup the knowledge base system files."""
@@ -300,7 +293,7 @@ def main():
     check_requirements()
     
     # Setup environment
-    setup_env()
+    setup_env_knowledge()
     
     # Setup knowledge base
     setup_knowledge_base()

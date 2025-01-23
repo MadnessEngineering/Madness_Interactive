@@ -9,6 +9,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from common import setup_env  # Import the common setup_env function
 
 def check_requirements():
     """Check if required packages are installed."""
@@ -25,14 +26,9 @@ def check_requirements():
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
 
-def setup_env():
-    """Setup environment configuration."""
-    env_path = Path(".env")
-    
-    if not env_path.exists():
-        print("Creating .env file...")
-        with open(env_path, "w") as f:
-            f.write("""# Local Model Settings
+def setup_env_proxy():
+    """Setup environment for proxy."""
+    env_string = """# Local Model Settings
 LOCAL_MODEL_URL=http://localhost:11434/v1
 OPENAI_API_BASE=http://localhost:8080/v1
 OPENAI_API_KEY=dummy-key
@@ -41,10 +37,8 @@ OPENAI_API_KEY=dummy-key
 PROXY_PORT=8080
 ALLOWED_MODELS=["gpt-3.5-turbo", "gpt-4"]
 LOCAL_MODEL_NAME=codellama
-""")
-        print("Created .env file with default settings")
-    else:
-        print(".env file already exists")
+"""
+    setup_env(env_string)  # Call the common setup_env function
 
 def setup_proxy():
     """Setup the proxy server configuration."""
@@ -112,7 +106,7 @@ def main():
     check_requirements()
     
     # Setup environment
-    setup_env()
+    setup_env_proxy()
     
     # Setup proxy
     setup_proxy()

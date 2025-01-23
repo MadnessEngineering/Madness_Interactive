@@ -10,7 +10,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Dict
+from common import setup_env  # Import the common setup_env function
 
 def check_requirements():
     """Check if required packages are installed."""
@@ -27,24 +27,17 @@ def check_requirements():
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
 
-def setup_env():
-    """Setup environment configuration."""
-    env_path = Path(".env")
-    
-    if not env_path.exists():
-        print("Creating .env file...")
-        with open(env_path, "w") as f:
-            f.write("""# Evaluation Settings
+def setup_env_evaluation():
+    """Setup environment for evaluation."""
+    env_string = """# Evaluation Settings
 MODELS=["codellama", "llama2", "mistral"]
 EVAL_DATA_PATH=./data/evaluation
 RESULTS_PATH=./data/results
 METRICS=["rouge", "bleu", "exact_match", "semantic_sim"]
 BATCH_SIZE=4
 NUM_SAMPLES=100
-""")
-        print("Created .env file with default settings")
-    else:
-        print(".env file already exists")
+"""
+    setup_env(env_string)  # Call the common setup_env function
 
 def setup_evaluation():
     """Setup the evaluation system files."""
@@ -169,75 +162,6 @@ class ModelEvaluator:
         return float(torch.nn.functional.cosine_similarity(emb1, emb2, dim=0))
 
 def main():
-    # Load test data
-    eval_data_path = Path(os.getenv("EVAL_DATA_PATH"))
-    test_data = []
-    for json_file in eval_data_path.glob("*.json"):
-        with open(json_file) as f:
-            data = json.load(f)
-            if isinstance(data, list):
-                test_data.extend(data)
-            else:
-                test_data.append(data)
-    
-    # Limit samples if specified
-    num_samples = int(os.getenv("NUM_SAMPLES"))
-    if num_samples > 0:
-        test_data = test_data[:num_samples]
-    
-    # Initialize evaluator
-    evaluator = ModelEvaluator()
-    
-    # Evaluate each model
-    results = {}
-    for model in evaluator.models:
-        results[model] = evaluator.evaluate_model(model, test_data)
-    
-    # Save results
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    results_file = evaluator.results_path / f"eval_results_{timestamp}.json"
-    with open(results_file, "w") as f:
-        json.dump(results, f, indent=2)
-    
-    # Generate report
-    df = pd.DataFrame(results).round(4)
-    print("\\nEvaluation Results:\\n")
-    print(df)
-    
-    # Save report
-    report_file = evaluator.results_path / f"eval_report_{timestamp}.md"
-    with open(report_file, "w") as f:
-        f.write("# Model Evaluation Report\\n\\n")
-        f.write(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\\n\\n")
-        f.write("## Results\\n\\n")
-        f.write(df.to_markdown())
-        f.write("\\n\\n## Metrics Description\\n\\n")
-        f.write("- ROUGE: Measures overlap of n-grams between prediction and reference\\n")
-        f.write("- BLEU: Measures translation quality between prediction and reference\\n")
-        f.write("- Exact Match: Percentage of predictions that exactly match references\\n")
-        f.write("- Semantic Similarity: Cosine similarity between prediction and reference embeddings\\n")
-
-if __name__ == "__main__":
-    main()
-""")
-
-    # Create example test data
-    example_data = [
-        {
-            "instruction": "What is the capital of France?",
-            "output": "The capital of France is Paris."
-        },
-        {
-            "instruction": "Write a function to check if a number is prime.",
-            "input": "n = 17",
-            "output": "def is_prime(n):\\n    if n < 2:\\n        return False\\n    for i in range(2, int(n ** 0.5) + 1):\\n        if n % i == 0:\\n            return False\\n    return True"
-        }
-    ]
-    
-    with open("data/evaluation/example_test.json", "w") as f:
-        json.dump(example_data, f, indent=2)
-
-def main():
     parser = argparse.ArgumentParser(description="Setup model evaluation suite")
     parser.add_argument("--models", nargs="+", default=["codellama", "llama2", "mistral"],
                       help="Models to evaluate (default: codellama llama2 mistral)")
@@ -249,7 +173,7 @@ def main():
     check_requirements()
     
     # Setup environment
-    setup_env()
+    setup_env_evaluation()
     
     # Setup evaluation system
     setup_evaluation()
