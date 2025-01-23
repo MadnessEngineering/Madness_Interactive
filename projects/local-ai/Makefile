@@ -1,49 +1,36 @@
-.PHONY: all help rag proxy knowledge gateway monitoring dataset evaluation finetuning clean
+.PHONY: all help setup clean rag proxy knowledge gateway monitoring dataset evaluation finetuning
 
 help:
 	@echo Available commands:
-	@echo   make all            - Set up all tools
-	@echo   make rag           - Set up the RAG system for document querying
-	@echo   make proxy         - Set up the API proxy for content filtering
-	@echo   make knowledge     - Set up the local knowledge base system
-	@echo   make gateway       - Set up the model API gateway
-	@echo   make monitoring    - Set up the monitoring system
-	@echo   make dataset       - Set up the dataset preparation tools
-	@echo   make evaluation    - Set up the model evaluation suite
-	@echo   make finetuning    - Set up the model fine-tuning tools
-	@echo   make clean         - Clean up generated files
-	@echo   make help          - Show this help message
+	@echo   make all                       - Set up all tools
+	@echo   make setup NAME=<target>      - Set up a specific tool (e.g., rag, proxy)
+	@echo   make <target>                 - Set up a specific tool directly (e.g., rag, proxy)
+	@echo   make clean                    - Clean up generated files
 
 all: rag proxy knowledge gateway monitoring dataset evaluation finetuning
 
-rag:
-	python3 tools/setup_rag.py
+# Generic setup target using NAME variable
+setup:
+	@# Ensure NAME is provided
+	@if [ -z "$(NAME)" ]; then \
+		echo "Error: NAME variable is not set. Usage: make setup NAME=<target>"; \
+		exit 1; \
+	fi
+	python3.11 tools/setup_$(NAME).py
 
-proxy:
-	python3 tools/setup_proxy.py
-
-knowledge:
-	python3 tools/setup_knowledge.py
-
-gateway:
-	python3 tools/setup_gateway.py
-
-monitoring:
-	python3 tools/setup_monitoring.py
-
-dataset:
-	python3 tools/setup_dataset.py
-
-evaluation:
-	python3 tools/setup_evaluation.py
-
-finetuning:
-	python3 tools/setup_finetuning.py
+# Pattern rule to handle individual targets
+%:
+	@# Check if the corresponding setup script exists
+	@if [ ! -f tools/setup_$@.py ]; then \
+		echo "Error: tools/setup_$@.py does not exist."; \
+		exit 1; \
+	fi
+	python3.11 tools/setup_$@.py
 
 clean:
-	if exist ".env" del /f ".env"
-	if exist "__pycache__" rd /s /q "__pycache__"
-	if exist "data" rd /s /q "data"
-	if exist "*.log" del /f "*.log"
-	if exist "*.db" del /f "*.db"
+	if exist ".env" del /f ".env" && \
+	if exist "__pycache__" rd /s /q "__pycache__" && \
+	if exist "data" rd /s /q "data" && \
+	if exist "*.log" del /f "*.log" && \
+	if exist "*.db" del /f "*.db" && \
 	if exist "*.sqlite" del /f "*.sqlite"

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Setup script for configuring OpenAI API proxy with local models.
 This tool helps set up a proxy to route AI API calls through local models for content checking.

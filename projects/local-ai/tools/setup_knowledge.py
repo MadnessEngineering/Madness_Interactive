@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Setup script for local knowledge base.
 This tool helps set up a system for collecting, processing, and querying local knowledge.
@@ -16,13 +16,13 @@ def check_requirements():
     """Check if required packages are installed."""
     required = ['beautifulsoup4', 'requests', 'trafilatura', 'chromadb', 'sentence-transformers', 'python-dotenv', 'fastapi', 'uvicorn']
     missing = []
-    
+
     for package in required:
         try:
             __import__(package)
         except ImportError:
             missing.append(package)
-    
+
     if missing:
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
@@ -46,10 +46,10 @@ def setup_knowledge_base():
     # Create necessary directories
     for dir_path in ["data/knowledge", "data/sources", "scripts"]:
         Path(dir_path).mkdir(parents=True, exist_ok=True)
-    
+
     # Create web scraper
     with open("scripts/scraper.py", "w") as f:
-        f.write("""#!/usr/bin/env python3
+        f.write("""#!/usr/bin/env python3.11
 import json
 import os
 from pathlib import Path
@@ -148,10 +148,10 @@ def main():
 if __name__ == "__main__":
     main()
 """)
-    
+
     # Create knowledge base processor
     with open("scripts/process_knowledge.py", "w") as f:
-        f.write("""#!/usr/bin/env python3
+        f.write("""#!/usr/bin/env python3.11
 import json
 import os
 from pathlib import Path
@@ -208,10 +208,10 @@ def main():
 if __name__ == "__main__":
     main()
 """)
-    
+
     # Create knowledge base API
     with open("scripts/knowledge_api.py", "w") as f:
-        f.write("""#!/usr/bin/env python3
+        f.write("""#!/usr/bin/env python3.11
 import os
 from typing import List, Dict
 from fastapi import FastAPI, HTTPException
@@ -286,18 +286,18 @@ if __name__ == "__main__":
 def main():
     parser = argparse.ArgumentParser(description="Setup local knowledge base")
     args = parser.parse_args()
-    
+
     print("Setting up local knowledge base...")
-    
+
     # Check and install requirements
     check_requirements()
-    
+
     # Setup environment
     setup_env_knowledge()
     
     # Setup knowledge base
     setup_knowledge_base()
-    
+
     print("""
 Setup complete! To build and use your knowledge base:
 
@@ -344,4 +344,4 @@ Tips:
 """)
 
 if __name__ == "__main__":
-    main() 
+    main()

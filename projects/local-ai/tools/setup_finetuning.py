@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Setup script for fine-tuning local models.
 This tool helps prepare datasets and run fine-tuning on local models.

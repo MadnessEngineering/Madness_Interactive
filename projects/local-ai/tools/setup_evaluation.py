@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Setup script for model evaluation suite.
 This tool helps evaluate and compare different models across various metrics.
@@ -16,13 +16,13 @@ def check_requirements():
     """Check if required packages are installed."""
     required = ['torch', 'evaluate', 'nltk', 'rouge-score', 'sacrebleu', 'python-dotenv', 'pandas']
     missing = []
-    
+
     for package in required:
         try:
             __import__(package)
         except ImportError:
             missing.append(package)
-    
+
     if missing:
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
@@ -44,10 +44,10 @@ def setup_evaluation():
     # Create necessary directories
     for dir_path in ["data/evaluation", "data/results", "scripts"]:
         Path(dir_path).mkdir(parents=True, exist_ok=True)
-    
+
     # Create evaluation script
     with open("scripts/evaluate_models.py", "w") as f:
-        f.write("""#!/usr/bin/env python3
+        f.write("""#!/usr/bin/env python3.11
 import json
 import os
 from pathlib import Path
@@ -166,18 +166,18 @@ def main():
     parser.add_argument("--models", nargs="+", default=["codellama", "llama2", "mistral"],
                       help="Models to evaluate (default: codellama llama2 mistral)")
     args = parser.parse_args()
-    
+
     print("Setting up model evaluation suite...")
-    
+
     # Check and install requirements
     check_requirements()
-    
+
     # Setup environment
     setup_env_evaluation()
     
     # Setup evaluation system
     setup_evaluation()
-    
+
     print(f"""
 Setup complete! To evaluate models:
 
@@ -209,4 +209,4 @@ Tips:
 """)
 
 if __name__ == "__main__":
-    main() 
+    main()

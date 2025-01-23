@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Setup script for dataset creation and preprocessing tools.
 This tool helps create, clean, and prepare datasets for training and evaluation.
@@ -16,13 +16,13 @@ def check_requirements():
     """Check if required packages are installed."""
     required = ['pandas', 'datasets', 'beautifulsoup4', 'markdown', 'python-dotenv', 'scikit-learn']
     missing = []
-    
+
     for package in required:
         try:
             __import__(package)
         except ImportError:
             missing.append(package)
-    
+
     if missing:
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
@@ -46,10 +46,10 @@ def setup_dataset_tools():
     # Create necessary directories
     for dir_path in ["data/raw", "data/processed", "scripts"]:
         Path(dir_path).mkdir(parents=True, exist_ok=True)
-    
+
     # Create data processing script
     with open("scripts/process_data.py", "w") as f:
-        f.write("""#!/usr/bin/env python3
+        f.write("""#!/usr/bin/env python3.11
 import json
 import os
 from pathlib import Path
@@ -237,10 +237,10 @@ def main():
 if __name__ == "__main__":
     main()
 """)
-    
+
     # Create data conversion script
     with open("scripts/convert_format.py", "w") as f:
-        f.write("""#!/usr/bin/env python3
+        f.write("""#!/usr/bin/env python3.11
 import json
 import pandas as pd
 from pathlib import Path
@@ -300,7 +300,7 @@ Q: How do you create a list in Python?
 A: You can create a list in Python using square brackets []. For example:
 my_list = [1, 2, 3]
 empty_list = []""",
-        
+
         "markdown": """# Python Basics
 
 ## Variables
@@ -314,13 +314,13 @@ Python has several built-in data types:
 - Strings (str)
 - Lists
 - Dictionaries""",
-        
+
         "html": """<div class="qa-pair">
     <div class="question">What are functions in Python?</div>
     <div class="answer">Functions are reusable blocks of code that perform specific tasks. They are defined using the def keyword.</div>
 </div>"""
     }
-    
+
     # Save example files
     for fmt, content in example_data.items():
         with open(f"data/raw/example.{fmt}", "w") as f:
@@ -329,18 +329,18 @@ Python has several built-in data types:
 def main():
     parser = argparse.ArgumentParser(description="Setup dataset creation tools")
     args = parser.parse_args()
-    
+
     print("Setting up dataset creation tools...")
-    
+
     # Check and install requirements
     check_requirements()
-    
+
     # Setup environment
     setup_env_dataset()
     
     # Setup dataset tools
     setup_dataset_tools()
-    
+
     print("""
 Setup complete! To create and process datasets:
 
@@ -375,4 +375,4 @@ Tips:
 """)
 
 if __name__ == "__main__":
-    main() 
+    main()
