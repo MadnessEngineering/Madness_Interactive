@@ -40,3 +40,6 @@
 [submodule "projects/local-ai/Swarmonomicon"]
 	path = projects/local-ai/Swarmonomicon
 	url = git@github.com:DanEdens/Swarmonomicon.git
+[submodule "projects/common/Omnispindle"]
+	path = projects/common/Omnispindle
+	url = git@github.com:DanEdens/mqttenv.git
