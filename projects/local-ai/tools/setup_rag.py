@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Setup script for configuring a local RAG (Retrieval Augmented Generation) system.
 This tool helps set up a simple RAG system using local embeddings and models.
@@ -14,13 +14,13 @@ def check_requirements():
     """Check if required packages are installed."""
     required = ['chromadb', 'sentence-transformers', 'torch', 'pypdf', 'python-dotenv']
     missing = []
-    
+
     for package in required:
         try:
             __import__(package)
         except ImportError:
             missing.append(package)
-    
+
     if missing:
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
@@ -28,7 +28,7 @@ def check_requirements():
 def setup_env():
     """Setup environment configuration."""
     env_path = Path(".env")
-    
+
     if not env_path.exists():
         print("Creating .env file...")
         with open(env_path, "w") as f:
@@ -50,10 +50,10 @@ def setup_rag():
     # Create necessary directories
     for dir_path in ["data/documents", "data/vectordb"]:
         Path(dir_path).mkdir(parents=True, exist_ok=True)
-    
+
     # Create the main RAG implementation
-    with open("rag_system.py", "w") as f:
-        f.write("""#!/usr/bin/env python3
+    with open("scripts/rag_system.py", "w") as f:
+        f.write("""#!/usr/bin/env python3.11
 import os
 from pathlib import Path
 from typing import List, Dict
@@ -75,7 +75,7 @@ class LocalRAG:
         self.chunk_overlap = int(os.getenv("CHUNK_OVERLAP", 50))
         
     def process_document(self, file_path: str):
-        """Process and index a document."""
+        \"\"\"Process and index a document.\"\"\"
         print(f"Processing {file_path}...")
         
         # Read document
@@ -103,7 +103,7 @@ class LocalRAG:
         )
         
     def query(self, question: str, k: int = 3) -> str:
-        """Query the RAG system."""
+        \"\"\"Query the RAG system.\"\"\"
         # Get question embedding
         question_embedding = self.embeddings_model.encode(question)
         
@@ -131,7 +131,7 @@ class LocalRAG:
         return response.json()['choices'][0]['message']['content']
     
     def _split_text(self, text: str) -> List[str]:
-        """Split text into overlapping chunks."""
+        \"\"\"Split text into overlapping chunks.\"\"\"
         chunks = []
         start = 0
         while start < len(text):
@@ -166,18 +166,18 @@ def main():
     parser = argparse.ArgumentParser(description="Setup local RAG system")
     parser.add_argument("--model", default="codellama", help="Local model to use (default: codellama)")
     args = parser.parse_args()
-    
+
     print("Setting up local RAG system...")
-    
+
     # Check and install requirements
     check_requirements()
-    
+
     # Setup environment
     setup_env()
-    
+
     # Setup RAG system
     setup_rag()
-    
+
     print(f"""
 Setup complete! To use the RAG system:
 
@@ -202,4 +202,4 @@ Example usage:
 """)
 
 if __name__ == "__main__":
-    main() 
+    main()

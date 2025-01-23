@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Setup script for model API gateway.
 This tool helps set up a gateway to manage multiple models with load balancing and caching.

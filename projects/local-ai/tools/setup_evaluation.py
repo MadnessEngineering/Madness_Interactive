@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Setup script for model evaluation suite.
 This tool helps evaluate and compare different models across various metrics.
@@ -16,13 +16,13 @@ def check_requirements():
     """Check if required packages are installed."""
     required = ['torch', 'evaluate', 'nltk', 'rouge-score', 'sacrebleu', 'python-dotenv', 'pandas']
     missing = []
-    
+
     for package in required:
         try:
             __import__(package)
         except ImportError:
             missing.append(package)
-    
+
     if missing:
         print(f"Installing missing packages: {', '.join(missing)}")
         subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
@@ -30,7 +30,7 @@ def check_requirements():
 def setup_env():
     """Setup environment configuration."""
     env_path = Path(".env")
-    
+
     if not env_path.exists():
         print("Creating .env file...")
         with open(env_path, "w") as f:
@@ -51,10 +51,10 @@ def setup_evaluation():
     # Create necessary directories
     for dir_path in ["data/evaluation", "data/results", "scripts"]:
         Path(dir_path).mkdir(parents=True, exist_ok=True)
-    
+
     # Create evaluation script
     with open("scripts/evaluate_models.py", "w") as f:
-        f.write("""#!/usr/bin/env python3
+        f.write("""#!/usr/bin/env python3.11
 import json
 import os
 from pathlib import Path
@@ -233,7 +233,7 @@ if __name__ == "__main__":
             "output": "def is_prime(n):\\n    if n < 2:\\n        return False\\n    for i in range(2, int(n ** 0.5) + 1):\\n        if n % i == 0:\\n            return False\\n    return True"
         }
     ]
-    
+
     with open("data/evaluation/example_test.json", "w") as f:
         json.dump(example_data, f, indent=2)
 
@@ -242,18 +242,18 @@ def main():
     parser.add_argument("--models", nargs="+", default=["codellama", "llama2", "mistral"],
                       help="Models to evaluate (default: codellama llama2 mistral)")
     args = parser.parse_args()
-    
+
     print("Setting up model evaluation suite...")
-    
+
     # Check and install requirements
     check_requirements()
-    
+
     # Setup environment
     setup_env()
-    
+
     # Setup evaluation system
     setup_evaluation()
-    
+
     print(f"""
 Setup complete! To evaluate models:
 
@@ -285,4 +285,4 @@ Tips:
 """)
 
 if __name__ == "__main__":
-    main() 
+    main()

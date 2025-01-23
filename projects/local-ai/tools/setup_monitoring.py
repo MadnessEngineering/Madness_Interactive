@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Setup script for model monitoring tools.
 This tool helps set up monitoring for model performance, usage, and costs.
@@ -57,7 +57,7 @@ def setup_monitoring():
     
     # Create metrics exporter
     with open("monitoring/exporters/model_metrics.py", "w") as f:
-        f.write("""#!/usr/bin/env python3
+        f.write("""#!/usr/bin/env python3.11
 import json
 import os
 import time
