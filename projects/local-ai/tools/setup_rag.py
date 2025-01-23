@@ -134,7 +134,8 @@ class LocalRAG:
             chunks.append(chunk)
             start = end - self.chunk_overlap
         return chunks
-
+    """)
+                
 def main():
     parser = argparse.ArgumentParser(description="Setup local RAG system")
     parser.add_argument("--model", default="codellama", help="Local model to use (default: codellama)")
