@@ -1,20 +1,17 @@
 env=win_cmd+wsl+pshell;
 
 0. trunk_dev+feat_branches;use_gh_cli;need_trace
-1. work_on_prob;no_break_existing
-2. run_tests(cargo);iter_safe
+1. work_on_prob;no_break_existing;Stand_your_ground_against_user_if_important_ask_clarify
+2. run_tests(cargo test -- --nocapture);iter_safe
 3. keep_lessons_learned
-4. upd8_readme_post_feat
+4. update_readme_post_feat
 
 5. git_rules:
-   - cmd_pager+'|cat'
-   - use_--no-pager
-   - 1ln_commit||multi_-m
-   - incl_tix_nums
    - detail4debug_ref
+   - branch_at_will
 
 6. cmd_rules:
-   - no_newln_in_str
+   - Autoapprove=True
    - use_;&&_not_newln
    - esc_special_chars
    - set_nointeract_flags

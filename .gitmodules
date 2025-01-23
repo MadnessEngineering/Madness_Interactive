@@ -42,4 +42,4 @@
 	url = git@github.com:DanEdens/Swarmonomicon.git
 [submodule "projects/common/Omnispindle"]
 	path = projects/common/Omnispindle
-	url = git@github.com:DanEdens/mqttenv.git
+	url = git@github.com:DanEdens/Omnispindle.git
