@@ -43,3 +43,6 @@
 [submodule "projects/common/Omnispindle"]
 	path = projects/common/Omnispindle
 	url = git@github.com:DanEdens/Omnispindle.git
+[submodule "projects/python/LegoScry"]
+	path = projects/python/LegoScry
+	url = git@github.com:DanEdens/LegoScry.git
