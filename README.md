@@ -1,7 +1,5 @@
 # Madness Interactive
 
-[![committers.top badge](https://user-badge.committers.top/united_states/DanEdens.svg)](https://user-badge.committers.top/united_states/DanEdens)
-
 A collection of interconnected projects focused on building an ecosystem of AI-powered tools and agents for local development and automation.
 
 ## Core Projects
