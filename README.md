@@ -2,9 +2,12 @@
 
 A collection of interconnected projects focused on building an ecosystem of AI-powered tools and agents for local development and automation.
 
+
 ## Core Projects
 
 ### Swarmonomicon
+
+![Cover Art](projects/common/Swarmonomicon/docs/assets/Cover-Art.jpeg)
 
 The central coordination system for our agent-based architecture. Swarmonomicon provides:
 
