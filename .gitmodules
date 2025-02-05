@@ -46,3 +46,6 @@
 [submodule "projects/python/LegoScry"]
 	path = projects/python/LegoScry
 	url = git@github.com:DanEdens/LegoScry.git
+[submodule "examples/mcp-memory-domain-knowledge"]
+	path = examples/mcp-memory-domain-knowledge
+	url = https://github.com/yodakeisuke/mcp-memory-domain-knowledge.git
