@@ -6,3 +6,4 @@ projects/local-ai/.env
 /projects/local-ai/data/raw
 /projects/local-ai/scripts
 /.idea
+eap-tls-lab/
