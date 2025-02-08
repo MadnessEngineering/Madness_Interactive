@@ -52,7 +52,6 @@ Recommended Actions:
 [X] Rust
 [X] Powershell
 [X] Lua
-[X] OS
 [ ] Go
 [ ] C#
 [ ] JavaScript
@@ -69,25 +68,25 @@ Recommended Actions:
 madness_interactive/
 ├── projects/
 │   ├── python/
-│   │   ├── ai_interface/
-│   │   ├── mcp_server/
-│   │   ├── EventGhost/
-│   │   ├── simple-mqtt-server-agent/
-│   │   ├── mqtt-get-var/
-│   │   ├── local-ai/
-│   │   ├── dvtTestKit/
-│   │   ├── SeleniumPageUtilities/
-│   │   ├── MqttLogger/
-│   │   ├── LegoScry/
+│   │   ├── ai_interface/ [README](projects/python/ai_interface/README.md)
+│   │   ├── mcp_server/ [README](projects/python/mcp_server/README.md)
+│   │   ├── EventGhost/ [README](projects/python/EventGhost/README.md)
+│   │   ├── simple-mqtt-server-agent/ [README](projects/python/simple-mqtt-server-agent/README.md)
+│   │   ├── mqtt-get-var/ [README](projects/python/mqtt-get-var/README.md)
+│   │   ├── local-ai/ [README](projects/python/local-ai/README.md)
+│   │   ├── dvtTestKit/ [README](projects/python/dvtTestKit/README.md)
+│   │   ├── SeleniumPageUtilities/ [README](projects/python/SeleniumPageUtilities/README.md)
+│   │   ├── MqttLogger/ [README](projects/python/MqttLogger/README.md)
+│   │   ├── LegoScry/ [README](projects/python/LegoScry/README.md)
 │   │   └── games/
 │   ├── powershell/
-│   │   └── WinSystemSnapshot/
+│   │   └── WinSystemSnapshot/ [README](projects/powershell/WinSystemSnapshot/README.md)
 │   ├── lua/
-│   │   ├── hammerspoon/
-│   │   └── LGS_script_template/
+│   │   ├── hammerspoon/ [README](projects/lua/hammerspoon/README.md)
+│   │   └── LGS_script_template/ [README](projects/lua/LGS_script_template/README.md)
 │   ├── rust/
-│   │   ├── Tinker/
-│   │   └── EventGhost-Rust/
+│   │   ├── Tinker/ [README](projects/rust/Tinker/README.md)
+│   │   └── EventGhost-Rust/ [README](projects/rust/EventGhost-Rust/README.md)
 │   ├── common/
 │   └── OS/
 ├── templates/
@@ -109,28 +108,28 @@ madness_interactive/
 
 ### Python Projects
 
-#### EventGhost
+#### [EventGhost](projects/python/EventGhost/README.md)
 An advanced, yet easy-to-use extensible automation tool for Windows. Users can create macros entirely through the GUI to be triggered by events from any device, program or source with a corresponding plugin.
 
 #### AI Interface & MCP Server
 A modern AI-powered control system for EventGhost:
-- **ai_interface**: Constructs and sends Events, Actions and Macros to EventGhost via XML
-- **mcp_server**: Socket server that forwards commands from AI interface to EventGhost
+- [**ai_interface**](projects/python/ai_interface/README.md): Constructs and sends Events, Actions and Macros to EventGhost via XML
+- [**mcp_server**](projects/python/mcp_server/README.md): Socket server that forwards commands from AI interface to EventGhost
 
 #### MQTT Tools
-- **simple-mqtt-server-agent**: Lightweight MQTT server with agent capabilities
-- **mqtt-get-var**: Tool for retrieving variables via MQTT
-- **MqttLogger**: Logging system built on MQTT protocol
+- [**simple-mqtt-server-agent**](projects/python/simple-mqtt-server-agent/README.md): Lightweight MQTT server with agent capabilities
+- [**mqtt-get-var**](projects/python/mqtt-get-var/README.md): Tool for retrieving variables via MQTT
+- [**MqttLogger**](projects/python/MqttLogger/README.md): Logging system built on MQTT protocol
 
 #### Testing & Automation
-- **dvtTestKit**: Device validation testing toolkit
-- **SeleniumPageUtilities**: Helper utilities for Selenium page testing
-- **LegoScry**: Computer vision tools for LEGO brick recognition
-- **local-ai**: Local AI model integration tools
+- [**dvtTestKit**](projects/python/dvtTestKit/README.md): Device validation testing toolkit
+- [**SeleniumPageUtilities**](projects/python/SeleniumPageUtilities/README.md): Helper utilities for Selenium page testing
+- [**LegoScry**](projects/python/LegoScry/README.md): Computer vision tools for LEGO brick recognition
+- [**local-ai**](projects/python/local-ai/README.md): Local AI model integration tools
 
 ### Rust Projects
 
-#### EventGhost-Rust
+#### [EventGhost-Rust](projects/rust/EventGhost-Rust/README.md)
 A modern, fast, and extensible reimplementation of EventGhost in Rust. Currently focusing on:
 - Robust plugin system architecture
 - Win32 API integration
@@ -138,7 +137,7 @@ A modern, fast, and extensible reimplementation of EventGhost in Rust. Currently
 - Plugin manifest format
 - Dynamic library loading
 
-#### Tinker
+#### [Tinker](projects/rust/Tinker/README.md)
 A Madness engineered browser built for tinkerers and test enthusiasts:
 - MQTT-powered control mechanisms
 - Universal Workbench API
@@ -149,7 +148,7 @@ A Madness engineered browser built for tinkerers and test enthusiasts:
 
 ### PowerShell Projects
 
-#### WinSystemSnapshot
+#### [WinSystemSnapshot](projects/powershell/WinSystemSnapshot/README.md)
 Tools for capturing and analyzing Windows system state:
 - System configuration snapshots
 - Change detection
@@ -158,14 +157,14 @@ Tools for capturing and analyzing Windows system state:
 
 ### Lua Projects
 
-#### Hammerspoon
+#### [Hammerspoon](projects/lua/hammerspoon/README.md)
 Custom Hammerspoon configurations and extensions:
 - Window management
 - Application control
 - System automation
 - Custom spoons
 
-#### LGS Script Template
+#### [LGS Script Template](projects/lua/LGS_script_template/README.md)
 Logitech Gaming Software script templates:
 - Macro definitions
 - Profile management
