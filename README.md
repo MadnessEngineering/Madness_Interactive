@@ -67,22 +67,117 @@ Recommended Actions:
 
 ```
 madness_interactive/
+├── projects/
+│   ├── python/
+│   │   ├── ai_interface/
+│   │   ├── mcp_server/
+│   │   ├── EventGhost/
+│   │   ├── simple-mqtt-server-agent/
+│   │   ├── mqtt-get-var/
+│   │   ├── local-ai/
+│   │   ├── dvtTestKit/
+│   │   ├── SeleniumPageUtilities/
+│   │   ├── MqttLogger/
+│   │   ├── LegoScry/
+│   │   └── games/
+│   ├── powershell/
+│   │   └── WinSystemSnapshot/
+│   ├── lua/
+│   │   ├── hammerspoon/
+│   │   └── LGS_script_template/
+│   ├── rust/
+│   │   ├── Tinker/
+│   │   └── EventGhost-Rust/
+│   ├── common/
+│   └── OS/
 ├── templates/
 │   ├── python/
-│   │   ├── games/
-│   │   │   └── snowball_snowman/
-│   │   └── [other-python-templates]/
 │   ├── rust/
-│   │   ├── tinker_template/
-│   │   └── [other-rust-templates]/
 │   └── [future-languages]/
 ├── docs/
 │   ├── python/
 │   └── rust/
-└── scripts/
-    ├── init_python_project.sh
-    └── init_rust_project.sh
+├── scripts/
+│   ├── init_python_project.sh
+│   └── init_rust_project.sh
+├── theming/
+├── prompts/
+└── README.md
 ```
+
+## Subprojects
+
+### Python Projects
+
+#### EventGhost
+An advanced, yet easy-to-use extensible automation tool for Windows. Users can create macros entirely through the GUI to be triggered by events from any device, program or source with a corresponding plugin.
+
+#### AI Interface & MCP Server
+A modern AI-powered control system for EventGhost:
+- **ai_interface**: Constructs and sends Events, Actions and Macros to EventGhost via XML
+- **mcp_server**: Socket server that forwards commands from AI interface to EventGhost
+
+#### MQTT Tools
+- **simple-mqtt-server-agent**: Lightweight MQTT server with agent capabilities
+- **mqtt-get-var**: Tool for retrieving variables via MQTT
+- **MqttLogger**: Logging system built on MQTT protocol
+
+#### Testing & Automation
+- **dvtTestKit**: Device validation testing toolkit
+- **SeleniumPageUtilities**: Helper utilities for Selenium page testing
+- **LegoScry**: Computer vision tools for LEGO brick recognition
+- **local-ai**: Local AI model integration tools
+
+### Rust Projects
+
+#### EventGhost-Rust
+A modern, fast, and extensible reimplementation of EventGhost in Rust. Currently focusing on:
+- Robust plugin system architecture
+- Win32 API integration
+- Core event system
+- Plugin manifest format
+- Dynamic library loading
+
+#### Tinker
+A Madness engineered browser built for tinkerers and test enthusiasts:
+- MQTT-powered control mechanisms
+- Universal Workbench API
+- Built-in diagnostic dashboard
+- Test blueprint management
+- Session versioning and comparison
+- Precision event engineering
+
+### PowerShell Projects
+
+#### WinSystemSnapshot
+Tools for capturing and analyzing Windows system state:
+- System configuration snapshots
+- Change detection
+- State comparison tools
+- Automated reporting
+
+### Lua Projects
+
+#### Hammerspoon
+Custom Hammerspoon configurations and extensions:
+- Window management
+- Application control
+- System automation
+- Custom spoons
+
+#### LGS Script Template
+Logitech Gaming Software script templates:
+- Macro definitions
+- Profile management
+- Device configurations
+- Event handlers
+
+### Common & OS Projects
+Shared utilities and OS-specific tools used across projects:
+- Cross-project utilities
+- System integration helpers
+- Platform-specific implementations
+- Shared configurations
 
 ## Features
 
