@@ -49,3 +49,6 @@
 [submodule "examples/mcp-memory-domain-knowledge"]
 	path = examples/mcp-memory-domain-knowledge
 	url = https://github.com/yodakeisuke/mcp-memory-domain-knowledge.git
+[submodule "projects/python/fastmcp-todo-server"]
+	path = projects/python/fastmcp-todo-server
+	url = https://github.com/DanEdens/fastmcp-todo-server.git
