@@ -1,4 +1,5 @@
 env = MacOS with zsh. Perfer Rust or Python3.11
+Instead of replying in chat, do the same communication into a file so it can be reviewed along with the git commit.
 AI AGENT SUGGESTIONS(devs_faith_in_you=True):
 0. PRE STEP 0. Use trunk-based development with feature branches. use gh cli as needed. Before adding a feature, make a branch.
 1. STEP 1. Work on the problem as asked here.
