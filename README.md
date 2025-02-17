@@ -105,16 +105,140 @@ pip install -r requirements.txt
 ```
 madness_interactive/
 ├── projects/
-│   ├── common/
-│   │   ├── Swarmonomicon/    # Agent coordination system
-│   │   └── Omnispindle/      # Distributed task system
+│   ├── python/
+│   │   ├── ai_interface/ [README](projects/python/ai_interface/README.md)
+│   │   ├── mcp_server/ [README](projects/python/mcp_server/README.md)
+│   │   ├── EventGhost/ [README](projects/python/EventGhost/README.md)
+│   │   ├── simple-mqtt-server-agent/ [README](projects/python/simple-mqtt-server-agent/README.md)
+│   │   ├── mqtt-get-var/ [README](projects/python/mqtt-get-var/README.md)
+│   │   ├── local-ai/ [README](projects/python/local-ai/README.md)
+│   │   ├── dvtTestKit/ [README](projects/python/dvtTestKit/README.md)
+│   │   ├── SeleniumPageUtilities/ [README](projects/python/SeleniumPageUtilities/README.md)
+│   │   ├── MqttLogger/ [README](projects/python/MqttLogger/README.md)
+│   │   ├── LegoScry/ [README](projects/python/LegoScry/README.md)
+│   │   └── games/
+│   ├── powershell/
+│   │   └── WinSystemSnapshot/ [README](projects/powershell/WinSystemSnapshot/README.md)
+│   ├── lua/
+│   │   ├── hammerspoon/ [README](projects/lua/hammerspoon/README.md)
+│   │   └── LGS_script_template/ [README](projects/lua/LGS_script_template/README.md)
 │   ├── rust/
-│   │   ├── EventGhost-Rust/  # Rust rebuild of EventGhost
-│   │   └── Tinker/           # Testing browser
-│   └── python/
-│       └── local-ai/         # Local AI pipeline tools
-└── tools/                    # Utility scripts and tools
+│   │   ├── Tinker/ [README](projects/rust/Tinker/README.md)
+│   │   └── EventGhost-Rust/ [README](projects/rust/EventGhost-Rust/README.md)
+│   ├── common/
+│   └── OS/
+├── templates/
+│   ├── python/
+│   ├── rust/
+│   └── [future-languages]/
+├── docs/
+│   ├── python/
+│   └── rust/
+├── scripts/
+│   ├── init_python_project.sh
+│   └── init_rust_project.sh
+├── theming/
+├── prompts/
+└── README.md
 ```
+
+## Subprojects
+
+### Python Projects
+
+#### [EventGhost](projects/python/EventGhost/README.md)
+An advanced, yet easy-to-use extensible automation tool for Windows. Users can create macros entirely through the GUI to be triggered by events from any device, program or source with a corresponding plugin.
+
+#### AI Interface & MCP Server
+A modern AI-powered control system for EventGhost:
+- [**ai_interface**](projects/python/ai_interface/README.md): Constructs and sends Events, Actions and Macros to EventGhost via XML
+- [**mcp_server**](projects/python/mcp_server/README.md): Socket server that forwards commands from AI interface to EventGhost
+
+#### MQTT Tools
+- [**simple-mqtt-server-agent**](projects/python/simple-mqtt-server-agent/README.md): Lightweight MQTT server with agent capabilities
+- [**mqtt-get-var**](projects/python/mqtt-get-var/README.md): Tool for retrieving variables via MQTT
+- [**MqttLogger**](projects/python/MqttLogger/README.md): Logging system built on MQTT protocol
+
+#### Testing & Automation
+- [**dvtTestKit**](projects/python/dvtTestKit/README.md): Device validation testing toolkit
+- [**SeleniumPageUtilities**](projects/python/SeleniumPageUtilities/README.md): Helper utilities for Selenium page testing
+- [**LegoScry**](projects/python/LegoScry/README.md): Computer vision tools for LEGO brick recognition
+- [**local-ai**](projects/python/local-ai/README.md): Local AI model integration tools
+
+### Rust Projects
+
+#### [EventGhost-Rust](projects/rust/EventGhost-Rust/README.md)
+A modern, fast, and extensible reimplementation of EventGhost in Rust. Currently focusing on:
+- Robust plugin system architecture
+- Win32 API integration
+- Core event system
+- Plugin manifest format
+- Dynamic library loading
+
+#### [Tinker](projects/rust/Tinker/README.md)
+A Madness engineered browser built for tinkerers and test enthusiasts:
+- MQTT-powered control mechanisms
+- Universal Workbench API
+- Built-in diagnostic dashboard
+- Test blueprint management
+- Session versioning and comparison
+- Precision event engineering
+
+### PowerShell Projects
+
+#### [WinSystemSnapshot](projects/powershell/WinSystemSnapshot/README.md)
+Tools for capturing and analyzing Windows system state:
+- System configuration snapshots
+- Change detection
+- State comparison tools
+- Automated reporting
+
+### Lua Projects
+
+#### [Hammerspoon](projects/lua/hammerspoon/README.md)
+Custom Hammerspoon configurations and extensions:
+- Window management
+- Application control
+- System automation
+- Custom spoons
+
+#### [LGS Script Template](projects/lua/LGS_script_template/README.md)
+Logitech Gaming Software script templates:
+- Macro definitions
+- Profile management
+- Device configurations
+- Event handlers
+
+### Common & OS Projects
+Shared utilities and OS-specific tools used across projects:
+- Cross-project utilities
+- System integration helpers
+- Platform-specific implementations
+- Shared configurations
+
+## Features
+
+- 📁 Organized template structure for multiple languages
+- 🔧 Project initialization scripts
+- 📝 Comprehensive documentation templates
+- 🧪 Testing frameworks setup
+- 🚀 CI/CD configurations
+- 📊 Project management tools
+
+## Getting Started
+
+### Creating a New Project
+
+1. Choose a language template:
+   ```bash
+   # For Python projects
+   ./scripts/init_python_project.sh [template-name] [project-name]
+
+   # For Rust projects
+   ./scripts/init_rust_project.sh [template-name] [project-name]
+   ```
+
+2. Follow the template-specific README for additional setup steps
 
 ## Contributing
 
