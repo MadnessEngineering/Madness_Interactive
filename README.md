@@ -7,7 +7,7 @@ A collection of interconnected projects focused on building an ecosystem of AI-p
 
 ### Swarmonomicon
 
-![Cover Art](projects/common/Swarmonomicon/docs/assets/Cover-Art.jpeg)
+![Cover Art](docs/assets/Cover-Art.jpeg)
 
 The central coordination system for our agent-based architecture. Swarmonomicon provides:
 
