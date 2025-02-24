@@ -55,3 +55,6 @@
 [submodule "projects/mobile/Cogwyrm"]
 	path = projects/mobile/Cogwyrm
 	url = https://github.com/DanEdens/Cogwyrm
+[submodule "projects/python/fastmcp-balena-cli"]
+	path = projects/python/fastmcp-balena-cli
+	url = git@github.com:DanEdens/fastmcp-balena-cli.git
