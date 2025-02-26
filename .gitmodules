@@ -58,3 +58,6 @@
 [submodule "projects/python/fastmcp-balena-cli"]
 	path = projects/python/fastmcp-balena-cli
 	url = git@github.com:DanEdens/fastmcp-balena-cli.git
+[submodule "projects/python/mcp-personal-jira"]
+	path = projects/python/mcp-personal-jira
+	url = git@github.com:DanEdens/mcp-personal-jira.git
