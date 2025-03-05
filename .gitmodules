@@ -61,3 +61,6 @@
 [submodule "projects/python/mcp-personal-jira"]
 	path = projects/python/mcp-personal-jira
 	url = git@github.com:DanEdens/mcp-personal-jira.git
+[submodule "projects/tasker"]
+	path = projects/tasker
+	url = https://github.com/DanEdens/MadTaskerTinkerbox.git
