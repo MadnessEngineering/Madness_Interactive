@@ -64,3 +64,6 @@
 [submodule "projects/tasker"]
 	path = projects/tasker
 	url = https://github.com/DanEdens/MadTaskerTinkerbox.git
+[submodule "examples/gui-crawler-macos"]
+	path = examples/gui-crawler-macos
+	url = https://github.com/michaelneale/gui-crawler-macos.git
