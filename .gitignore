@@ -7,3 +7,4 @@ projects/local-ai/.env
 /projects/local-ai/scripts
 /.idea
 eap-tls-lab/
+/.specstory

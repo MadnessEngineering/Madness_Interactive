@@ -67,3 +67,6 @@
 [submodule "examples/gui-crawler-macos"]
 	path = examples/gui-crawler-macos
 	url = https://github.com/michaelneale/gui-crawler-macos.git
+[submodule "docs/cursor_chathistory"]
+	path = docs/cursor_chathistory
+	url = git@github.com:DanEdens/Madness_chats-.git
