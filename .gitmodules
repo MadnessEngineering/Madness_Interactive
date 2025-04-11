@@ -49,9 +49,6 @@
 [submodule "examples/mcp-memory-domain-knowledge"]
 	path = examples/mcp-memory-domain-knowledge
 	url = https://github.com/yodakeisuke/mcp-memory-domain-knowledge.git
-[submodule "projects/python/fastmcp-todo-server"]
-	path = projects/python/fastmcp-todo-server
-	url = https://github.com/DanEdens/fastmcp-todo-server.git
 [submodule "projects/mobile/Cogwyrm"]
 	path = projects/mobile/Cogwyrm
 	url = https://github.com/DanEdens/Cogwyrm
@@ -73,3 +70,9 @@
 [submodule "projects/python/Spindlewrit"]
 	path = projects/python/Spindlewrit
 	url = git@github.com:DanEdens/Spindlewrit.git
+[submodule "examples/adk-samples"]
+	path = examples/adk-samples
+	url = https://github.com/google/adk-samples.git
+[submodule "projects/python/Omnispindle"]
+	path = projects/python/Omnispindle
+	url = https://github.com/DanEdens/Omnispindle.git
