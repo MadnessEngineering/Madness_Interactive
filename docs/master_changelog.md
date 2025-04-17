@@ -58,6 +58,7 @@ The Madness Interactive ecosystem consists of the following projects organized b
 - **EntropyVector** - Tasker automation project
 - **ContextOfficium** - Tasker automation project
 - **AnathemaHexVault** - Tasker automation project
+- **InvocationTome** - Enhanced MQTT integration for Tasker projects (NEW)
 
 ## Main Repository Activity
 - Updates to submodules (59e9596, fb83a7b)
@@ -107,11 +108,23 @@ Recent chat logs have been added for:
 - Created logkit.py file
 - Refactored code structure for better maintainability
 
+### Tasker Projects
+- **InvocationTome (NEW)**: Created new project for enhanced MQTT integration
+  - Standardized MQTT publishing tasks for all Tasker projects
+  - Implemented JSON message formatting with timestamps
+  - Added device status monitoring and reporting
+  - Created connection monitoring and error handling
+  - Provided integration guide for other Tasker projects
+- **EntropyVector**: Legacy MQTT implementation identified for update
+- **PhilosophersAmpoule**: MQTT integration for medication tracking identified
+- **ContextOfficium**: Location-based MQTT functionality identified for enhancement
+
 ## Cross-Project Integration
 - Enhanced project field support across multiple tools
 - Improved GitHub Desktop integration with project selection
 - Better MQTT communication between components
 - Standardized logging and error handling approaches
+- New centralized MQTT tasks for Tasker projects
 
 ## Upcoming Development Focus
 - Enhanced AI assistant integration for todo suggestions
@@ -119,3 +132,4 @@ Recent chat logs have been added for:
 - LangGraph integration for improved workflows
 - Enhanced log message formatting with clickable source links
 - Additional window management patterns for Hammerspoon
+- Full migration of Tasker projects to new InvocationTome MQTT system
