@@ -204,5 +204,24 @@ For questions, suggestions, or to join our GLORIOUS CAUSE:
 2. Join our hivemind discussions
 3. Contact the mad scientists directly
 
+## Docker Support
+
+For ease of deployment and cross-platform compatibility, Swarmonomicon now includes Docker support. This allows you to run the entire system consistently on both macOS and Windows without worrying about dependencies or platform-specific issues.
+
+### Quick Docker Setup
+
+To get started with Docker:
+
+```bash
+# On macOS/Linux:
+chmod +x docker-setup.sh
+./docker-setup.sh
+
+# On Windows (PowerShell):
+.\docker-setup.ps1
+```
+
+For detailed instructions, configuration options, and troubleshooting, see the [Docker Guide](DOCKER.md).
+
 ---
 *"The difference between madness and genius is measured only by success!" - Unknown Mad Scientist*
