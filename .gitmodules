@@ -76,3 +76,6 @@
 [submodule "projects/python/Omnispindle"]
 	path = projects/python/Omnispindle
 	url = https://github.com/DanEdens/Omnispindle.git
+[submodule "projects/mobile/MQTTCommander"]
+	path = projects/mobile/MQTTCommander
+	url = https://github.com/DanEdens/MQTTCommander.git
