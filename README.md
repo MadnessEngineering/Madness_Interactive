@@ -188,8 +188,8 @@ Each project may be bound by different cosmic laws. Consult individual project d
 *"Our path to GLORIOUS CHAOS!"*
 
 - [ ] Complete Swarmonomicon agent system
-- [ ] 🔮 Unleash MQTT Commander upon an unsuspecting world
-- [ ] Develop Omnispindle distributed task system - bin mcp_todo_server
+- [x] 🔮 Unleash MQTT Commander upon an unsuspecting world
+- [x] Develop Omnispindle distributed task system - bin mcp_todo_server
 - [ ] Complete rebuild of EventGhost-Rust functionality
 - [ ] Build out Tinker browser
 - [ ] Improve local AI pipeline tools
