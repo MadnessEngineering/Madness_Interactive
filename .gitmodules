@@ -55,3 +55,6 @@
 [submodule "projects/mobile/Cogwyrm"]
 	path = projects/mobile/Cogwyrm
 	url = https://github.com/DanEdens/Cogwyrm
+[submodule "projects/mobile/MQTTCommander"]
+	path = projects/mobile/MQTTCommander
+	url = https://github.com/DanEdens/MQTTCommander.git
