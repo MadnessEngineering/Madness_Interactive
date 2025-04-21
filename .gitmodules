@@ -49,9 +49,30 @@
 [submodule "examples/mcp-memory-domain-knowledge"]
 	path = examples/mcp-memory-domain-knowledge
 	url = https://github.com/yodakeisuke/mcp-memory-domain-knowledge.git
-[submodule "projects/python/fastmcp-todo-server"]
-	path = projects/python/fastmcp-todo-server
-	url = https://github.com/DanEdens/fastmcp-todo-server.git
 [submodule "projects/mobile/Cogwyrm"]
 	path = projects/mobile/Cogwyrm
 	url = https://github.com/DanEdens/Cogwyrm
+[submodule "projects/python/fastmcp-balena-cli"]
+	path = projects/python/fastmcp-balena-cli
+	url = git@github.com:DanEdens/fastmcp-balena-cli.git
+[submodule "projects/python/mcp-personal-jira"]
+	path = projects/python/mcp-personal-jira
+	url = git@github.com:DanEdens/mcp-personal-jira.git
+[submodule "projects/tasker"]
+	path = projects/tasker
+	url = https://github.com/DanEdens/MadTaskerTinkerbox.git
+[submodule "examples/gui-crawler-macos"]
+	path = examples/gui-crawler-macos
+	url = https://github.com/michaelneale/gui-crawler-macos.git
+[submodule "docs/cursor_chathistory"]
+	path = docs/cursor_chathistory
+	url = git@github.com:DanEdens/Madness_chats-.git
+[submodule "projects/python/Spindlewrit"]
+	path = projects/python/Spindlewrit
+	url = git@github.com:DanEdens/Spindlewrit.git
+[submodule "examples/adk-samples"]
+	path = examples/adk-samples
+	url = https://github.com/google/adk-samples.git
+[submodule "projects/python/Omnispindle"]
+	path = projects/python/Omnispindle
+	url = https://github.com/DanEdens/Omnispindle.git

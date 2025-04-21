@@ -4,7 +4,7 @@ A collection of interconnected projects focused on building an ecosystem of AI-p
 
 ## Core Projects
 
-### 🌟 Swarmonomicon
+### 🌟 [Swarmonomicon](projects/python/mcp_server/README.md)
 *"The grimoire that binds them all!"*
 
 ![Cover Art](docs/assets/Cover-Art.jpeg)
@@ -34,14 +34,14 @@ A distributed task management engine that shall:
 
 ### ⚡ Event Systems
 
-#### Original EventGhost Update
+#### [Original EventGhost Update](projects/python/EventGhost/README.md)
 *"Ancient magic renewed!"*
 - Python 3.x compatibility enchantments
 - Modern UI/UX transmutations
 - Enhanced plugin summoning circles
 - Forbidden knowledge documentation
 
-#### EventGhost-Rust
+#### [EventGhost-Rust](projects/rust/EventGhost-Rust/README.md)
 *"The spirit of automation, REBORN IN IRON!"*
 - Performance that DEFIES PHYSICS
 - Modern async SORCERY
@@ -50,7 +50,7 @@ A distributed task management engine that shall:
 - Rust-forged plugin architecture
 - Swarmonomicon neural linkage
 
-### 🔍 Tinker
+### 🔍 [Tinker](projects/rust/Tinker/README.md)
 *"That which peers beyond the veil!"*
 
 A testing apparatus that BENDS REALITY to your will:
@@ -138,25 +138,25 @@ pip install -r requirements.txt  # BIND THE DEPENDENCIES
 madness_interactive/
 ├── projects/
 │   ├── python/
-│   │   ├── ai_interface/ [README](projects/python/ai_interface/README.md)
-│   │   ├── mcp_server/ [README](projects/python/mcp_server/README.md)
-│   │   ├── EventGhost/ [README](projects/python/EventGhost/README.md)
-│   │   ├── simple-mqtt-server-agent/ [README](projects/python/simple-mqtt-server-agent/README.md)
-│   │   ├── mqtt-get-var/ [README](projects/python/mqtt-get-var/README.md)
-│   │   ├── local-ai/ [README](projects/python/local-ai/README.md)
-│   │   ├── dvtTestKit/ [README](projects/python/dvtTestKit/README.md)
-│   │   ├── SeleniumPageUtilities/ [README](projects/python/SeleniumPageUtilities/README.md)
-│   │   ├── MqttLogger/ [README](projects/python/MqttLogger/README.md)
-│   │   ├── LegoScry/ [README](projects/python/LegoScry/README.md)
+│   │   ├── [ai_interface/](projects/python/ai_interface/README.md)
+│   │   ├── [mcp_server/](projects/python/mcp_server/README.md)
+│   │   ├── [EventGhost/](projects/python/EventGhost/README.md)
+│   │   ├── [simple-mqtt-server-agent/](projects/python/simple-mqtt-server-agent/README.md)
+│   │   ├── [mqtt-get-var/](projects/python/mqtt-get-var/README.md)
+│   │   ├── [local-ai/](projects/python/local-ai/README.md)
+│   │   ├── [dvtTestKit/](projects/python/dvtTestKit/README.md)
+│   │   ├── [SeleniumPageUtilities/](projects/python/SeleniumPageUtilities/README.md)
+│   │   ├── [MqttLogger/](projects/python/MqttLogger/README.md)
+│   │   ├── [LegoScry/](projects/python/LegoScry/README.md)
 │   │   └── games/
 │   ├── powershell/
-│   │   └── WinSystemSnapshot/ [README](projects/powershell/WinSystemSnapshot/README.md)
+│   │   └── [WinSystemSnapshot/](projects/powershell/WinSystemSnapshot/README.md)
 │   ├── lua/
-│   │   ├── hammerspoon/ [README](projects/lua/hammerspoon/README.md)
-│   │   └── LGS_script_template/ [README](projects/lua/LGS_script_template/README.md)
+│   │   ├── [hammerspoon/](projects/lua/hammerspoon/README.md)
+│   │   └── [LGS_script_template/](projects/lua/LGS_script_template/README.md)
 │   ├── rust/
-│   │   ├── Tinker/ [README](projects/rust/Tinker/README.md)
-│   │   └── EventGhost-Rust/ [README](projects/rust/EventGhost-Rust/README.md)
+│   │   ├── [Tinker/](projects/rust/Tinker/README.md)
+│   │   └── [EventGhost-Rust/](projects/rust/EventGhost-Rust/README.md)
 │   ├── common/
 │   └── OS/
 ├── templates/

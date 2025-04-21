@@ -1,0 +1,54 @@
+{
+    "name": "Mad Tinker",
+    "type": "dark",
+    "colors": {
+        "editor.background": "#4A5459",
+        "editor.foreground": "#E0E0E0",
+        "editorCursor.foreground": "#00FFFC",
+        "editor.lineHighlightBackground": "#3A4347",
+        "editor.selectionBackground": "#005B5E",
+        "editor.inactiveSelectionBackground": "#003F41",
+        "editorIndentGuide.activeBackground": "#BCAD20",
+        "editorBracketMatch.background": "#6A00BC33",
+        "editorBracketMatch.border": "#6A00BC"
+    },
+    "tokenColors": [
+        {
+            "scope": "comment",
+            "settings": { "foreground": "#10C972", "fontStyle": "italic" }
+        },
+        {
+            "scope": "string",
+            "settings": { "foreground": "#00FFFC" }
+        },
+        {
+            "scope": "constant.numeric",
+            "settings": { "foreground": "#BCAD20" }
+        },
+        {
+            "scope": "keyword",
+            "settings": { "foreground": "#BCAD20", "fontStyle": "bold" }
+        },
+        {
+            "scope": "variable.language",
+            "settings": { "foreground": "#C97E10" }
+        },
+        {
+            "scope": "entity.name.function",
+            "settings": { "foreground": "#6A00BC" }
+        },
+        {
+            "scope": "meta.function-call",
+            "settings": { "foreground": "#00FFFC" }
+        },
+        {
+            "scope": "storage.type",
+            "settings": { "foreground": "#BCAD20", "fontStyle": "bold" }
+        },
+        {
+            "scope": "invalid",
+            "settings": { "foreground": "#FF0000", "background": "#330000" }
+        }
+    ]
+}
+
