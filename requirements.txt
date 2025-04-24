@@ -1,10 +1,26 @@
-fastmcp>=0.1.0
-lmstudio
-pymongo>=4.0.0
-paho-mqtt>=2.0.0
-python-dotenv>=0.19.0
-uvicorn>=0.17.0
-starlette>=0.17.1
-scikit-learn>=0.0
-numpy>=1.20.0
-python-dateutil>=2.8.2 
+# Core dependencies
+requests>=2.25.0
+fastapi>=0.68.0
+uvicorn>=0.15.0
+pydantic>=2.0.0
+python-dateutil>=2.8.2
+
+# Optional dependencies
+redis>=4.0.0  # For Redis backend
+psycopg2-binary>=2.9.0  # For PostgreSQL backend
+sqlalchemy>=1.4.0  # For SQL storage
+aiohttp>=3.8.1  # For async HTTP client
+
+# Development dependencies
+pytest>=6.0.0
+pytest-asyncio>=0.18.3
+pytest-cov>=2.12.0
+black>=21.5b0
+isort>=5.9.0
+flake8>=3.9.0
+mypy>=0.812
+pre-commit>=2.19.0
+faker>=13.12.0
+
+# Optional PostgreSQL support
+# asyncpg>=0.25.0 
