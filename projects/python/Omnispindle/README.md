@@ -1,194 +1,124 @@
-# Omnispindle
+# FastMCP Todo Server
 
-**A lightweight, flexible distributed task execution system for Python.**
-
-![Omnispindle Logo](https://via.placeholder.com/150x150?text=Omnispindle)
+A FastMCP-based Todo Server for the [Swarmonomicon](https://github.com/DanEdens/madness_interactive/tree/main/projects/common/Swarmonomicon) project. This server receives todo requests via FastMCP and stores them in MongoDB for processing by the Swarmonomicon todo worker.
 
 ## Features
 
-✨ **Distributed Task Execution** - Run tasks across multiple workers
-🔄 **Dynamic Worker Registration** - Workers can join and leave the system at any time
-⚖️ **Intelligent Task Scheduling** - Prioritize tasks and match them to capable workers
-🔗 **Task Dependencies** - Create complex workflows with dependencies
-⏱️ **Automatic Retries** - Failed tasks are automatically retried
-🔍 **Worker Health Monitoring** - Detect and handle worker failures
-🧩 **Flexible Worker Capabilities** - Match tasks to workers based on capabilities
-📊 **Comprehensive Metrics** - Track system performance and task execution
+- FastMCP server for receiving todo requests
+- MongoDB integration for todo storage
+- Compatible with Swarmonomicon todo worker
+- Python-based implementation
 
 ## Installation
 
-```bash
-pip install omnispindle
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/DanEdens/Omnispindle.git
+   cd Omnispindle
+   ```
 
-## Quick Start
+2. Install uv (if not already installed):
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
 
-Here's a simple example to get you started:
+3. Create and activate a virtual environment with uv:
+   ```bash
+   uv venv
+   source .venv/bin/activate  # On Unix/macOS
+   # or
+   .venv\Scripts\activate  # On Windows
+   ```
 
-```python
-from omnispindle.task_queue import TaskQueue
-from omnispindle.client import TaskQueueClient, WorkerClient
+4. Install dependencies with uv:
+   ```bash
+   uv pip install -r requirements.txt
+   ```
 
-# Create a task queue
-task_queue = TaskQueue()
+5. For development, install additional dependencies:
+   ```bash
+   uv pip install -r requirements-dev.txt
+   ```
 
-# Create a client
-client = TaskQueueClient(local_queue=task_queue)
+6. Create a `.env` file with your configuration:
+   ```bash
+   MONGODB_URI=mongodb://localhost:27017
+   MONGODB_DB=swarmonomicon
+   MONGODB_COLLECTION=todos
+   ```
 
-# Register a worker
-worker = WorkerClient(
-    local_queue=task_queue,
-    capabilities=["math"],
-)
+## Usage
 
-# Define a task executor
-def math_executor(task_data):
-    operation = task_data["parameters"]["operation"]
-    values = task_data["parameters"]["values"]
-    
-    if operation == "sum":
-        result = sum(values)
-    elif operation == "multiply":
-        result = 1
-        for val in values:
-            result *= val
-    
-    return {"result": result}
+### Starting the Server
 
-# Register the executor
-worker.register_task_executor("math", math_executor)
+1. Start the FastMCP server:
+   ```bash
+   python -m src.Omnispindle
+   ```
 
-# Start the worker (in a separate thread in a real application)
-import threading
-worker_thread = threading.Thread(target=worker.start)
-worker_thread.daemon = True
-worker_thread.start()
+### Adding Todos
 
-# Submit a task
-task_id = client.submit_task(
-    task_type="math",
-    parameters={
-        "operation": "sum",
-        "values": [1, 2, 3, 4, 5]
-    }
-)
+You can add todos using FastMCP in several ways:
 
-# Wait for the result
-result = client.wait_for_task(task_id)
-print(f"Result: {result['result']['result']}")  # Output: Result: 15
+1. Using FastMCP Python client:
+   ```python
+   from fastmcp import FastMCPClient
+   
+   client = FastMCPClient()
+   response = await client.call_tool("add_todo", {
+       "description": "Example todo",
+       "priority": "high",  # optional, defaults to "medium"
+       "target_agent": "user"  # optional, defaults to "user"
+   })
+   ```
 
-# Shutdown
-worker.stop()
-task_queue.shutdown()
-```
+2. Using MQTT directly:
+   ```bash
+   mosquitto_pub -t "mcp/todo/new" -m '{
+       "description": "Example todo",
+       "priority": "high",
+       "target_agent": "user"
+   }'
+   ```
 
-## Architecture
+### Development
 
-Omnispindle consists of several key components:
+1. Run tests:
+   ```bash
+   pytest tests/
+   ```
 
-1. **TaskQueue** - The central component that manages task scheduling and worker coordination
-2. **Task** - Represents a unit of work to be executed
-3. **Worker** - Represents a node that can execute tasks
-4. **TaskQueueClient** - Client interface for submitting and managing tasks
-5. **WorkerClient** - Client interface for worker nodes
+2. Run tests with coverage:
+   ```bash
+   pytest --cov=src tests/
+   ```
 
-The system is designed to be flexible and scalable, with support for both local (in-process) and remote (distributed) execution.
+3. Run specific test file:
+   ```bash
+   pytest tests/test_todo_handler.py -v
+   ```
 
-## Task Lifecycle
+## Integration with Swarmonomicon
 
-1. **Submission** - Tasks are submitted to the queue with a type, parameters, and optional priority and dependencies
-2. **Scheduling** - The queue schedules tasks based on priority and worker availability
-3. **Claiming** - Workers claim tasks they can execute
-4. **Execution** - Workers execute tasks and report results
-5. **Completion** - The queue records the task result and schedules dependent tasks
+This server is part of the larger [Swarmonomicon](https://github.com/DanEdens/madness_interactive/tree/main/projects/common/Swarmonomicon) project, which provides:
 
-## Worker Capabilities
+- Task management and distribution
+- Agent-based task processing
+- Real-time updates via MQTT
+- Integration with various AI models
 
-Workers register with the system declaring their capabilities - the types of tasks they can execute. The task queue matches tasks to workers with the appropriate capabilities, ensuring that tasks are only assigned to workers that can handle them.
-
-## Error Handling
-
-Omnispindle provides robust error handling:
-
-- Automatic retries for failed tasks
-- Dead worker detection
-- Task timeout monitoring
-- Exception propagation
-
-## Advanced Features
-
-### Task Dependencies
-
-Tasks can depend on other tasks, creating complex workflows:
-
-```python
-# First task: calculate the sum
-step1_id = client.submit_task(
-    task_type="math",
-    parameters={"operation": "sum", "values": [1, 2, 3]}
-)
-
-# Second task: multiply the result
-step2_id = client.submit_task(
-    task_type="math",
-    parameters={"operation": "multiply", "values": [10]},
-    dependencies=[step1_id]
-)
-```
-
-### Batch Processing
-
-Submit multiple tasks as a batch:
-
-```python
-batch_tasks = [
-    {
-        "task_type": "math",
-        "parameters": {"operation": "sum", "values": [1, 2, 3]}
-    },
-    {
-        "task_type": "math",
-        "parameters": {"operation": "multiply", "values": [4, 5, 6]}
-    }
-]
-
-batch_ids = client.submit_batch(batch_tasks)
-batch_results = client.wait_for_batch(batch_ids)
-```
-
-### State Persistence
-
-TaskQueue can persist its state to disk for recovery:
-
-```python
-task_queue = TaskQueue(persistence_path="/path/to/state.json")
-
-# Later, recover state
-task_queue.load_state()
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+For more information about the Swarmonomicon project and its features, check out the [main project documentation](https://github.com/DanEdens/madness_interactive/tree/main/projects/common/Swarmonomicon/README.md).
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT License
 
-## TODOs
+## Contributing
 
-- [ ] Implement Redis-based distributed queue
-- [ ] Add support for task cancellation propagation
-- [ ] Develop a web dashboard for monitoring
-- [ ] Add support for streaming results
-- [ ] Implement worker auto-scaling
-- [ ] Add task prioritization strategies
-- [ ] Develop load balancing improvements
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Submit a pull request
 
-## LESSONS LEARNED
-
-1. Ensure thread safety with proper locking mechanisms when dealing with shared state.
-2. Design for both local and distributed operation from the beginning.
-3. Implement robust error handling for various failure scenarios in distributed systems.
-4. Consider the overhead of task serialization and parameter size in distributed environments.
-5. Monitoring worker health is critical for reliable distributed task execution. 
+For more information about contributing to the Swarmonomicon project, see the [main project's contributing guidelines](https://github.com/DanEdens/madness_interactive/tree/main/projects/common/Swarmonomicon/CONTRIBUTING.md).
