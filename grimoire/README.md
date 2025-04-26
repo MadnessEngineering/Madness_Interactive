@@ -118,4 +118,10 @@ The Mad Scientific License (MSL-1.0)
 
 ---
 
-*"The difference between madness and genius is measured only by success!"* 
+*"The difference between madness and genius is measured only by success!"* "# TODO: Further Improvements"  
+""  
+"- Add support for dark mode in all themes"  
+"- Implement search functionality for the grimoire"  
+"- Add PDF export option"  
+"- Create more themes (e.g., 'necromancy', 'alchemy')"  
+"- Add interactive elements with JavaScript" 
