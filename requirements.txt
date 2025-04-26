@@ -1,1 +1,12 @@
- 
+markdown
+python-markdown-math
+jinja2
+pygments
+pymdown-extensions
+mkdocs
+mkdocs-material
+pillow
+watchdog
+click
+rich
+typer 

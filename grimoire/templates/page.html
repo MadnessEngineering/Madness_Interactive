@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Fira+Code&family=IM+Fell+English&family=Major+Mono+Display&family=Orbitron:wght@400;600&family=Philosopher:wght@400;700&display=swap">
+    <style>
+        /* Generated CSS will be inserted here */
+        {{ css }}
+        
+        body {
+            font-family: var(--body-font);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            background-image: var(--page-texture);
+        }
+        
+        .grimoire-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border: 7px var(--border-style) var(--primary-color);
+            border-radius: 8px;
+            background-color: var(--background-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .grimoire-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                circle at center,
+                transparent 80%,
+                rgba(0, 0, 0, 0.1)
+            );
+            pointer-events: none;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--header-font);
+            color: var(--primary-color);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            line-height: 1.2;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            border-bottom: 3px double var(--primary-color);
+            padding-bottom: 0.3em;
+            margin-bottom: 1em;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            border-bottom: 1px solid var(--secondary-color);
+            padding-bottom: 0.2em;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+        
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--primary-color);
+        }
+        
+        a:hover {
+            color: var(--secondary-color);
+            border-bottom: 1px solid var(--secondary-color);
+        }
+        
+        pre {
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            overflow-x: auto;
+            border-left: 4px solid var(--secondary-color);
+            font-family: var(--code-font);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        code {
+            font-family: var(--code-font);
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        blockquote {
+            border-left: 4px solid var(--secondary-color);
+            margin-left: 0;
+            padding-left: 1.5rem;
+            font-style: italic;
+            color: rgba(var(--text-color-rgb), 0.8);
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            padding: 0.5rem;
+            border: 1px solid var(--secondary-color);
+        }
+        
+        th {
+            background-color: rgba(0, 0, 0, 0.1);
+            font-family: var(--header-font);
+            color: var(--primary-color);
+        }
+        
+        /* Admonitions */
+        .admonition {
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--primary-color);
+            background-color: rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        
+        .admonition-title {
+            font-family: var(--header-font);
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .admonition.note {
+            border-left-color: #00BCD4;
+        }
+        
+        .admonition.warning {
+            border-left-color: #FFC107;
+        }
+        
+        .admonition.danger {
+            border-left-color: #F44336;
+        }
+        
+        .footer-nav {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--secondary-color);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .back-to-index {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            border: none;
+            font-family: var(--header-font);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            transition: background-color 0.3s;
+        }
+        
+        .back-to-index:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="grimoire-container">
+        {{ content | safe }}
+        
+        <div class="footer-nav">
+            <a href="{{ relative_path }}index.html" class="back-to-index">Back to Grimoire Index</a>
+        </div>
+    </div>
+</body>
+</html> 
