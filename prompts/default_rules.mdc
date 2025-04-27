@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 env = MacOS with zsh. Perfer Rust or Python3.11
 Instead of replying in chat, do the same communication into a file so it can be reviewed along with the git commit.
 AI AGENT SUGGESTIONS(devs_faith_in_you=True):

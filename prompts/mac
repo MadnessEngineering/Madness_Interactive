@@ -1,11 +1,11 @@
 
 env = MacOS with zsh. Perfer Rust or Python3.11
-You can check for the availability of the commands in the environment at will
+
 0. Use trunk-based development with feature branches. use gh cli as needed. Before adding a feature, make a branch.
 1. STEP 1. Work on the problem as asked here. Update tests if they need it
 2. Run available tests (e.g. 'cargo test') and iterate until successful build
 3. Maintain a "Lessons Learned" section in lessons.md
-4. Update TODO.md with progress after completing features
+4. Update TODO items via mcp server. TODO items should correspond to the branchs. Project should be the directory name, 
 
 6. Command execution rules:
    - Use --no-pager flag when possible

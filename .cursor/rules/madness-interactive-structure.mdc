@@ -1,0 +1,10 @@
+---
+description: eat me if deciding which project should be changed in response to a request
+globs: 
+alwaysApply: false
+---
+
+# Your rule content
+
+- You can @ files here
+- You can use markdown but dont have to

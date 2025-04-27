@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 Lets be careful not to remove a bunch of features just to pass tests.
 Lets review what we're trying to accomplish and where we stand.
 Could you please help me Write out an Archeture.md document and a todo.md list?
