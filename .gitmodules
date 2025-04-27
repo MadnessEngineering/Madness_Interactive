@@ -79,3 +79,6 @@
 [submodule "projects/mobile/MQTTCommander"]
 	path = projects/mobile/MQTTCommander
 	url = https://github.com/DanEdens/MQTTCommander.git
+[submodule "projects/common/Inventorium"]
+	path = projects/common/Inventorium
+	url = /Users/d.edens/lab/madness_interactive/projects/common/Inventorium
