@@ -1,0 +1,55 @@
+# Tips for using the Todo MCP Server tools
+
+## add_todo_tool
+- Adds a new todo
+- Requires `description` and `project` parameters
+- Optional parameters: `priority`, `target_agent`, `metadata`
+- Returns the created todo as a JSON string
+
+## query_todos_tool
+- Queries existing todos
+- Optional filter and projection parameters to refine results
+- `limit` parameter caps number of results (default 100)
+- Returns matching todos as a JSON string
+
+## update_todo_tool
+- Updates an existing todo by ID
+- Requires `todo_id` and `updates` (dict of fields to update)
+- Returns the updated todo
+
+## delete_todo_tool
+- Deletes a todo by ID
+- Requires `todo_id` parameter
+- Returns a success message
+
+## mark_todo_complete_tool
+- Marks a todo as completed by ID
+- Requires `todo_id` parameter
+- Returns the updated todo
+
+## search_todos_tool
+- Text search across todo fields
+- Requires `query` parameter
+- Optional `fields` to search and `limit` parameters
+- Returns matching todos as JSON
+
+## get_todo_suggestions_tool
+- Analyzes completed todos to suggest:
+  - Task automation opportunities
+  - Priorities for pending todos
+  - Insights on task patterns
+- Returns suggestions as JSON
+
+## get_specific_todo_suggestions_tool
+- Analyzes a specific todo by ID to suggest:
+  - Priority based on similar completed todos
+  - Estimated completion time
+  - List of similar completed todos
+- Requires `todo_id` parameter
+- Returns suggestions as JSON
+
+## suggest_deadline_tool
+- Suggests an optimal deadline for a todo
+- Analyzes priority and keywords like "urgent"
+- Requires `todo_id` parameter
+- Returns suggested deadline as JSON
