@@ -6,7 +6,7 @@ A collection of interconnected projects focused on building an ecosystem of AI-p
 
 ### 🌟 [Swarmonomicon](projects/python/mcp_server/README.md)
 *"The grimoire that binds them all!"*
-
+https://github.com/modelcontextprotocol/servers.git
 ![Cover Art](docs/assets/Cover-Art.jpeg)
 
 The central nervous system of our GLORIOUS HIVE MIND! Swarmonomicon bestows:
