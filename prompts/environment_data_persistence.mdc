@@ -1,0 +1,2 @@
+# enhance this prompt file to explain to an ai agent how to use our mqtt post/rost/get/fet/rnost and sub|xarg|rust-cli style of server perfrence
+# It shouldn't be to full of obvious details, but should make it clear the value of controlling variables statelessly from it's cli environment
