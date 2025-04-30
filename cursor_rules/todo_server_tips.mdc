@@ -1,8 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 # Tips for using the Todo MCP Server tools
 
 ## add_todo_tool
 - Adds a new todo
 - Requires `description` and `project` parameters
+- options: M
 - Optional parameters: `priority`, `target_agent`, `metadata`
 - Returns the created todo as a JSON string
 

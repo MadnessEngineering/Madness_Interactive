@@ -8,3 +8,5 @@ projects/local-ai/.env
 /.idea
 eap-tls-lab/
 /.specstory
+# SpecStory explanation file
+.specstory/.what-is-this.md
