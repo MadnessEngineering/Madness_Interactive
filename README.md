@@ -131,6 +131,11 @@ cargo build  # FORGE THE BINARIES!!
 pip install -r requirements.txt  # BIND THE DEPENDENCIES
 ```
 
+4. Install the ELDRITCH GIT HOOKS for automatic status updates:
+```bash
+./scripts/install_git_hooks.sh [path/to/repository]  # BIND THE REPOSITORY TO OUR WILL!!
+```
+
 ## 📁 Project Structure
 *"The architecture of CHAOS!"*
 
@@ -168,7 +173,9 @@ madness_interactive/
 │   └── rust/
 ├── scripts/
 │   ├── init_python_project.sh
-│   └── init_rust_project.sh
+│   ├── init_rust_project.sh
+│   ├── install_git_hooks.sh
+│   └── git_hooks_template/
 ├── theming/
 ├── prompts/
 └── README.md
