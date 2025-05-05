@@ -82,3 +82,12 @@
 [submodule "projects/common/Inventorium"]
 	path = projects/common/Inventorium
 	url = /Users/d.edens/lab/madness_interactive/projects/common/Inventorium
+[submodule "RaidShadowLegendsButItsMCP"]
+	path = RaidShadowLegendsButItsMCP
+	url = https://github.com/MadnessEngineering/RaidShadowLegendsButItsMCP.git
+[submodule "projects/typescript/RaidShadowLegendsButItsMCP"]
+	path = projects/typescript/RaidShadowLegendsButItsMCP
+	url = https://github.com/MadnessEngineering/RaidShadowLegendsButItsMCP.git
+[submodule "projects/python/wyrmwatch"]
+	path = projects/python/wyrmwatch
+	url = https://github.com/MadnessEngineering/wyrmwatch.git
