@@ -82,3 +82,6 @@
 [submodule "projects/common/Inventorium"]
 	path = projects/common/Inventorium
 	url = /Users/d.edens/lab/madness_interactive/projects/common/Inventorium
+[submodule "examples/wcgw"]
+	path = examples/wcgw
+	url = https://github.com/rusiaaman/wcgw.git
