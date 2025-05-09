@@ -85,3 +85,12 @@
 [submodule "examples/wcgw"]
 	path = examples/wcgw
 	url = https://github.com/rusiaaman/wcgw.git
+[submodule "RaidShadowLegendsButItsMCP"]
+	path = RaidShadowLegendsButItsMCP
+	url = https://github.com/MadnessEngineering/RaidShadowLegendsButItsMCP.git
+[submodule "projects/typescript/RaidShadowLegendsButItsMCP"]
+	path = projects/typescript/RaidShadowLegendsButItsMCP
+	url = https://github.com/MadnessEngineering/RaidShadowLegendsButItsMCP.git
+[submodule "projects/python/wyrmwatch"]
+	path = projects/python/wyrmwatch
+	url = https://github.com/MadnessEngineering/wyrmwatch.git
