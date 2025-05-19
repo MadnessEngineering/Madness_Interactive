@@ -12,16 +12,21 @@ Join us in exploring the limits of what is possible when we embrace the unknown 
 
 *"There is no great genius without some touch of madness.  - Aristotle"*
 
-
 In this Mad Era of Ai and Automation, we believe that the only way to win is to build systems that can build themselves.
 For me, ADHD is a state of being aware and awake to too many possibilities in the moment. This causes us to neglect not only the project goal, but those around us, and other priorities.
+Wouldn't it be great to toss every idea into the void, to be able to focus where you should, without losing all that potential?
 
-As Ai agents assist us with tasks, the run off can be chaotic, exessive, and brilliant.
-The goal of this workshop, is to provide a place to experiment with new ideas, and to build systems that can help us harness the power of the swarm.
+Especially as AI agents assist us with increasing complexity, the run off can be chaotic, exessive, and yet brilliant.
 
-In my Experience, the only way to harness this is to equip yourself with tools that can help juggle contexts and make decisions from a place of clarity.
+I believe the only way to harness this mighty power is to equip yourself with tools that can juggle contexts and allow you to make decisions from a place of clarity.
 
+# Who should check this out?
 
+- You are a tinkerer, and you want to build your own tools and agents.
+- You want to use MCP tooling to help you manage your own chaos.
+- You are looking for tips and lessons-learned on building with Ai agent workflows.
+- You are a maker, and you want to build your own tools and agents.
+- You are anyone with too many ideas and not enough time.
 
 
 ## Core Projects
@@ -31,8 +36,9 @@ In my Experience, the only way to harness this is to equip yourself with tools t
 
 ![Cover Art](docs/assets/Cover-Art.jpeg)
 
-The central nervous system of our GLORIOUS HIVE MIND! Swarmonomicon bestows:
+The central nervous system of our glorious hive mind!
 
+### Features:
 - [X] Async task casting and processing (mqtt_ingest, Operational!)
 - [ ] Multi-agent consciousness with centralized hivemind registry (currently exaggerated)
 - [ ] Persistent state management (wip)
@@ -44,20 +50,50 @@ The central nervous system of our GLORIOUS HIVE MIND! Swarmonomicon bestows:
   - [ ] Documentation Summoning (wip)
   - [ ] User enlightenment (wip)
 
-### 🕸️ Omnispindle (In Development)
+### 🕸️ [Omnispindle](projects/python/Omnispindle/README.md)
 *"Genius is the ability to put into effect what is on your mind.!"*
 
 A distributed task management MCP engine that falcilitates thoughts between minds:
 
+### Features:
 - [X] Orchestrate tasks across multiple agent incarnations via MCP tooling
 - [ ] Command resources with an iron fist (Docker deployment)
 - [ ] Scry real-time metrics from the void (MQTT dials and levers)
 - [ ] Accept tribute from plugin disciples (wip)
 - [ ] Enable cross-project consciousness management Dashboard (Coming Very Soon!)
 
+#### 🗂️ [Todomill Projectorium](projects/python/Omnispindle/Todomill_projectorium/README.md)
+*"Men of lofty genius sometimes accomplish the most when they work least, for their minds are occupied with their ideas and the perfection of their conceptions, to which they afterwards give form. - Leonardo da Vinci"*
 
+A sub-repository of Omnispindle, Todomill Projectorium is a dashboard for managing todos.
+Tightly integrated with the Omnispindle MCP server. It enables AI agents to interact with a MongoDB-backed todo list, allowing for review and revision of todos.
 
+### Features:
+  - Project sidebar and overview
+  - Item editor for todos
+  - Smart suggestions tab for AI-powered redundancy reduction
+  - Control panel for project filters and refresh
 
+- **Advanced Dashboard Controls:**
+  - Filter todos by project, status, priority, and date
+  - Combine filters for complex queries
+  - MQTT-driven actions for creation, refresh, and filter management
+  - Global context variables maintain filter state
+- **Integration with Omnispindle:**
+  - Omnispindle's Python MCP server enables agent-driven automation and cross-project orchestration
+
+**Development Workflow:**
+- Edit `.js` and `.html` files for logic/UI, then copy changes into Node-RED and re-export JSON flows
+- Only edit `.json` files directly for node connections
+- Comments in JSON files document the mapping to code files
+
+**Future Directions:**
+- Enhanced AI suggestions using historical data
+- User feedback/rating for AI insights
+- Team Boards
+- Custom filter presets and saved views
+
+> See [Todomill_projectorium](projects/python/Omnispindle/Todomill_projectorium/) for the full subrepo and its exported flows, code, and documentation.
 
 ### ⚡ Event Systems
 
@@ -118,7 +154,7 @@ This is a work in progress, and will be updated as we add more features. It aims
 - Quick-access ritual shortcuts
 
 
-## 🛠️ Tools and Utilities
+<!-- ## 🛠️ Tools and Utilities
 *"The mad Tinkers's Grimoire!"*
 
 The `tools/` directory contains artifacts for channeling local AI power:
@@ -134,7 +170,7 @@ The `tools/` directory contains artifacts for channeling local AI power:
   - Knowledge Base Corruption
   - Model Mind-Melding
   - Dataset Transmutation
-  - Evaluation Circles
+  - Evaluation Circles -->
 
 ## 🚀 Getting Started
 *"Your first steps into BEAUTIFUL MADNESS!"*
