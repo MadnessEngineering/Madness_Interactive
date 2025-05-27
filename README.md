@@ -122,9 +122,7 @@ A testing apparatus that BENDS REALITY to your will:
 - Agent-based testing rituals
 - Swarmonomicon neural interface
 - Cross-platform infection vectors
-- Plugin system for custom CHAOS SCENARIOS
-
-### Mobile Projects
+- Plugin system for custom CHAOS SCEN### Mobile Projects
 
 #### Cogwyrm: The Pocket Madness Interface
 *"The eye of genius has always a plaintive expression, and its natural language is pathos!"*
