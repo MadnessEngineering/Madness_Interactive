@@ -94,3 +94,6 @@
 [submodule "projects/python/wyrmwatch"]
 	path = projects/python/wyrmwatch
 	url = https://github.com/MadnessEngineering/wyrmwatch.git
+[submodule "projects/python/dans-fastmcp-server-template"]
+	path = projects/python/dans-fastmcp-server-template
+	url = git@github.com:DanEdens/dans-fastmcp-server-template.git

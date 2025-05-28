@@ -161,7 +161,7 @@ gh_issue = create_github_issue_from_todo(todo_id)
 # Update todo with GitHub issue number
 mcp_todo_client.update_todo(
     todo_id=todo_id,
-    updates={"metadata": {"github_issue": gh_issue.number}}
+    updates={"metadata": {"ticket": gh_issue.number}}
 )
 ```
 
@@ -175,7 +175,7 @@ jira_key = create_jira_ticket_from_todo(todo_id)
 # Update todo with Jira key
 mcp_todo_client.update_todo(
     todo_id=todo_id,
-    updates={"metadata": {"jira_key": jira_key}}
+    updates={"metadata": {"ticket": jira_key}}
 )
 ```
 
