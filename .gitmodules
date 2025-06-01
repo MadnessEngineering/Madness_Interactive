@@ -100,3 +100,9 @@
 [submodule "projects/common/Omnispindle-cli-bridge"]
 	path = projects/common/Omnispindle-cli-bridge
 	url = https://github.com/MadnessEngineering/Omnispindle-mcp-gem.git
+[submodule "examples/mcp-server-bash-sdk"]
+	path = examples/mcp-server-bash-sdk
+	url = https://github.com/muthuishere/mcp-server-bash-sdk
+[submodule "examples/cookbook"]
+	path = examples/cookbook
+	url = https://github.com/google-gemini/cookbook.git
