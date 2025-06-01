@@ -97,3 +97,6 @@
 [submodule "projects/python/dans-fastmcp-server-template"]
 	path = projects/python/dans-fastmcp-server-template
 	url = git@github.com:DanEdens/dans-fastmcp-server-template.git
+[submodule "projects/common/Omnispindle-cli-bridge"]
+	path = projects/common/Omnispindle-cli-bridge
+	url = https://github.com/MadnessEngineering/Omnispindle-mcp-gem.git
