@@ -3,7 +3,7 @@
 Welcome to the Mad Tinkers Workshop!
 
 A collection of interconnected projects focused on building an ecosystem of AI-powered tools and agents for local development and automation.
-
+<!--
 This project defies the trend of making "AI" conform to logical and predictable norms, embracing the beauty of chaos and unpredictability.
 
 Join us in exploring the limits of what is possible when we embrace the unknown and the chaotic nature of our own minds.
@@ -19,6 +19,16 @@ Wouldn't it be great to toss every idea into the void, to be able to focus where
 Especially as AI agents assist us with increasing complexity, the run off can be chaotic, exessive, and yet brilliant.
 
 I believe the only way to harness this mighty power is to equip yourself with tools that can juggle contexts and allow you to make decisions from a place of clarity.
+
+# Use Cases -->
+
+## Saving Side Quests for Later
+
+One of the most powerful features of our system is the ability to capture spontaneous ideas and "side quests" without derailing your main focus. Whether you're deep in a coding session and suddenly think of a brilliant feature, or you're in a meeting and realize there's a critical bug to fix later - just capture it and keep moving.
+
+![Use Case Example: Saving a Side Quest for Later](docs/assets/images/Use-case-example-saving-a-side-quest-for-later.png)
+
+This workflow demonstrates how AI agents can seamlessly capture, categorize, and schedule ideas while you maintain your current focus. The captured tasks are automatically organized by project, prioritized by urgency, and can be reviewed when you're ready to tackle them.
 
 # Who should check this out?
 
