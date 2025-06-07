@@ -106,3 +106,6 @@
 [submodule "examples/cookbook"]
 	path = examples/cookbook
 	url = https://github.com/google-gemini/cookbook.git
+[submodule "cursor_rules"]
+	path = cursor_rules
+	url = https://github.com/DanEdens/MadCursorRules.git
