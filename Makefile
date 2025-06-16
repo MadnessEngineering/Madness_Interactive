@@ -5,17 +5,18 @@
 
 # Default target
 help:
-	@echo "Available targets:"
-	@echo "  new NAME=<project_name> [TYPE=<python|rust|typescript|lua|common>] [DESC=<description>]"
-	@echo "    - Create new project and add as submodule"
-	@echo "  list-projects - List all submodules"
-	@echo "  status - Check status of all submodules"
-	@echo "  clean-all - Clean all __pycache__ and build artifacts"
+	@echo "Madness Interactive Project Manager"
 	@echo ""
-	@echo "Cursor Rules Management:"
-	@echo "  list-cursor-rules - Show all submodules with .cursor/rules/ directories"
-	@echo "  centralize-cursor-rules - Move all .cursor/rules/ to centralized location with symlinks"
-	@echo "  restore-cursor-rules TARGET=<submodule> - Restore rules from centralized location to submodule"
+	@echo "Project Management:"
+	@echo "  new NAME=<name> [TYPE=python|rust|typescript|lua|common] - Create new project"
+	@echo "  list-projects  - List all submodules"
+	@echo "  status         - Check submodule status"
+	@echo "  clean-all      - Clean build artifacts"
+	@echo ""
+	@echo "Cursor Rules:"
+	@echo "  list-cursor-rules      - Show projects with cursor rules"
+	@echo "  centralize-cursor-rules - Move rules to central location"
+	@echo "  restore-cursor-rules TARGET=<path> - Restore rules to project"
 
 # Variables
 NAME ?=
