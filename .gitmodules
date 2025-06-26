@@ -109,3 +109,6 @@
 [submodule "cursor_rules"]
 	path = cursor_rules
 	url = https://github.com/MadnessEngineering/MadnessMethods.git
+[submodule "projects/common/Whispermind_Conduit"]
+	path = projects/common/Whispermind_Conduit
+	url = https://github.com/DanEdens/whispermind-conduit.git

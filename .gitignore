@@ -1,6 +1,7 @@
 .DS_Store
 prompts/.backups/
 .cursorrules
+.cursor/
 
 projects/local-ai/.env
 /projects/local-ai/data/raw
@@ -10,3 +11,4 @@ eap-tls-lab/
 /.specstory
 # SpecStory explanation file
 .specstory/.what-is-this.md
+/backups
