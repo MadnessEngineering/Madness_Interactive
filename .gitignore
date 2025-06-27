@@ -1,3 +1,4 @@
+*.pyc
 .DS_Store
 prompts/.backups/
 .cursorrules
@@ -12,3 +13,8 @@ eap-tls-lab/
 # SpecStory explanation file
 .specstory/.what-is-this.md
 /backups
+/src/fastmcp_todo_server/.idea
+/src/Omnispindle/.idea
+/venv
+.env
+/node_modules
