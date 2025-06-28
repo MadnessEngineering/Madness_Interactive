@@ -1,0 +1,829 @@
+{
+  "name": "Madness Interactive",
+  "type": "root",
+  "language": "",
+  "description": "A Mad Tinker's AI Project Hub",
+  "metadata": {
+    "scan_time": "2025-06-28T18:29:15.828325",
+    "total_projects": 39,
+    "languages": [
+      "OS",
+      "powershell",
+      "typescript",
+      "mobile",
+      "lua",
+      "rust",
+      "tasker",
+      "common",
+      "python"
+    ]
+  },
+  "children": [
+    {
+      "name": "Python",
+      "type": "category",
+      "language": "python",
+      "description": "Python projects",
+      "metadata": {
+        "color": "#3776ab",
+        "icon": "🐍",
+        "project_count": 15
+      },
+      "children": [
+        {
+          "name": "EventGhost",
+          "type": "project",
+          "language": "python",
+          "description": "![EventGhost Logo](images/logo.png)",
+          "metadata": {
+            "category": "Automation",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-04-25T15:42:54.425348",
+            "size_estimate": "83.4MB"
+          },
+          "children": []
+        },
+        {
+          "name": "Spindlewrit",
+          "type": "project",
+          "language": "python",
+          "description": "A tool to generate project structures with AI-powered suggestions from Gemma function calling.",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-06-28T18:24:41.888052",
+            "size_estimate": "180.2KB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "python",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "SeleniumPageUtilities",
+          "type": "project",
+          "language": "python",
+          "description": "Project in python",
+          "metadata": {
+            "category": "Other",
+            "has_readme": false,
+            "has_config": false,
+            "last_modified": "2025-01-22T19:49:24.664644",
+            "size_estimate": "7.7KB"
+          },
+          "children": []
+        },
+        {
+          "name": "dans-fastmcp-server-template",
+          "type": "project",
+          "language": "python",
+          "description": "A FastMCP Server Template for the [Swarmonomicon](https://github.com/DanEdens/madness_interactive/tr...",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-06-26T19:00:26.488527",
+            "size_estimate": "234.3KB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "python",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "LegoScry",
+          "type": "project",
+          "language": "python",
+          "description": "AI vision system for identifying and locating LEGO pieces in instruction manuals and physical builds...",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-06-28T18:24:41.976363",
+            "size_estimate": "64.7KB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "python",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "mcp-personal-jira",
+          "type": "project",
+          "language": "python",
+          "description": "[![smithery badge](https://smithery.ai/badge/mcp-atlassian)](https://smithery.ai/server/mcp-atlassia...",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-02-24T14:22:34.330682",
+            "size_estimate": "296.8KB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "python",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "wyrmwatch",
+          "type": "project",
+          "language": "python",
+          "description": "A mad tinker's monitoring system for tasks and tiny wyrms.",
+          "metadata": {
+            "category": "Other",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-06-28T18:24:41.396323",
+            "size_estimate": "83.3KB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "python",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "fastmcp-balena-cli",
+          "type": "project",
+          "language": "python",
+          "description": "A FastMCP-based Todo Server for the [Swarmonomicon](https://github.com/DanEdens/madness_interactive/...",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-06-28T18:24:41.694326",
+            "size_estimate": "94.5KB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "python",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "local-ai",
+          "type": "project",
+          "language": "python",
+          "description": "A collection of experimental tools for tinkering with AI models locally. Part of the Mad Tinker's Wo...",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-01-24T16:23:32.538664",
+            "size_estimate": "109.5KB"
+          },
+          "children": [
+            {
+              "name": "tools",
+              "type": "component",
+              "language": "python",
+              "description": "tools directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "mqtt-get-var",
+          "type": "project",
+          "language": "python",
+          "description": "Project in python",
+          "metadata": {
+            "category": "Automation",
+            "has_readme": false,
+            "has_config": false,
+            "last_modified": "2025-01-22T19:49:24.773837",
+            "size_estimate": "844B"
+          },
+          "children": []
+        },
+        {
+          "name": "MqttLogger",
+          "type": "project",
+          "language": "python",
+          "description": "Project in python",
+          "metadata": {
+            "category": "Automation",
+            "has_readme": false,
+            "has_config": false,
+            "last_modified": "2025-01-22T19:49:24.618888",
+            "size_estimate": "9.4KB"
+          },
+          "children": []
+        },
+        {
+          "name": "Omnispindle",
+          "type": "project",
+          "language": "python",
+          "description": "[![Verified on MseeP](https://mseep.ai/badge.svg)](https://mseep.ai/app/7cd85c5a-291d-4027-9497-78bf...",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-06-28T17:40:44.299700",
+            "size_estimate": "18.6MB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "python",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "games",
+          "type": "project",
+          "language": "python",
+          "description": "Project in python",
+          "metadata": {
+            "category": "Games",
+            "has_readme": false,
+            "has_config": false,
+            "last_modified": "2025-01-25T16:40:27.513424",
+            "size_estimate": "774.9KB"
+          },
+          "children": []
+        },
+        {
+          "name": "simple-mqtt-server-agent",
+          "type": "project",
+          "language": "python",
+          "description": "Project in python",
+          "metadata": {
+            "category": "MCP",
+            "has_readme": false,
+            "has_config": false,
+            "last_modified": "2025-01-22T19:49:24.934877",
+            "size_estimate": "1.4KB"
+          },
+          "children": []
+        },
+        {
+          "name": "dvtTestKit",
+          "type": "project",
+          "language": "python",
+          "description": "Toolkit for Minim DVT department",
+          "metadata": {
+            "category": "Tools",
+            "has_readme": false,
+            "has_config": true,
+            "last_modified": "2025-03-07T17:35:50.299091",
+            "size_estimate": "206.3KB"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Typescript",
+      "type": "category",
+      "language": "typescript",
+      "description": "Typescript projects",
+      "metadata": {
+        "color": "#3178c6",
+        "icon": "📘",
+        "project_count": 1
+      },
+      "children": [
+        {
+          "name": "RaidShadowLegendsButItsMCP",
+          "type": "project",
+          "language": "typescript",
+          "description": "Control your Raid Shadow Legends Tasker automation via a Mission Control Protocol server.",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-06-28T18:24:41.639552",
+            "size_estimate": "36.4MB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "typescript",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Rust",
+      "type": "category",
+      "language": "rust",
+      "description": "Rust projects",
+      "metadata": {
+        "color": "#dea584",
+        "icon": "🦀",
+        "project_count": 2
+      },
+      "children": [
+        {
+          "name": "EventGhost-Rust",
+          "type": "project",
+          "language": "rust",
+          "description": "A Rust implementation of EventGhost, a powerful automation tool for Windows. This project aims to mo...",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-04-25T15:33:49.109982",
+            "size_estimate": "226.1MB"
+          },
+          "children": [
+            {
+              "name": "tools",
+              "type": "component",
+              "language": "rust",
+              "description": "tools directory",
+              "metadata": {},
+              "children": []
+            },
+            {
+              "name": "src",
+              "type": "component",
+              "language": "rust",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Tinker",
+          "type": "project",
+          "language": "rust",
+          "description": "A Madness engineered browser built for tinkerers and test enthusiasts. Tinker treats web testing as ...",
+          "metadata": {
+            "category": "Web",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-03-05T11:43:30.802904",
+            "size_estimate": "16.8MB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "rust",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Lua",
+      "type": "category",
+      "language": "lua",
+      "description": "Lua projects",
+      "metadata": {
+        "color": "#000080",
+        "icon": "🌙",
+        "project_count": 1
+      },
+      "children": [
+        {
+          "name": "LGS_script_template",
+          "type": "project",
+          "language": "lua",
+          "description": "Project in lua",
+          "metadata": {
+            "category": "Other",
+            "has_readme": false,
+            "has_config": false,
+            "last_modified": "2025-01-22T19:49:13.652976",
+            "size_estimate": "848B"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Powershell",
+      "type": "category",
+      "language": "powershell",
+      "description": "Powershell projects",
+      "metadata": {
+        "color": "#012456",
+        "icon": "💻",
+        "project_count": 1
+      },
+      "children": [
+        {
+          "name": "WinSystemSnapshot",
+          "type": "project",
+          "language": "powershell",
+          "description": "Project in powershell",
+          "metadata": {
+            "category": "Other",
+            "has_readme": false,
+            "has_config": false,
+            "last_modified": "2025-01-22T19:49:14.530047",
+            "size_estimate": "4.0KB"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Common",
+      "type": "category",
+      "language": "common",
+      "description": "Common projects",
+      "metadata": {
+        "color": "#8b4513",
+        "icon": "🏛️",
+        "project_count": 5
+      },
+      "children": [
+        {
+          "name": "Inventorium",
+          "type": "project",
+          "language": "common",
+          "description": "Welcome to **Madness Interactive**, an AI-powered Todo Board and Project Management Tool where AI Ag...",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-06-28T18:28:44.532165",
+            "size_estimate": "710.8MB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "common",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "SwarmDesk",
+          "type": "project",
+          "language": "common",
+          "description": "**A gamified 3D interface for controlling AI agent swarms through an immersive cyberpunk office envi...",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-06-28T18:24:43.510257",
+            "size_estimate": "438.4KB"
+          },
+          "children": []
+        },
+        {
+          "name": "Omnispindle-cli-bridge",
+          "type": "project",
+          "language": "common",
+          "description": "A curated collection of documentation and code examples for integrating Omnispindle MCP todo server ...",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-06-28T18:24:41.527159",
+            "size_estimate": "114.1KB"
+          },
+          "children": []
+        },
+        {
+          "name": "Swarmonomicon",
+          "type": "project",
+          "language": "common",
+          "description": "![Cover Art](docs/assets/Cover-Art.jpeg)",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-06-28T17:52:46.339226",
+            "size_estimate": "4.0GB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "common",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Whispermind_Conduit",
+          "type": "project",
+          "language": "common",
+          "description": "> *\"The mad conduit between mortal queries and AI consciousness!\"*",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-06-28T18:24:41.399264",
+            "size_estimate": "40.7MB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "common",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mobile",
+      "type": "category",
+      "language": "mobile",
+      "description": "Mobile projects",
+      "metadata": {
+        "color": "#a4c639",
+        "icon": "📱",
+        "project_count": 2
+      },
+      "children": [
+        {
+          "name": "MQTTCommander",
+          "type": "project",
+          "language": "mobile",
+          "description": "*\"When you absolutely, positively need to whisper sweet nothings to your swarm of AI agents from any...",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": true,
+            "last_modified": "2025-04-24T14:42:27.830655",
+            "size_estimate": "44.9KB"
+          },
+          "children": [
+            {
+              "name": "src",
+              "type": "component",
+              "language": "mobile",
+              "description": "src directory",
+              "metadata": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Cogwyrm",
+          "type": "project",
+          "language": "mobile",
+          "description": "*\"Control your Swarmonomicon agents from the palm of your hand!\"*",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-05-12T15:29:59.649715",
+            "size_estimate": "55.6MB"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Os",
+      "type": "category",
+      "language": "OS",
+      "description": "Os projects",
+      "metadata": {
+        "color": "#666666",
+        "icon": "🖥️",
+        "project_count": 2
+      },
+      "children": [
+        {
+          "name": "barrier-configs",
+          "type": "project",
+          "language": "OS",
+          "description": "Project in OS",
+          "metadata": {
+            "category": "Other",
+            "has_readme": false,
+            "has_config": false,
+            "last_modified": "2025-06-20T13:00:44.522500",
+            "size_estimate": "1.4KB"
+          },
+          "children": []
+        },
+        {
+          "name": "windows",
+          "type": "project",
+          "language": "OS",
+          "description": "Project in OS",
+          "metadata": {
+            "category": "Other",
+            "has_readme": false,
+            "has_config": false,
+            "last_modified": "2025-01-22T19:49:13.567630",
+            "size_estimate": "663B"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Tasker",
+      "type": "category",
+      "language": "tasker",
+      "description": "Tasker projects",
+      "metadata": {
+        "color": "#ff6b35",
+        "icon": "⚙️",
+        "project_count": 10
+      },
+      "children": [
+        {
+          "name": "ContextOfficium",
+          "type": "project",
+          "language": "tasker",
+          "description": "Tasker project for context-aware automation based on location (Home/Office) detection.",
+          "metadata": {
+            "category": "Automation",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-04-30T16:25:00.539058",
+            "size_estimate": "277.3KB"
+          },
+          "children": []
+        },
+        {
+          "name": "InvocationTome",
+          "type": "project",
+          "language": "tasker",
+          "description": "Enhanced MQTT integration for Tasker projects across the Madness Interactive ecosystem.",
+          "metadata": {
+            "category": "Automation",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-04-17T00:08:52.822889",
+            "size_estimate": "30.4KB"
+          },
+          "children": []
+        },
+        {
+          "name": "AnathemaHexVault",
+          "type": "project",
+          "language": "tasker",
+          "description": "A collection of legacy Tasker projects and configurations that have been archived for reference.",
+          "metadata": {
+            "category": "Automation",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-04-30T16:29:18.160081",
+            "size_estimate": "4.1MB"
+          },
+          "children": []
+        },
+        {
+          "name": "Ludomancery",
+          "type": "project",
+          "language": "tasker",
+          "description": "Tasker automation for mobile games, including Raid Shadow Legends and Nexus.",
+          "metadata": {
+            "category": "AI/ML",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-04-30T16:25:00.904901",
+            "size_estimate": "823.5KB"
+          },
+          "children": []
+        },
+        {
+          "name": "Fragmentarium",
+          "type": "project",
+          "language": "tasker",
+          "description": "Clipboard management and text snippet tools for Tasker.",
+          "metadata": {
+            "category": "Automation",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-04-30T16:25:00.784007",
+            "size_estimate": "212.9KB"
+          },
+          "children": []
+        },
+        {
+          "name": "EntropyVector",
+          "type": "project",
+          "language": "tasker",
+          "description": "Core subsystems for Android device management and state monitoring via Tasker.",
+          "metadata": {
+            "category": "Automation",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-04-30T16:25:00.662254",
+            "size_estimate": "1.3MB"
+          },
+          "children": []
+        },
+        {
+          "name": "RunedManifold",
+          "type": "project",
+          "language": "tasker",
+          "description": "User interface components and control systems for Tasker.",
+          "metadata": {
+            "category": "Automation",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-04-30T16:25:01.165774",
+            "size_estimate": "725.0KB"
+          },
+          "children": []
+        },
+        {
+          "name": ".vscode",
+          "type": "project",
+          "language": "tasker",
+          "description": "Project in tasker",
+          "metadata": {
+            "category": "Automation",
+            "has_readme": false,
+            "has_config": false,
+            "last_modified": "2025-03-05T11:44:21.692106",
+            "size_estimate": "118B"
+          },
+          "children": []
+        },
+        {
+          "name": "Verbatex",
+          "type": "project",
+          "language": "tasker",
+          "description": "Voice assistant integration and voice command systems for Tasker.",
+          "metadata": {
+            "category": "Automation",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-04-30T16:25:01.298080",
+            "size_estimate": "534.7KB"
+          },
+          "children": []
+        },
+        {
+          "name": "PhilosophersAmpoule",
+          "type": "project",
+          "language": "tasker",
+          "description": "Medication tracking and health management system using Tasker.",
+          "metadata": {
+            "category": "Automation",
+            "has_readme": true,
+            "has_config": false,
+            "last_modified": "2025-04-30T16:25:01.029270",
+            "size_estimate": "79.6KB"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

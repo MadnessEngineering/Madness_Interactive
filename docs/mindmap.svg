@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+        </linearGradient>
+        <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge> 
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+    
+    <rect width="100%" height="100%" fill="url(#bg)"/>
+    
+    <text x="600" y="30" text-anchor="middle" fill="white" font-size="24" font-weight="bold">
+        🧠 Madness Interactive Mind Map
+    </text>
+    
+    <text x="600" y="55" text-anchor="middle" fill="white" font-size="14" opacity="0.8">
+        39 Projects • 9 Technologies
+    </text>
+
+    <circle cx="600" cy="400" r="20" fill="#e53e3e" filter="url(#glow)"/>
+    <text x="600" y="405" text-anchor="middle" fill="white" font-size="12" font-weight="bold">
+        Madness Interactive
+    </text>
+
+    <line x1="600" y1="400" x2="750.0" y2="400.0" stroke="white" stroke-width="2" opacity="0.6"/>
+    <circle cx="750.0" cy="400.0" r="15" fill="#3776ab" filter="url(#glow)"/>
+    <text x="750.0" y="403.0" text-anchor="middle" fill="white" font-size="10" font-weight="bold">
+        🐍
+    </text>
+    <text x="750.0" y="425.0" text-anchor="middle" fill="white" font-size="10">
+        Python
+    </text>
+    <text x="750.0" y="440.0" text-anchor="middle" fill="white" font-size="8" opacity="0.8">
+        15 projects
+    </text>
+
+    <line x1="750.0" y1="400.0" x2="750.0" y2="320.0" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="750.0" cy="320.0" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="750.0" y="340.0" text-anchor="middle" fill="white" font-size="8">
+        EventGhost
+    </text>
+
+    <line x1="750.0" y1="400.0" x2="782.538931446064" y2="326.91636338859195" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="782.538931446064" cy="326.91636338859195" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="782.538931446064" y="346.91636338859195" text-anchor="middle" fill="white" font-size="8">
+        Spindlewrit
+    </text>
+
+    <line x1="750.0" y1="400.0" x2="809.4515860381915" y2="346.4695514912913" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="809.4515860381915" cy="346.4695514912913" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="809.4515860381915" y="366.4695514912913" text-anchor="middle" fill="white" font-size="8">
+        SeleniumPageUti...
+    </text>
+
+    <line x1="750.0" y1="400.0" x2="826.0845213036123" y2="375.2786404500042" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="826.0845213036123" cy="375.2786404500042" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="826.0845213036123" y="395.2786404500042" text-anchor="middle" fill="white" font-size="8">
+        dans-fastmcp-se...
+    </text>
+
+    <line x1="750.0" y1="400.0" x2="829.5617516294619" y2="408.36227706141227" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="829.5617516294619" cy="408.36227706141227" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="829.5617516294619" y="428.36227706141227" text-anchor="middle" fill="white" font-size="8">
+        LegoScry
+    </text>
+
+    <line x1="750.0" y1="400.0" x2="819.282032302755" y2="440.0" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="819.282032302755" cy="440.0" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="819.282032302755" y="460.0" text-anchor="middle" fill="white" font-size="8">
+        mcp-personal-ji...
+    </text>
+
+    <line x1="750.0" y1="400.0" x2="797.0228201833978" y2="464.7213595499958" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="797.0228201833978" cy="464.7213595499958" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="797.0228201833978" y="484.7213595499958" text-anchor="middle" fill="white" font-size="8">
+        wyrmwatch
+    </text>
+
+    <line x1="750.0" y1="400.0" x2="766.6329352654208" y2="478.25180805870446" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="766.6329352654208" cy="478.25180805870446" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="766.6329352654208" y="498.25180805870446" text-anchor="middle" fill="white" font-size="8">
+        fastmcp-balena-...
+    </text>
+
+    <line x1="600" y1="400" x2="714.9066664678467" y2="496.4181414529809" stroke="white" stroke-width="2" opacity="0.6"/>
+    <circle cx="714.9066664678467" cy="496.4181414529809" r="15" fill="#3178c6" filter="url(#glow)"/>
+    <text x="714.9066664678467" y="499.4181414529809" text-anchor="middle" fill="white" font-size="10" font-weight="bold">
+        📘
+    </text>
+    <text x="714.9066664678467" y="521.4181414529809" text-anchor="middle" fill="white" font-size="10">
+        Typescript
+    </text>
+    <text x="714.9066664678467" y="536.4181414529809" text-anchor="middle" fill="white" font-size="8" opacity="0.8">
+        1 projects
+    </text>
+
+    <line x1="714.9066664678467" y1="496.4181414529809" x2="766.3296752427698" y2="435.13458600346263" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="766.3296752427698" cy="435.13458600346263" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="766.3296752427698" y="455.13458600346263" text-anchor="middle" fill="white" font-size="8">
+        RaidShadowLegen...
+    </text>
+
+    <line x1="600" y1="400" x2="626.0472266500395" y2="547.7211629518312" stroke="white" stroke-width="2" opacity="0.6"/>
+    <circle cx="626.0472266500395" cy="547.7211629518312" r="15" fill="#dea584" filter="url(#glow)"/>
+    <text x="626.0472266500395" y="550.7211629518312" text-anchor="middle" fill="white" font-size="10" font-weight="bold">
+        🦀
+    </text>
+    <text x="626.0472266500395" y="572.7211629518312" text-anchor="middle" fill="white" font-size="10">
+        Rust
+    </text>
+    <text x="626.0472266500395" y="587.7211629518312" text-anchor="middle" fill="white" font-size="8" opacity="0.8">
+        2 projects
+    </text>
+
+    <line x1="626.0472266500395" y1="547.7211629518312" x2="704.8318468910162" y2="533.8293087384767" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="704.8318468910162" cy="533.8293087384767" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="704.8318468910162" y="553.8293087384767" text-anchor="middle" fill="white" font-size="8">
+        EventGhost-Rust
+    </text>
+
+    <line x1="626.0472266500395" y1="547.7211629518312" x2="547.2626064090629" y2="561.6130171651856" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="547.2626064090629" cy="561.6130171651856" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="547.2626064090629" y="581.6130171651856" text-anchor="middle" fill="white" font-size="8">
+        Tinker
+    </text>
+
+    <line x1="600" y1="400" x2="525.0" y2="529.9038105676658" stroke="white" stroke-width="2" opacity="0.6"/>
+    <circle cx="525.0" cy="529.9038105676658" r="15" fill="#000080" filter="url(#glow)"/>
+    <text x="525.0" y="532.9038105676658" text-anchor="middle" fill="white" font-size="10" font-weight="bold">
+        🌙
+    </text>
+    <text x="525.0" y="554.9038105676658" text-anchor="middle" fill="white" font-size="10">
+        Lua
+    </text>
+    <text x="525.0" y="569.9038105676658" text-anchor="middle" fill="white" font-size="8" opacity="0.8">
+        1 projects
+    </text>
+
+    <line x1="525.0" y1="529.9038105676658" x2="594.282032302755" y2="569.9038105676658" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="594.282032302755" cy="569.9038105676658" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="594.282032302755" y="589.9038105676658" text-anchor="middle" fill="white" font-size="8">
+        LGS_script_temp...
+    </text>
+
+    <line x1="600" y1="400" x2="459.04610688211375" y2="451.30302149885034" stroke="white" stroke-width="2" opacity="0.6"/>
+    <circle cx="459.04610688211375" cy="451.30302149885034" r="15" fill="#012456" filter="url(#glow)"/>
+    <text x="459.04610688211375" y="454.30302149885034" text-anchor="middle" fill="white" font-size="10" font-weight="bold">
+        💻
+    </text>
+    <text x="459.04610688211375" y="476.30302149885034" text-anchor="middle" fill="white" font-size="10">
+        Powershell
+    </text>
+    <text x="459.04610688211375" y="491.30302149885034" text-anchor="middle" fill="white" font-size="8" opacity="0.8">
+        1 projects
+    </text>
+
+    <line x1="459.04610688211375" y1="451.30302149885034" x2="486.40771834816724" y2="526.478431161723" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="486.40771834816724" cy="526.478431161723" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="486.40771834816724" y="546.478431161723" text-anchor="middle" fill="white" font-size="8">
+        WinSystemSnapsh...
+    </text>
+
+    <line x1="600" y1="400" x2="459.04610688211375" y2="348.6969785011497" stroke="white" stroke-width="2" opacity="0.6"/>
+    <circle cx="459.04610688211375" cy="348.6969785011497" r="15" fill="#8b4513" filter="url(#glow)"/>
+    <text x="459.04610688211375" y="351.6969785011497" text-anchor="middle" fill="white" font-size="10" font-weight="bold">
+        🏛️
+    </text>
+    <text x="459.04610688211375" y="373.6969785011497" text-anchor="middle" fill="white" font-size="10">
+        Common
+    </text>
+    <text x="459.04610688211375" y="388.6969785011497" text-anchor="middle" fill="white" font-size="8" opacity="0.8">
+        5 projects
+    </text>
+
+    <line x1="459.04610688211375" y1="348.6969785011497" x2="431.68449541606026" y2="423.87238816402237" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="431.68449541606026" cy="423.87238816402237" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="431.68449541606026" y="443.87238816402237" text-anchor="middle" fill="white" font-size="8">
+        Inventorium
+    </text>
+
+    <line x1="459.04610688211375" y1="348.6969785011497" x2="379.0948407205861" y2="345.90501876494966" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="379.0948407205861" cy="345.90501876494966" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="379.0948407205861" y="365.90501876494966" text-anchor="middle" fill="white" font-size="8">
+        SwarmDesk
+    </text>
+
+    <line x1="459.04610688211375" y1="348.6969785011497" x2="436.99511841675377" y2="271.7960428260842" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="436.99511841675377" cy="271.7960428260842" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="436.99511841675377" y="291.7960428260842" text-anchor="middle" fill="white" font-size="8">
+        Omnispindle-cli...
+    </text>
+
+    <line x1="459.04610688211375" y1="348.6969785011497" x2="525.369112686517" y2="303.9615462234899" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="525.369112686517" cy="303.9615462234899" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="525.369112686517" y="323.9615462234899" text-anchor="middle" fill="white" font-size="8">
+        Swarmonomicon
+    </text>
+
+    <line x1="459.04610688211375" y1="348.6969785011497" x2="522.0869671706515" y2="397.9498965272023" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="522.0869671706515" cy="397.9498965272023" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="522.0869671706515" y="417.9498965272023" text-anchor="middle" fill="white" font-size="8">
+        Whispermind_Con...
+    </text>
+
+    <line x1="600" y1="400" x2="524.9999999999999" y2="270.09618943233426" stroke="white" stroke-width="2" opacity="0.6"/>
+    <circle cx="524.9999999999999" cy="270.09618943233426" r="15" fill="#a4c639" filter="url(#glow)"/>
+    <text x="524.9999999999999" y="273.09618943233426" text-anchor="middle" fill="white" font-size="10" font-weight="bold">
+        📱
+    </text>
+    <text x="524.9999999999999" y="295.09618943233426" text-anchor="middle" fill="white" font-size="10">
+        Mobile
+    </text>
+    <text x="524.9999999999999" y="310.09618943233426" text-anchor="middle" fill="white" font-size="8" opacity="0.8">
+        2 projects
+    </text>
+
+    <line x1="524.9999999999999" y1="270.09618943233426" x2="455.71796769724483" y2="310.0961894323343" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="455.71796769724483" cy="310.0961894323343" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="455.71796769724483" y="330.0961894323343" text-anchor="middle" fill="white" font-size="8">
+        MQTTCommander
+    </text>
+
+    <line x1="524.9999999999999" y1="270.09618943233426" x2="594.2820323027549" y2="230.09618943233423" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="594.2820323027549" cy="230.09618943233423" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="594.2820323027549" y="250.09618943233423" text-anchor="middle" fill="white" font-size="8">
+        Cogwyrm
+    </text>
+
+    <line x1="600" y1="400" x2="626.0472266500395" y2="252.27883704816878" stroke="white" stroke-width="2" opacity="0.6"/>
+    <circle cx="626.0472266500395" cy="252.27883704816878" r="15" fill="#666666" filter="url(#glow)"/>
+    <text x="626.0472266500395" y="255.27883704816878" text-anchor="middle" fill="white" font-size="10" font-weight="bold">
+        🖥️
+    </text>
+    <text x="626.0472266500395" y="277.2788370481688" text-anchor="middle" fill="white" font-size="10">
+        Os
+    </text>
+    <text x="626.0472266500395" y="292.2788370481688" text-anchor="middle" fill="white" font-size="8" opacity="0.8">
+        2 projects
+    </text>
+
+    <line x1="626.0472266500395" y1="252.27883704816878" x2="547.2626064090629" y2="238.38698283481438" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="547.2626064090629" cy="238.38698283481438" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="547.2626064090629" y="258.3869828348144" text-anchor="middle" fill="white" font-size="8">
+        barrier-configs
+    </text>
+
+    <line x1="626.0472266500395" y1="252.27883704816878" x2="704.8318468910162" y2="266.1706912615232" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="704.8318468910162" cy="266.1706912615232" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="704.8318468910162" y="286.1706912615232" text-anchor="middle" fill="white" font-size="8">
+        windows
+    </text>
+
+    <line x1="600" y1="400" x2="714.9066664678467" y2="303.58185854701907" stroke="white" stroke-width="2" opacity="0.6"/>
+    <circle cx="714.9066664678467" cy="303.58185854701907" r="15" fill="#ff6b35" filter="url(#glow)"/>
+    <text x="714.9066664678467" y="306.58185854701907" text-anchor="middle" fill="white" font-size="10" font-weight="bold">
+        ⚙️
+    </text>
+    <text x="714.9066664678467" y="328.58185854701907" text-anchor="middle" fill="white" font-size="10">
+        Tasker
+    </text>
+    <text x="714.9066664678467" y="343.58185854701907" text-anchor="middle" fill="white" font-size="8" opacity="0.8">
+        10 projects
+    </text>
+
+    <line x1="714.9066664678467" y1="303.58185854701907" x2="663.4836576929235" y2="242.29830309750082" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="663.4836576929235" cy="242.29830309750082" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="663.4836576929235" y="262.2983030975008" text-anchor="middle" fill="white" font-size="8">
+        ContextOfficium
+    </text>
+
+    <line x1="714.9066664678467" y1="303.58185854701907" x2="709.3261485683166" y2="223.77673452623313" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="709.3261485683166" cy="223.77673452623313" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="709.3261485683166" y="243.77673452623313" text-anchor="middle" fill="white" font-size="8">
+        InvocationTome
+    </text>
+
+    <line x1="714.9066664678467" y1="303.58185854701907" x2="757.300207606503" y2="235.73801085450498" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="757.300207606503" cy="235.73801085450498" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="757.300207606503" y="255.73801085450498" text-anchor="middle" fill="white" font-size="8">
+        AnathemaHexVaul...
+    </text>
+
+    <line x1="714.9066664678467" y1="303.58185854701907" x2="789.0813748331897" y2="273.61333107374605" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="789.0813748331897" cy="273.61333107374605" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="789.0813748331897" y="293.61333107374605" text-anchor="middle" fill="white" font-size="8">
+        Ludomancery
+    </text>
+
+    <line x1="714.9066664678467" y1="303.58185854701907" x2="792.5303245699264" y2="322.93561019499253" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="792.5303245699264" cy="322.93561019499253" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="792.5303245699264" y="342.93561019499253" text-anchor="middle" fill="white" font-size="8">
+        Fragmentarium
+    </text>
+
+    <line x1="714.9066664678467" y1="303.58185854701907" x2="766.3296752427698" y2="364.8654139965373" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="766.3296752427698" cy="364.8654139965373" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="766.3296752427698" y="384.8654139965373" text-anchor="middle" fill="white" font-size="8">
+        EntropyVector
+    </text>
+
+    <line x1="714.9066664678467" y1="303.58185854701907" x2="720.4871843673767" y2="383.38698256780503" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="720.4871843673767" cy="383.38698256780503" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="720.4871843673767" y="403.38698256780503" text-anchor="middle" fill="white" font-size="8">
+        RunedManifold
+    </text>
+
+    <line x1="714.9066664678467" y1="303.58185854701907" x2="672.5131253291902" y2="371.42570623953316" stroke="white" stroke-width="1" opacity="0.4"/>
+    <circle cx="672.5131253291902" cy="371.42570623953316" r="8" fill="#45b7d1" opacity="0.8"/>
+    <text x="672.5131253291902" y="391.42570623953316" text-anchor="middle" fill="white" font-size="8">
+        .vscode
+    </text>
+</svg>

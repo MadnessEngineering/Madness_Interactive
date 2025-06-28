@@ -1,7 +1,7 @@
 # Madness Interactive Makefile
 # Comprehensive project management and submodule workflow
 
-.PHONY: help new list-projects clean-all status centralize-cursor-rules list-cursor-rules restore-cursor-rules
+.PHONY: help new list-projects clean-all status centralize-cursor-rules list-cursor-rules restore-cursor-rules mindmap mindmap-interactive mindmap-svg mindmap-json mindmap-all mindmap-help
 
 # Default target
 help:
@@ -297,3 +297,38 @@ clean-all:
 	find $(PROJECTS_DIR) -name "target" -type d -exec rm -rf {} + 2>/dev/null || true
 	find $(PROJECTS_DIR) -name "node_modules" -type d -exec rm -rf {} + 2>/dev/null || true
 	@echo "Cleanup complete!"
+
+# Mind Map Generation
+mindmap: ## Generate interactive HTML mind map
+	@echo "🧠 Generating Madness Interactive Mind Map..."
+	@python3 scripts/mindmap_generator.py --format html --interactive --output docs/mindmap.html
+	@echo "✨ Mind map generated at docs/mindmap.html"
+
+mindmap-interactive: mindmap ## Alias for interactive mind map
+
+mindmap-svg: ## Generate SVG mind map
+	@echo "🎨 Generating SVG mind map..."
+	@python3 scripts/mindmap_generator.py --format svg --output docs/mindmap.svg
+	@echo "✨ SVG mind map generated at docs/mindmap.svg"
+
+mindmap-json: ## Generate JSON data export
+	@echo "📄 Generating JSON mind map data..."
+	@python3 scripts/mindmap_generator.py --format json --output docs/mindmap.json
+	@echo "✨ JSON data generated at docs/mindmap.json"
+
+mindmap-dot: ## Generate DOT/Graphviz mind map
+	@echo "🎯 Generating DOT mind map..."
+	@python3 scripts/mindmap_generator.py --format dot --output docs/mindmap.dot
+	@echo "✨ DOT file generated at docs/mindmap.dot"
+	@echo "   To render: dot -Tpng docs/mindmap.dot -o docs/mindmap.png"
+
+mindmap-all: ## Generate all mind map formats
+	@echo "🚀 Generating all mind map formats..."
+	@make mindmap
+	@make mindmap-svg
+	@make mindmap-json
+	@make mindmap-dot
+	@echo "🎉 All mind maps generated in docs/ directory!"
+
+mindmap-help: ## Show mind map generator help
+	@python3 scripts/mindmap_generator.py --help
