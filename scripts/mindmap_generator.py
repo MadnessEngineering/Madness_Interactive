@@ -18,10 +18,12 @@ Options:
     --exclude PATTERN           Exclude directories matching pattern
     --include-todos             Include todo information in mindmap
     --include-todo-items        Include individual todo items as nodes (top 5 projects only)
+    --todo-centric              Generate todo-centric mindmap focusing on active projects from database
     
 Examples:
     python mindmap_generator.py --format html --interactive --include-todos
     python mindmap_generator.py --format html --include-todo-items
+    python mindmap_generator.py --todo-centric --format html --interactive
     python mindmap_generator.py --format svg --style hierarchical
     python mindmap_generator.py --format dot --depth 2
 """
@@ -1394,6 +1396,106 @@ class MindMapGenerator:
 
         print(f"🎨 SVG mind map generated: {output_file}")
 
+    def scan_todo_projects(self) -> ProjectNode:
+        """Scan todo database and build a todo-centric project tree"""
+        target_projects = [
+            'madness_interactive',
+            'swarmonomicon', 
+            'todomill_projectorium',
+            'inventorium',
+            'SwarmDesk'
+        ]
+
+        # Get all todo summaries if todo integration is enabled
+        project_todos = {}
+        if self.todo_integration:
+            all_project_todos = self.todo_integration.get_all_project_todos()
+            # Filter to only target projects that have todos
+            for project_name in target_projects:
+                if project_name in all_project_todos:
+                    project_todos[project_name] = all_project_todos[project_name]
+
+        root_node = ProjectNode(
+            name="Active Todo Projects",
+            path="",
+            type="root",
+            description="Current active projects tracked in todo system",
+            metadata={
+                'scan_time': datetime.now().isoformat(),
+                'total_projects': len(project_todos),
+                'todo_enabled': True,
+                'total_todos': sum(summary.total for summary in project_todos.values()) if project_todos else 0,
+                'target_projects': target_projects,
+                'active_projects': list(project_todos.keys())
+            }
+        )
+
+        # Create nodes for each target project that has todos
+        for project_name in target_projects:
+            if project_name not in project_todos:
+                print(f"⚠️  Skipping {project_name} - no todos found in database")
+                continue
+                
+            project_summary = project_todos[project_name]
+            
+            project_node = ProjectNode(
+                name=project_name,
+                path="",
+                type="project",
+                language="mixed",
+                description=f"Active project with {project_summary.total} todos",
+                metadata={
+                    'category': 'Active Project',
+                    'todo_count': project_summary.total,
+                    'high_priority_count': project_summary.high_priority,
+                    'medium_priority_count': project_summary.medium_priority,
+                    'low_priority_count': project_summary.low_priority,
+                    'status_initial': project_summary.initial,
+                    'status_pending': project_summary.pending,
+                    'status_completed': project_summary.completed
+                },
+                todo_summary=project_summary
+            )
+
+            # Add individual todo items as child nodes
+            if self.todo_integration:
+                todo_items = self.todo_integration.get_project_todo_items(project_name, 20)  # Get up to 20 todos
+                for todo_item in todo_items:
+                    # First 20 characters of description
+                    short_desc = todo_item['description'][:20]
+                    if len(todo_item['description']) > 20:
+                        short_desc += "..."
+                    
+                    todo_node = ProjectNode(
+                        name=f"{todo_item['id'][:8]}... {short_desc}",
+                        path="",
+                        type="todo",
+                        language="",
+                        description=todo_item['description'],  # Full description for tooltip
+                        metadata={
+                            'todo_id': todo_item['id'],
+                            'status': todo_item['status'],
+                            'priority': todo_item['priority'],
+                            'created_at': todo_item['created_at'],
+                            'updated_at': todo_item['updated_at'],
+                            'priority_color': {
+                                'high': '#ff4757',
+                                'medium': '#ffa502', 
+                                'low': '#2ed573'
+                            }.get(todo_item['priority'], '#ffa502'),
+                            'status_color': {
+                                'initial': '#5352ed',
+                                'pending': '#ffa502',
+                                'completed': '#2ed573'
+                            }.get(todo_item['status'], '#5352ed')
+                        }
+                    )
+                    project_node.children.append(todo_node)
+            
+            root_node.children.append(project_node)
+
+        return root_node
+
 def main():
     parser = argparse.ArgumentParser(description="Generate mind maps from Madness Interactive project structure")
     parser.add_argument('--format', choices=['html', 'svg', 'dot', 'json'], default='html',
@@ -1406,6 +1508,7 @@ def main():
     parser.add_argument('--exclude', action='append', help='Exclude directories matching pattern')
     parser.add_argument('--include-todos', action='store_true', help='Include todo information in mindmap')
     parser.add_argument('--include-todo-items', action='store_true', help='Include individual todo items as nodes (top 5 projects only)')
+    parser.add_argument('--todo-centric', action='store_true', help='Generate todo-centric mindmap focusing on active projects from database')
     parser.add_argument('--root', default='.', help='Root directory to scan (default: current directory)')
 
     args = parser.parse_args()
@@ -1424,20 +1527,33 @@ def main():
         print("📋 Todo integration: enabled")
     if args.include_todo_items:
         print("📋 Individual todo items: enabled (top 5 projects)")
+    if args.todo_centric:
+        print("📋 Todo-centric: enabled")
     print("")
 
     # Generate mind map
-    generator = MindMapGenerator(args.root, args.include_todos, args.include_todo_items)
+    if args.todo_centric:
+        # Force todo integration for todo-centric mode
+        generator = MindMapGenerator(args.root, True, True)
+    else:
+        generator = MindMapGenerator(args.root, args.include_todos, args.include_todo_items)
 
     print("🔄 Scanning project structure...")
-    root_node = generator.scan_projects(args.depth, args.exclude or [])
+    if args.todo_centric:
+        root_node = generator.scan_todo_projects()
+    else:
+        root_node = generator.scan_projects(args.depth, args.exclude or [])
 
     print(f"✅ Scanned {root_node.metadata.get('total_projects', 0)} projects in {len(root_node.children)} categories")
-    print(f"🏷️  Technologies: {', '.join(root_node.metadata.get('languages', []))}")
-    if args.include_todos:
+    if args.todo_centric:
+        print(f"🎯 Active projects: {', '.join(root_node.metadata.get('active_projects', []))}")
         print(f"📋 Total todos: {root_node.metadata.get('total_todos', 0)}")
-    if args.include_todo_items and generator.top_todo_projects:
-        print(f"📋 Top projects with individual todos: {', '.join(generator.top_todo_projects)}")
+    else:
+        print(f"🏷️  Technologies: {', '.join(root_node.metadata.get('languages', []))}")
+        if args.include_todos:
+            print(f"📋 Total todos: {root_node.metadata.get('total_todos', 0)}")
+        if args.include_todo_items and generator.top_todo_projects:
+            print(f"📋 Top projects with individual todos: {', '.join(generator.top_todo_projects)}")
     print("")
 
     print(f"🎨 Generating {args.format.upper()} mind map...")

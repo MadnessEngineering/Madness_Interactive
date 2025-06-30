@@ -1,7 +1,7 @@
 # Madness Interactive Makefile
 # Comprehensive project management and submodule workflow
 
-.PHONY: help new list-projects clean-all status centralize-cursor-rules list-cursor-rules restore-cursor-rules mindmap mindmap-interactive mindmap-with-todos mindmap-svg mindmap-svg-todos mindmap-json mindmap-json-todos mindmap-dot mindmap-dot-todos mindmap-all mindmap-all-todos mindmap-help invent omnispindle swarmdesk swarmonomicon whispermind check-vitals doctor sync-the-swarm tinker-time unleash-chaos mindmap-with-todo-items
+.PHONY: help new list-projects clean-all status centralize-cursor-rules list-cursor-rules restore-cursor-rules mindmap mindmap-interactive mindmap-with-todos mindmap-svg mindmap-svg-todos mindmap-json mindmap-json-todos mindmap-dot mindmap-dot-todos mindmap-all mindmap-all-todos mindmap-help invent omnispindle swarmdesk swarmonomicon whispermind check-vitals doctor sync-the-swarm tinker-time unleash-chaos mindmap-with-todo-items mindmap-todo-centric
 
 # Default target
 help:
@@ -534,3 +534,8 @@ mindmap-with-todo-items: ## Generate interactive HTML mind map with individual t
 	@echo "🧠 Generating interactive HTML mind map with individual todo items..."
 	@python3 scripts/mindmap_generator.py --format html --interactive --include-todo-items --output docs/mindmap_detailed.html
 	@echo "✨ Detailed mind map with todo items generated at docs/mindmap_detailed.html"
+
+mindmap-todo-centric: ## Generate todo-centric HTML mind map focusing on active projects
+	@echo "🧠 Generating todo-centric mind map..."
+	@python3 scripts/mindmap_generator.py --todo-centric --format html --interactive --output docs/mindmap_todos.html
+	@echo "✨ Todo-centric mind map generated at docs/mindmap_todos.html"

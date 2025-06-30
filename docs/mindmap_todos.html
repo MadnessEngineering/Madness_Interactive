@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Madness Interactive - Project Mind Map</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        #mindmap {
+            width: 100%;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .node {
+            cursor: pointer;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+        }
+        
+        .node circle {
+            stroke: white;
+            stroke-width: 2px;
+        }
+        
+        .node text {
+            font-size: 12px;
+            fill: white;
+            text-anchor: middle;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .node.todo text {
+            font-size: 10px;
+            text-anchor: start;
+        }
+        
+        .node.todo circle {
+            stroke-width: 1px;
+        }
+        
+        .link {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.3);
+            stroke-width: 2px;
+        }
+        
+        .link.todo {
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 1px;
+            stroke-dasharray: 2,2;
+        }
+        
+        /* Todo badge styles */
+        .todo-badge {
+            pointer-events: none;
+        }
+        
+        .todo-badge circle {
+            fill: #ff4757;
+            stroke: white;
+            stroke-width: 1px;
+        }
+        
+        .todo-badge text {
+            fill: white;
+            font-size: 10px;
+            font-weight: bold;
+            text-anchor: middle;
+            dominant-baseline: central;
+        }
+        
+        .priority-high { fill: #ff4757; }
+        .priority-medium { fill: #ffa502; }
+        .priority-low { fill: #2ed573; }
+        .status-initial { fill: #5352ed; }
+        .status-pending { fill: #ffa502; }
+        .status-completed { fill: #2ed573; }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 300px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .tooltip h4 {
+            margin: 0 0 5px 0;
+            color: #ffa502;
+        }
+        
+        .todo-item {
+            margin: 3px 0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .controls button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .controls button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .controls button.active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+        
+        .legend-icon {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Madness Interactive Mind Map</h1>
+            <p>A Mad Tinker's AI Project Hub Visualization</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-number">4</span>
+                <span class="stat-label">Projects</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">0</span>
+                <span class="stat-label">Technologies</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">4</span>
+                <span class="stat-label">Categories</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">303</span>
+                <span class="stat-label">Total Todos</span>
+            </div>
+        </div>
+        
+        <div class="legend">
+            
+        </div>
+        
+        <div class='controls'><button onclick='expandAll()'>Expand All</button><button onclick='collapseAll()'>Collapse All</button><button onclick='resetView()'>Reset View</button><button id='todoToggle' onclick='toggleTodos()'>Toggle Todos</button></div>
+        
+        <div id="mindmap"></div>
+    </div>
+    
+    <div class="tooltip" id="tooltip" style="display: none;"></div>
+    
+    <script>
+        const data = {
+  "name": "Active Todo Projects",
+  "type": "root",
+  "language": "",
+  "description": "Current active projects tracked in todo system",
+  "metadata": {
+    "scan_time": "2025-06-30T18:15:29.657815",
+    "total_projects": 4,
+    "todo_enabled": true,
+    "total_todos": 303,
+    "target_projects": [
+      "madness_interactive",
+      "swarmonomicon",
+      "todomill_projectorium",
+      "inventorium",
+      "SwarmDesk"
+    ],
+    "active_projects": [
+      "madness_interactive",
+      "swarmonomicon",
+      "todomill_projectorium",
+      "inventorium"
+    ]
+  },
+  "children": [
+    {
+      "name": "madness_interactive",
+      "type": "project",
+      "language": "mixed",
+      "description": "Active project with 126 todos",
+      "metadata": {
+        "category": "Active Project",
+        "todo_count": 126,
+        "high_priority_count": 55,
+        "medium_priority_count": 58,
+        "low_priority_count": 9,
+        "status_initial": 0,
+        "status_pending": 49,
+        "status_completed": 77
+      },
+      "children": [
+        {
+          "name": "67eeb036... Review and consolida...",
+          "type": "todo",
+          "language": "",
+          "description": "Review and consolidate ARCHITECTURE.md file - separate Python architecture from Rust implementation details. Update with recent changes to GTK prelude and path utilities.",
+          "metadata": {
+            "todo_id": "67eeb036c77c7c26997635f4",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1743695926,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "67f14c3a... Implement comprehens...",
+          "type": "todo",
+          "language": "",
+          "description": "Implement comprehensive error handling and logging system across all microservices:\\n1. Create standardized error response formats\\n2. Develop centralized logging mechanism\\n3. Add contextual error tracking\\n4. Implement error monitoring and alerting\\n5. Ensure GDPR and data privacy compliance in error logging",
+          "metadata": {
+            "todo_id": "67f14c3ab6e525b811e6d3e2",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1743866938,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "6803ca3e... Consolidate document...",
+          "type": "todo",
+          "language": "",
+          "description": "Consolidate documentation by creating a centralized documentation structure with consistent formatting and cross-referencing",
+          "metadata": {
+            "todo_id": "6803ca3e17592b6e8b3809a2",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1745078846,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "67e37d7e... Implement a more rob...",
+          "type": "todo",
+          "language": "",
+          "description": "Implement a more robust dummy_app in the run_server method with proper response handling instead of ellipsis (...)",
+          "metadata": {
+            "todo_id": "67e37d7e688ebb028e403089",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1742962046,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "67e49c29... Run duplicate_report...",
+          "type": "todo",
+          "language": "",
+          "description": "Run duplicate_report.py against the 2024-06-11 collection to check for duplicates and generate a detailed report",
+          "metadata": {
+            "todo_id": "67e49c29688ebb028e403095",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1743035433,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "67eae175... Investigate and reso...",
+          "type": "todo",
+          "language": "",
+          "description": "Investigate and resolve MongoDB connection issues in BigQuery data ingestion. Current error suggests DNS resolution or network connectivity problems.",
+          "metadata": {
+            "todo_id": "67eae175b6d955b12fa763e7",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1743446389,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "67c227fb... Implement full-text ...",
+          "type": "todo",
+          "language": "",
+          "description": "Implement full-text search capabilities for todos and lessons (Implemented!)",
+          "metadata": {
+            "todo_id": "67c227fb73911114158d5484",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1740777467,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "67e37d7a... Add proper return ty...",
+          "type": "todo",
+          "language": "",
+          "description": "Add proper return type annotation for run_server method in Omnispindle class to clarify that it returns an ASGI application",
+          "metadata": {
+            "todo_id": "67e37d7a688ebb028e403088",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1742962042,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "67e37d82... Add unit tests to ve...",
+          "type": "todo",
+          "language": "",
+          "description": "Add unit tests to verify the run_server method properly handles the case when run_sse_async returns None",
+          "metadata": {
+            "todo_id": "67e37d82688ebb028e40308a",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1742962050,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "67e37da5... Add comprehensive lo...",
+          "type": "todo",
+          "language": "",
+          "description": "Add comprehensive logging throughout the Omnispindle class for better debugging and monitoring, especially in run_server() and register_tool() methods",
+          "metadata": {
+            "todo_id": "67e37da5688ebb028e40308c",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1742962085,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "67e37edb... Implement AI-powered...",
+          "type": "todo",
+          "language": "",
+          "description": "Implement AI-powered Todo Assistant feature that suggests automated handling of routine tasks based on patterns in previously completed todos",
+          "metadata": {
+            "todo_id": "67e37edb688ebb028e40308f",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1742962395,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "67e3804e... Create a web dashboa...",
+          "type": "todo",
+          "language": "",
+          "description": "Create a web dashboard for the AI assistant and scheduler using lightweight frameworks like FastAPI and htmx",
+          "metadata": {
+            "todo_id": "67e3804e688ebb028e403093",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1742962766,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "67f946d4... Merged feature/proje...",
+          "type": "todo",
+          "language": "",
+          "description": "Merged feature/project-generation-tool into main branch. Resolved git index lock file issue.",
+          "metadata": {
+            "todo_id": "67f946d47de82ae00c33e401",
+            "status": "completed",
+            "priority": "initial",
+            "created_at": 1744389844,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "6803cbcc... Create a mad-science...",
+          "type": "todo",
+          "language": "",
+          "description": "Create a mad-science themed documentation generator that converts markdown files into a cohesive grimoire of knowledge",
+          "metadata": {
+            "todo_id": "6803cbcc17592b6e8b3809a8",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1745079244,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "680a2ca6... Test todo without a ...",
+          "type": "todo",
+          "language": "",
+          "description": "Test todo without a project",
+          "metadata": {
+            "todo_id": "680a2ca6086c2a7279d53356",
+            "status": "completed",
+            "priority": "initial",
+            "created_at": 1745497254,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "680a2cb2... Explore unique proje...",
+          "type": "todo",
+          "language": "",
+          "description": "Explore unique projects in the todo database",
+          "metadata": {
+            "todo_id": "680a2cb2086c2a7279d53357",
+            "status": "completed",
+            "priority": "initial",
+            "created_at": 1745497266,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "680b7bdc... fix up the Dashboard...",
+          "type": "todo",
+          "language": "",
+          "description": "fix up the Dashboard todoedit UI elements and command responses.",
+          "metadata": {
+            "todo_id": "680b7bdc0159ac33cf79ed6c",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1745582148,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "680b7bdc... Build out the Serial...",
+          "type": "todo",
+          "language": "",
+          "description": "Build out the Serial controller for SG003A",
+          "metadata": {
+            "todo_id": "680b7bdc0159ac33cf79ed6d",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1745580240,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "67c227f8... Create OpenAPI/Swagg...",
+          "type": "todo",
+          "language": "",
+          "description": "Create OpenAPI/Swagger documentation for all endpoints and tools",
+          "metadata": {
+            "todo_id": "67c227f873911114158d5483",
+            "status": "completed",
+            "priority": "low",
+            "created_at": 1740777464,
+            "updated_at": "",
+            "priority_color": "#2ed573",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "6803d75b... Create DOCKER.md doc...",
+          "type": "todo",
+          "language": "",
+          "description": "Create DOCKER.md documentation for each project",
+          "metadata": {
+            "todo_id": "6803d75b17592b6e8b3809c9",
+            "status": "completed",
+            "priority": "low",
+            "created_at": 1745082203,
+            "updated_at": "",
+            "priority_color": "#2ed573",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        }
+      ],
+      "todo_summary": {
+        "total": 126,
+        "initial": 0,
+        "pending": 49,
+        "completed": 77,
+        "high_priority": 55,
+        "medium_priority": 58,
+        "low_priority": 9,
+        "recent_todos": [
+          {
+            "id": "67c227f873911114158d5483",
+            "description": "Create OpenAPI/Swagger documentation for all endpoints and tools",
+            "status": "completed",
+            "priority": "low"
+          },
+          {
+            "id": "67c227fb73911114158d5484",
+            "description": "Implement full-text search capabilities for todos and lessons (Implemented!)",
+            "status": "completed",
+            "priority": "medium"
+          },
+          {
+            "id": "67e37d7a688ebb028e403088",
+            "description": "Add proper return type annotation for run_server method in Omnispindle class to ...",
+            "status": "completed",
+            "priority": "medium"
+          }
+        ]
+      }
+    },
+    {
+      "name": "swarmonomicon",
+      "type": "project",
+      "language": "mixed",
+      "description": "Active project with 29 todos",
+      "metadata": {
+        "category": "Active Project",
+        "todo_count": 29,
+        "high_priority_count": 13,
+        "medium_priority_count": 13,
+        "low_priority_count": 3,
+        "status_initial": 0,
+        "status_pending": 25,
+        "status_completed": 4
+      },
+      "children": [
+        {
+          "name": "67f6a4d0... Test Spindlewrit too...",
+          "type": "todo",
+          "language": "",
+          "description": "Test Spindlewrit tool with Gemma AI integration - implementation complete",
+          "metadata": {
+            "todo_id": "67f6a4d04c93c8135ae78c80",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1744217296,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "6803cada... Add more comprehensi...",
+          "type": "todo",
+          "language": "",
+          "description": "Add more comprehensive integration tests for todo_worker to verify MQTT interaction and error handling",
+          "metadata": {
+            "todo_id": "6803cada17592b6e8b3809a5",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1745079002,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "68129efc... MASTER: Update Swarm...",
+          "type": "todo",
+          "language": "",
+          "description": "MASTER: Update Swarmonomicon Todo Worker for Advanced Status Handling",
+          "metadata": {
+            "todo_id": "68129efcb17fdda06aec2c28",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1746050812,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "68129f02... Update Swarmonomicon...",
+          "type": "todo",
+          "language": "",
+          "description": "Update Swarmonomicon worker to recognize new task statuses",
+          "metadata": {
+            "todo_id": "68129f02b17fdda06aec2c29",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1746050818,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "68129f07... Implement status-spe...",
+          "type": "todo",
+          "language": "",
+          "description": "Implement status-specific processing logic in Todo Worker",
+          "metadata": {
+            "todo_id": "68129f07b17fdda06aec2c2a",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1746050823,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "6812a19a... Refine Project Inter...",
+          "type": "todo",
+          "language": "",
+          "description": "Refine Project Interconnection Model in Top-Level Agent Prompt System",
+          "metadata": {
+            "todo_id": "6812a19ab17fdda06aec2c2f",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1746051482,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "681d3dc0... fix the logging in s...",
+          "type": "todo",
+          "language": "",
+          "description": "fix the logging in swarmonomicon to only use the verbage 'adding new todo' when a database entry is actually sent\n",
+          "metadata": {
+            "todo_id": "681d3dc0b7dc3f244508fee1",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1746746789,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "683a17be... Clean up existing to...",
+          "type": "todo",
+          "language": "",
+          "description": "Clean up existing todo items to unified schema and remove inconsistent fields",
+          "metadata": {
+            "todo_id": "683a17be476bb1951fc4ab92",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1748637630,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "680507c1... Implemented MCP Todo...",
+          "type": "todo",
+          "language": "",
+          "description": "Implemented MCP Todo Client Tool for Swarmonomicon agents to communicate with MCP Todo Server via MQTT",
+          "metadata": {
+            "todo_id": "680507c117592b6e8b3809d7",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1745160129,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "681d3c61... Equip Swarm with Omn...",
+          "type": "todo",
+          "language": "",
+          "description": "Equip Swarm with Omnispindle MCP calls",
+          "metadata": {
+            "todo_id": "681d3c61b7dc3f244508fede",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1746746440,
+            "updated_at": 1749334964,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "67f6a574... Document the Spindle...",
+          "type": "todo",
+          "language": "",
+          "description": "Document the Spindlewrit integration with ProjectAgent",
+          "metadata": {
+            "todo_id": "67f6a5748b92a6f4aef5a331",
+            "status": "pending",
+            "priority": "medium",
+            "created_at": 1744217460,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "67f6a792... Create comprehensive...",
+          "type": "todo",
+          "language": "",
+          "description": "Create comprehensive tests for Spindlewrit's project generation capabilities",
+          "metadata": {
+            "todo_id": "67f6a792018bd168810b2468",
+            "status": "pending",
+            "priority": "medium",
+            "created_at": 1744218002,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "6803cad4... Consider adding stru...",
+          "type": "todo",
+          "language": "",
+          "description": "Consider adding structured logging to todo_worker with different log levels (error, warn, info, debug) for better observability and debugging",
+          "metadata": {
+            "todo_id": "6803cad417592b6e8b3809a3",
+            "status": "pending",
+            "priority": "medium",
+            "created_at": 1745078996,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "6803cad7... Add configuration fi...",
+          "type": "todo",
+          "language": "",
+          "description": "Add configuration files for todo_worker to make it easier to customize behavior without recompiling",
+          "metadata": {
+            "todo_id": "6803cad717592b6e8b3809a4",
+            "status": "pending",
+            "priority": "medium",
+            "created_at": 1745078999,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "68129f0f... Configure worker que...",
+          "type": "todo",
+          "language": "",
+          "description": "Configure worker queue filters for new status types",
+          "metadata": {
+            "todo_id": "68129f0fb17fdda06aec2c2b",
+            "status": "pending",
+            "priority": "medium",
+            "created_at": 1746050831,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "68129f20... Implement retry logi...",
+          "type": "todo",
+          "language": "",
+          "description": "Implement retry logic for pending-complete and pending-cluster statuses",
+          "metadata": {
+            "todo_id": "68129f20b17fdda06aec2c2d",
+            "status": "pending",
+            "priority": "medium",
+            "created_at": 1746050848,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "681d3d3b... Give swarmonomicon b...",
+          "type": "todo",
+          "language": "",
+          "description": "Give swarmonomicon better context on assigning todos to projects and filling out the missing fields",
+          "metadata": {
+            "todo_id": "681d3d3bb7dc3f244508fee0",
+            "status": "pending",
+            "priority": "medium",
+            "created_at": 1746746669,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "68295b7f... setup some logic to ...",
+          "type": "todo",
+          "language": "",
+          "description": "setup some logic to allow for shorter responses from swarmonomicon",
+          "metadata": {
+            "todo_id": "68295b7f0180f70092ef7fd6",
+            "status": "pending",
+            "priority": "medium",
+            "created_at": 1747540813,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "683a1686... Refactor lessons lea...",
+          "type": "todo",
+          "language": "",
+          "description": "Refactor lessons learned to treat language as a tag instead of parsing complex language strings",
+          "metadata": {
+            "todo_id": "683a1686476bb1951fc4ab90",
+            "status": "pending",
+            "priority": "medium",
+            "created_at": 1748637318,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "683a17c9... Implement bulk opera...",
+          "type": "todo",
+          "language": "",
+          "description": "Implement bulk operations for todo management (bulk complete, bulk delete, bulk project transfer)",
+          "metadata": {
+            "todo_id": "683a17c9476bb1951fc4ab94",
+            "status": "pending",
+            "priority": "low",
+            "created_at": 1748637641,
+            "updated_at": "",
+            "priority_color": "#2ed573",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        }
+      ],
+      "todo_summary": {
+        "total": 29,
+        "initial": 0,
+        "pending": 25,
+        "completed": 4,
+        "high_priority": 13,
+        "medium_priority": 13,
+        "low_priority": 3,
+        "recent_todos": [
+          {
+            "id": "67f6a4d04c93c8135ae78c80",
+            "description": "Test Spindlewrit tool with Gemma AI integration - implementation complete",
+            "status": "pending",
+            "priority": "high"
+          },
+          {
+            "id": "67f6a5748b92a6f4aef5a331",
+            "description": "Document the Spindlewrit integration with ProjectAgent",
+            "status": "pending",
+            "priority": "medium"
+          },
+          {
+            "id": "67f6a792018bd168810b2468",
+            "description": "Create comprehensive tests for Spindlewrit's project generation capabilities",
+            "status": "pending",
+            "priority": "medium"
+          }
+        ]
+      }
+    },
+    {
+      "name": "todomill_projectorium",
+      "type": "project",
+      "language": "mixed",
+      "description": "Active project with 26 todos",
+      "metadata": {
+        "category": "Active Project",
+        "todo_count": 26,
+        "high_priority_count": 14,
+        "medium_priority_count": 10,
+        "low_priority_count": 2,
+        "status_initial": 0,
+        "status_pending": 7,
+        "status_completed": 19
+      },
+      "children": [
+        {
+          "name": "68309b95... Test the standalone ...",
+          "type": "todo",
+          "language": "",
+          "description": "Test the standalone TodoLogService for monitoring todo changes: Verify that the TodoLogService correctly tracks all todo operations (create, update, delete, complete), persists logs to MongoDB, and provides query functionality through the FastMCP API.",
+          "metadata": {
+            "todo_id": "68309b950c8e63ce953bf03d",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1748016021,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "683dc70b... Implement a `Create ...",
+          "type": "todo",
+          "language": "",
+          "description": "Implement a `Create New` todo item feature in the UI. This requires adding a `Create New` button to `todoeditor.html` and developing the corresponding backend functionality to perform a MongoDB insert operation for new todo items.",
+          "metadata": {
+            "todo_id": "683dc70bc5dfc312bef82ec1",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1748879115,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "683f9721... update the todo log ...",
+          "type": "todo",
+          "language": "",
+          "description": "update the todo log html page with a header section like the todo list and editor tabs have. After that we will need to update the todo list header to match the style of the editor",
+          "metadata": {
+            "todo_id": "683f9721ddfeed7e5641a85a",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1748997909,
+            "updated_at": 1749008119,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "683fd53c... Review and finalize ...",
+          "type": "todo",
+          "language": "",
+          "description": "Review and finalize node-red-contrib-file-template package for publishing",
+          "metadata": {
+            "todo_id": "683fd53cc5dfc312bef82ec9",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1749013820,
+            "updated_at": 1749014360,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "683fd541... Create GitHub reposi...",
+          "type": "todo",
+          "language": "",
+          "description": "Create GitHub repository for node-red-contrib-file-template",
+          "metadata": {
+            "todo_id": "683fd541c5dfc312bef82eca",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1749013825,
+            "updated_at": 1749013876,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "683fd545... Verify Node-RED Flow...",
+          "type": "todo",
+          "language": "",
+          "description": "Verify Node-RED Flow Library requirements compliance",
+          "metadata": {
+            "todo_id": "683fd545c5dfc312bef82ecb",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1749013829,
+            "updated_at": 1749013841,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "683fd548... Publish node-red-con...",
+          "type": "todo",
+          "language": "",
+          "description": "Publish node-red-contrib-file-template to npm registry",
+          "metadata": {
+            "todo_id": "683fd548c5dfc312bef82ecc",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1749013832,
+            "updated_at": 1749014245,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "683fd74b... Create GitHub reposi...",
+          "type": "todo",
+          "language": "",
+          "description": "Create GitHub repository and push node-red-contrib-file-template code to remote",
+          "metadata": {
+            "todo_id": "683fd74bc5dfc312bef82ecf",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1749014347,
+            "updated_at": 1749014616,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "68449079... Update mad-template-...",
+          "type": "todo",
+          "language": "",
+          "description": "Update mad-template-ai node to support multiple LLM providers (OpenAI, Gemini, Ollama, LM Studio) with dynamic configuration UI",
+          "metadata": {
+            "todo_id": "68449079f9125e0932d41024",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1749323897,
+            "updated_at": 1749324259,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "6844aec8... Research similar Nod...",
+          "type": "todo",
+          "language": "",
+          "description": "Research similar Node-RED AI and template generation tools to identify common feature requests and competitive landscape",
+          "metadata": {
+            "todo_id": "6844aec8f9125e0932d41027",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1749331656,
+            "updated_at": 1749331714,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "6848901c... Fix saving indicator...",
+          "type": "todo",
+          "language": "",
+          "description": "Fix saving indicator never receiving success acknowledgment in Todo Editor",
+          "metadata": {
+            "todo_id": "6848901c3175ccef3b89adcc",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1749585948,
+            "updated_at": 1749586087,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "683dd9cc... Apply dynamic CSS cl...",
+          "type": "todo",
+          "language": "",
+          "description": "Apply dynamic CSS class assignment (similar to msg.className for cards) to parent containers of existing HTML tabs for custom styling.",
+          "metadata": {
+            "todo_id": "683dd9ccc5dfc312bef82ec2",
+            "status": "pending",
+            "priority": "medium",
+            "created_at": 1748883916,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "683fd74f... Test node-red-contri...",
+          "type": "todo",
+          "language": "",
+          "description": "Test node-red-contrib-file-template in actual Node-RED installation with TodoList.html",
+          "metadata": {
+            "todo_id": "683fd74fc5dfc312bef82ed0",
+            "status": "pending",
+            "priority": "medium",
+            "created_at": 1749014351,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "683a17b0... Remove Due Date and ...",
+          "type": "todo",
+          "language": "",
+          "description": "Remove Due Date and Duration fields from Todo Item Editor UI",
+          "metadata": {
+            "todo_id": "683a17b0476bb1951fc4ab91",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1748637616,
+            "updated_at": 1749429963,
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "683b302d... Remove the next and ...",
+          "type": "todo",
+          "language": "",
+          "description": "Remove the next and templates fields from the ai_hints dictionary in the return of the `get_todo_tool` in `src/Omnispindle/__init__.py`. These fields are extraneous and clutter the output for CLI usage. The `ai_hints` should only contain pertinent information like `status`.",
+          "metadata": {
+            "todo_id": "683b302d476bb1951fc4ab9c",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1748709421,
+            "updated_at": 1749581247,
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "683fd54d... Submit node-red-cont...",
+          "type": "todo",
+          "language": "",
+          "description": "Submit node-red-contrib-file-template@1.0.0 to Node-RED Flow Library at flows.nodered.org/add/node (package now live on npm)",
+          "metadata": {
+            "todo_id": "683fd54dc5dfc312bef82ecd",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1749013837,
+            "updated_at": 1749014277,
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "6840b03e... Improved LogActions ...",
+          "type": "todo",
+          "language": "",
+          "description": "Improved LogActions routing in Node-RED flow - Added proper routing for todo/log/* messages from LogActions.js through the main routing switch to the existing dashboard log routing system",
+          "metadata": {
+            "todo_id": "6840b03ea8e76663ec6b8531",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1749069886,
+            "updated_at": 1749069891,
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "6844aec1... Create comprehensive...",
+          "type": "todo",
+          "language": "",
+          "description": "Create comprehensive Cursor rules (.mdc file) for Node-RED Mad Template AI project capturing architecture, patterns, and development guidelines",
+          "metadata": {
+            "todo_id": "6844aec1f9125e0932d41026",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1749331649,
+            "updated_at": 1749331709,
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "684999f3... WindowToggler persis...",
+          "type": "todo",
+          "language": "",
+          "description": "WindowToggler persistence feature completed - locations now survive config reloads",
+          "metadata": {
+            "todo_id": "684999f33175ccef3b89adf5",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1749654003,
+            "updated_at": 1749654008,
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "683fd754... Update Todomill_proj...",
+          "type": "todo",
+          "language": "",
+          "description": "Update Todomill_projectorium documentation to reference new file-template node",
+          "metadata": {
+            "todo_id": "683fd754c5dfc312bef82ed1",
+            "status": "pending",
+            "priority": "low",
+            "created_at": 1749014356,
+            "updated_at": "",
+            "priority_color": "#2ed573",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        }
+      ],
+      "todo_summary": {
+        "total": 26,
+        "initial": 0,
+        "pending": 7,
+        "completed": 19,
+        "high_priority": 14,
+        "medium_priority": 10,
+        "low_priority": 2,
+        "recent_todos": [
+          {
+            "id": "68309b950c8e63ce953bf03d",
+            "description": "Test the standalone TodoLogService for monitoring todo changes: Verify that the ...",
+            "status": "pending",
+            "priority": "high"
+          },
+          {
+            "id": "683a17b0476bb1951fc4ab91",
+            "description": "Remove Due Date and Duration fields from Todo Item Editor UI",
+            "status": "completed",
+            "priority": "medium"
+          },
+          {
+            "id": "683b302d476bb1951fc4ab9c",
+            "description": "Remove the next and templates fields from the ai_hints dictionary in the return ...",
+            "status": "completed",
+            "priority": "medium"
+          }
+        ]
+      }
+    },
+    {
+      "name": "inventorium",
+      "type": "project",
+      "language": "mixed",
+      "description": "Active project with 122 todos",
+      "metadata": {
+        "category": "Active Project",
+        "todo_count": 122,
+        "high_priority_count": 63,
+        "medium_priority_count": 51,
+        "low_priority_count": 8,
+        "status_initial": 0,
+        "status_pending": 46,
+        "status_completed": 75
+      },
+      "children": [
+        {
+          "name": "67c227ef... Implement user authe...",
+          "type": "todo",
+          "language": "",
+          "description": "Implement user authentication and authorization for multi-user support",
+          "metadata": {
+            "todo_id": "67c227ef73911114158d5481",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1740777455,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "680e743e... Enhance security for...",
+          "type": "todo",
+          "language": "",
+          "description": "Enhance security for madnessinteractive.cc: Implement HTTPS with Let's Encrypt, restrict SSH access to specific IPs, setup fail2ban, and enable firewall rules to protect against common attacks.",
+          "metadata": {
+            "todo_id": "680e743e086c2a7279d5336a",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1745777726,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "6810026f... run the new update_s...",
+          "type": "todo",
+          "language": "",
+          "description": "run the new update_sec.sh for inventorium",
+          "metadata": {
+            "todo_id": "6810026f465c17755587a696",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1745879638,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "683bd521... Transform Inventoriu...",
+          "type": "todo",
+          "language": "",
+          "description": "Transform Inventorium from simple website into React-based frontend for Todomill dashboard with user authentication",
+          "metadata": {
+            "todo_id": "683bd521c5dfc312bef82ead",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1748751649,
+            "updated_at": 1748752305,
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "684f6415... Test React frontend ...",
+          "type": "todo",
+          "language": "",
+          "description": "Test React frontend connection to backend API - verify todo CRUD operations work through the live website",
+          "metadata": {
+            "todo_id": "684f6415a4eaff62866c129b",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1750033429,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "684f65e1... \ud83c\udf89 DEPLOYMENT SUCCESS...",
+          "type": "todo",
+          "language": "",
+          "description": "\ud83c\udf89 DEPLOYMENT SUCCESS: Madness Interactive Inventorium is now fully operational! React frontend connected to Node.js backend API (port 9192) with MongoDB swarmonomicon database. All systems working: Auth0 hybrid authentication, demo mode (madtinker/workshop2025), API proxy through nginx, PM2 process management. Ready for production use!",
+          "metadata": {
+            "todo_id": "684f65e1a4eaff62866c129d",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1750033889,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "6850715e... \ud83d\ude80 INVENTORIUM DEMO: ...",
+          "type": "todo",
+          "language": "",
+          "description": "\ud83d\ude80 INVENTORIUM DEMO: Set up authentication and data loading for React frontend demo. Make demo credentials connect to current user data just like Todomill_projectorium. Fix Basic auth token handling in AuthContext and API client.",
+          "metadata": {
+            "todo_id": "6850715ea4eaff62866c12af",
+            "status": "pending",
+            "priority": "high",
+            "created_at": 1750102366,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "683bd5e9... Create TodoList comp...",
+          "type": "todo",
+          "language": "",
+          "description": "Create TodoList component - Convert Node-RED TodoList.html to React component with sorting, filtering, and Material-UI styling",
+          "metadata": {
+            "todo_id": "683bd5e9c5dfc312bef82eae",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1748751849,
+            "updated_at": 1748752290,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "684f628f... Backend API server s...",
+          "type": "todo",
+          "language": "",
+          "description": "Backend API server successfully deployed to AWS EC2 - PM2 service running on port 9191",
+          "metadata": {
+            "todo_id": "684f628fa4eaff62866c1297",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1750033039,
+            "updated_at": 1750033423,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "684f668e... Create comprehensive...",
+          "type": "todo",
+          "language": "",
+          "description": "Create comprehensive API documentation with OpenAPI/Swagger specification for all endpoints",
+          "metadata": {
+            "todo_id": "684f668ea4eaff62866c129f",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1750034062,
+            "updated_at": 1750037667,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "684f6694... Implement user-speci...",
+          "type": "todo",
+          "language": "",
+          "description": "Implement user-specific data isolation using Auth0 user IDs - todos should be filtered by authenticated user",
+          "metadata": {
+            "todo_id": "684f6694a4eaff62866c12a1",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1750034068,
+            "updated_at": 1750037688,
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "684fa680... \ud83d\udd12 HTTPS/SSL DEPLOYME...",
+          "type": "todo",
+          "language": "",
+          "description": "\ud83d\udd12 HTTPS/SSL DEPLOYMENT SUCCESS: Madness Interactive now fully secured with HTTPS! Cloudflare-compatible SSL configuration implemented, all API endpoints working over HTTPS (/health, /api/todos, /docs/), security headers configured, real IP forwarding from Cloudflare, and SSL certificate auto-renewal set up. Production-ready secure deployment complete!",
+          "metadata": {
+            "todo_id": "684fa680a4eaff62866c12a6",
+            "status": "completed",
+            "priority": "high",
+            "created_at": 1750050432,
+            "updated_at": "",
+            "priority_color": "#ff4757",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "680e7441... Research and impleme...",
+          "type": "todo",
+          "language": "",
+          "description": "Research and implement user login system for madnessinteractive.cc: Evaluate authentication options (Auth0, Cognito, or custom), design user profile structure, and implement secure login/registration functionality.",
+          "metadata": {
+            "todo_id": "680e7441086c2a7279d5336b",
+            "status": "review",
+            "priority": "medium",
+            "created_at": 1745777729,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#5352ed"
+          },
+          "children": []
+        },
+        {
+          "name": "6841abbf... Fix SSL certificates...",
+          "type": "todo",
+          "language": "",
+          "description": "Fix SSL certificates for madnessinteractive.cc domain - DNS pointing issue preventing Let's Encrypt certificate generation",
+          "metadata": {
+            "todo_id": "6841abbff9125e0932d4101c",
+            "status": "pending",
+            "priority": "medium",
+            "created_at": 1749134271,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "6810027b... {\"status\":\"success\",...",
+          "type": "todo",
+          "language": "",
+          "description": "{\"status\":\"success\",\"message\":\"Added new todo: {\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Added new todo: run the new update_sec.sh for inventorium\\\",\\\"timestamp\\\":\\\"2025-04-28T22:34:23.486926+00:00\\\"}\",\"timestamp\":\"2025-04-28T22:34:27.864114+00:00\"}",
+          "metadata": {
+            "todo_id": "6810027b465c17755587a698",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1745879667,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "68100284... {\"status\":\"success\",...",
+          "type": "todo",
+          "language": "",
+          "description": "{\"status\":\"success\",\"message\":\"Added new todo: {\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"Added new todo: {\\\\\\\"status\\\\\\\":\\\\\\\"success\\\\\\\",\\\\\\\"message\\\\\\\":\\\\\\\"Added new todo: run the new update_sec.sh for inventorium\\\\\\\",\\\\\\\"timestamp\\\\\\\":\\\\\\\"2025-04-28T22:34:23.486926+00:00\\\\\\\"}\\\",\\\"timestamp\\\":\\\"2025-04-28T22:34:27.864114+00:00\\\"}\",\"timestamp\":\"2025-04-28T22:34:35.324641+00:00\"}",
+          "metadata": {
+            "todo_id": "68100284465c17755587a699",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1745879675,
+            "updated_at": "",
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "683bd5ed... Create TodoStats com...",
+          "type": "todo",
+          "language": "",
+          "description": "Create TodoStats component - Display todo statistics with Material-UI cards and visual indicators",
+          "metadata": {
+            "todo_id": "683bd5edc5dfc312bef82eaf",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1748751853,
+            "updated_at": 1748752294,
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "683bd5f2... Create AddTodoDialog...",
+          "type": "todo",
+          "language": "",
+          "description": "Create AddTodoDialog component - Modal dialog for creating new todos with form validation",
+          "metadata": {
+            "todo_id": "683bd5f2c5dfc312bef82eb0",
+            "status": "completed",
+            "priority": "medium",
+            "created_at": 1748751858,
+            "updated_at": 1748752299,
+            "priority_color": "#ffa502",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        },
+        {
+          "name": "683bdcb9... Create read-only pub...",
+          "type": "todo",
+          "language": "",
+          "description": "Create read-only public dashboard view for non-authenticated users to watch live project board. Features needed: 1) Public route (/public or /watch) that bypasses authentication, 2) Read-only TodoList component with viewing restrictions (no edit/delete/complete actions), 3) Live data refresh (polling or websocket), 4) Public TodoStats showing aggregate metrics only, 5) Project filtering for public visibility settings, 6) Responsive design optimized for viewing on various devices, 7) Optional \"Watch Mode\" branding/theming, 8) Rate limiting for API calls, 9) Cache optimization for public data, 10) SEO-friendly meta tags for sharing. Should integrate with existing API but with public endpoint restrictions. Consider adding optional URL parameters for filtering by project or status for embeddable widgets.",
+          "metadata": {
+            "todo_id": "683bdcb9c5dfc312bef82eb2",
+            "status": "pending",
+            "priority": "low",
+            "created_at": 1748753593,
+            "updated_at": 1749134260,
+            "priority_color": "#2ed573",
+            "status_color": "#ffa502"
+          },
+          "children": []
+        },
+        {
+          "name": "68100273... {\"status\":\"success\",...",
+          "type": "todo",
+          "language": "",
+          "description": "{\"status\":\"success\",\"message\":\"Added new todo: run the new update_sec.sh for inventorium\",\"timestamp\":\"2025-04-28T22:34:23.486926+00:00\"}",
+          "metadata": {
+            "todo_id": "68100273465c17755587a697",
+            "status": "completed",
+            "priority": "low",
+            "created_at": 1745879663,
+            "updated_at": "",
+            "priority_color": "#2ed573",
+            "status_color": "#2ed573"
+          },
+          "children": []
+        }
+      ],
+      "todo_summary": {
+        "total": 122,
+        "initial": 0,
+        "pending": 46,
+        "completed": 75,
+        "high_priority": 63,
+        "medium_priority": 51,
+        "low_priority": 8,
+        "recent_todos": [
+          {
+            "id": "67c227ef73911114158d5481",
+            "description": "Implement user authentication and authorization for multi-user support",
+            "status": "pending",
+            "priority": "high"
+          },
+          {
+            "id": "680e743e086c2a7279d5336a",
+            "description": "Enhance security for madnessinteractive.cc: Implement HTTPS with Let's Encrypt, ...",
+            "status": "pending",
+            "priority": "high"
+          },
+          {
+            "id": "680e7441086c2a7279d5336b",
+            "description": "Research and implement user login system for madnessinteractive.cc: Evaluate aut...",
+            "status": "review",
+            "priority": "medium"
+          }
+        ]
+      }
+    }
+  ]
+};
+        let showTodos = true;
+        
+        const width = document.getElementById('mindmap').clientWidth;
+        const height = 600;
+        
+        const svg = d3.select("#mindmap")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+        
+        const g = svg.append("g");
+        
+        // Create zoom behavior
+        const zoom = d3.zoom()
+            .scaleExtent([0.1, 4])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+        
+        svg.call(zoom);
+        
+        // Create tree layout
+        const tree = d3.tree()
+            .size([height - 100, width - 200])
+            .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth);
+        
+        // Create hierarchy
+        const root = d3.hierarchy(data);
+        
+        // Collapse all nodes initially except root and first level
+        root.descendants().forEach(d => {
+            if (d.depth > 1) {
+                if (d.children) {
+                    d._children = d.children;
+                    d.children = null;
+                }
+            }
+        });
+        
+        let i = 0;
+        
+        function update(source) {
+            // Compute the new tree layout
+            const treeData = tree(root);
+            const nodes = treeData.descendants();
+            const links = treeData.descendants().slice(1);
+            
+            // Normalize for fixed-depth
+            nodes.forEach(d => {
+                d.y = d.depth * 180;
+            });
+            
+            // Update nodes
+            const node = g.selectAll('g.node')
+                .data(nodes, d => d.id || (d.id = ++i));
+            
+            // Enter new nodes
+            const nodeEnter = node.enter().append('g')
+                .attr('class', 'node')
+                .attr('transform', d => `translate(${source.y0 || 0},${source.x0 || 0})`)
+                .on('click', click);
+            
+            // Add circles
+            nodeEnter.append('circle')
+                .attr('r', 1e-6)
+                .style('fill', d => {
+                    if (d.data.type === 'root') return '#ff6b6b';
+                    if (d.data.type === 'category') return d.data.metadata?.color || '#4ecdc4';
+                    if (d.data.type === 'project') return '#45b7d1';
+                    if (d.data.type === 'todo') return d.data.metadata?.priority_color || '#ffa502';
+                    return '#96ceb4';
+                })
+                .style('opacity', 0.8)
+                .attr('class', d => d.data.type === 'todo' ? 'todo-node' : '');
+            
+            // Add labels
+            nodeEnter.append('text')
+                .attr('dy', '.35em')
+                .attr('x', d => {
+                    if (d.data.type === 'todo') return 8;  // Todo items have text to the right
+                    return d.children || d._children ? -13 : 13;
+                })
+                .style('text-anchor', d => {
+                    if (d.data.type === 'todo') return 'start';
+                    return d.children || d._children ? 'end' : 'start';
+                })
+                .text(d => {
+                    if (d.data.type === 'todo') {
+                        const statusIcon = {
+                            'initial': '⭕',
+                            'pending': '🟡', 
+                            'completed': '✅'
+                        }[d.data.metadata?.status] || '⭕';
+                        return `${statusIcon} ${d.data.name.replace('📋 ', '')}`;
+                    }
+                    const icon = d.data.metadata?.icon || '';
+                    return `${icon} ${d.data.name}`;
+                })
+                .style('fill-opacity', 1e-6)
+                .style('font-size', d => d.data.type === 'todo' ? '10px' : '12px');
+            
+            // Add todo badges
+            if (showTodos) {
+                const todoBadges = nodeEnter.filter(d => d.data.todo_summary && d.data.todo_summary.total > 0)
+                    .append('g')
+                    .attr('class', 'todo-badge')
+                    .attr('transform', 'translate(15, -15)');
+                
+                todoBadges.append('circle')
+                    .attr('r', 8)
+                    .style('fill', d => {
+                        if (d.data.todo_summary.high_priority > 0) return '#ff4757';
+                        if (d.data.todo_summary.medium_priority > 0) return '#ffa502';
+                        return '#2ed573';
+                    });
+                
+                todoBadges.append('text')
+                    .text(d => d.data.todo_summary.total)
+                    .attr('dy', '.35em')
+                    .style('font-size', '10px')
+                    .style('fill', 'white')
+                    .style('text-anchor', 'middle');
+            }
+            
+            // Transition nodes to their new position
+            const nodeUpdate = nodeEnter.merge(node);
+            
+            nodeUpdate.transition()
+                .duration(750)
+                .attr('transform', d => `translate(${d.y},${d.x})`);
+            
+            nodeUpdate.select('circle')
+                .attr('r', d => {
+                    if (d.data.type === 'root') return 12;
+                    if (d.data.type === 'category') return 10;
+                    if (d.data.type === 'project') return 8;
+                    if (d.data.type === 'todo') return 5;  // Smaller circles for todos
+                    return 6;
+                })
+                .style('fill', d => {
+                    if (d.data.type === 'root') return '#ff6b6b';
+                    if (d.data.type === 'category') return d.data.metadata?.color || '#4ecdc4';
+                    if (d.data.type === 'project') return '#45b7d1';
+                    if (d.data.type === 'todo') return d.data.metadata?.priority_color || '#ffa502';
+                    return '#96ceb4';
+                })
+                .attr('cursor', 'pointer');
+            
+            nodeUpdate.select('text')
+                .style('fill-opacity', 1);
+            
+            // Update todo badges
+            nodeUpdate.selectAll('.todo-badge')
+                .style('display', showTodos ? 'block' : 'none');
+            
+            // Remove exiting nodes
+            const nodeExit = node.exit().transition()
+                .duration(750)
+                .attr('transform', d => `translate(${source.y},${source.x})`)
+                .remove();
+            
+            nodeExit.select('circle')
+                .attr('r', 1e-6);
+            
+            nodeExit.select('text')
+                .style('fill-opacity', 1e-6);
+            
+            // Update links
+            const link = g.selectAll('path.link')
+                .data(links, d => d.id);
+            
+            // Enter new links
+            const linkEnter = link.enter().insert('path', 'g')
+                .attr('class', 'link')
+                .attr('d', d => {
+                    const o = {x: source.x0 || 0, y: source.y0 || 0};
+                    return diagonal(o, o);
+                });
+            
+            // Transition links to their new position
+            linkEnter.merge(link).transition()
+                .duration(750)
+                .attr('d', d => diagonal(d, d.parent));
+            
+            // Remove exiting links
+            link.exit().transition()
+                .duration(750)
+                .attr('d', d => {
+                    const o = {x: source.x, y: source.y};
+                    return diagonal(o, o);
+                })
+                .remove();
+            
+            // Store the old positions for transition
+            nodes.forEach(d => {
+                d.x0 = d.x;
+                d.y0 = d.y;
+            });
+        }
+        
+        // Diagonal line generator
+        function diagonal(s, d) {
+            const path = `M ${s.y} ${s.x}
+                         C ${(s.y + d.y) / 2} ${s.x},
+                           ${(s.y + d.y) / 2} ${d.x},
+                           ${d.y} ${d.x}`;
+            return path;
+        }
+        
+        // Toggle children on click
+        function click(event, d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
+            }
+            update(d);
+        }
+        
+        // Add tooltip functionality
+        
+        g.selectAll('.node')
+            .on('mouseover', function(event, d) {
+                const tooltip = d3.select('#tooltip');
+                let content = `<strong>${d.data.name}</strong><br>
+                               Type: ${d.data.type}<br>`;
+                               
+                if (d.data.type === 'todo') {
+                    content += `Status: ${d.data.metadata?.status || 'unknown'}<br>
+                               Priority: ${d.data.metadata?.priority || 'medium'}<br>
+                               Todo ID: ${d.data.metadata?.todo_id || 'N/A'}<br>`;
+                    if (d.data.metadata?.created_at) {
+                        content += `Created: ${new Date(d.data.metadata.created_at).toLocaleDateString()}<br>`;
+                    }
+                    if (d.data.metadata?.updated_at) {
+                        content += `Updated: ${new Date(d.data.metadata.updated_at).toLocaleDateString()}<br>`;
+                    }
+                    content += `<div style="margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                               <strong>Full Description:</strong><br>${d.data.description}
+                               </div>`;
+                } else {
+                    content += `${d.data.language ? `Language: ${d.data.language}<br>` : ''}
+                               ${d.data.description ? `Description: ${d.data.description}<br>` : ''}
+                               ${d.data.metadata?.category ? `Category: ${d.data.metadata.category}<br>` : ''}
+                               ${d.data.metadata?.size_estimate ? `Size: ${d.data.metadata.size_estimate}<br>` : ''}`;
+                    
+                    if (d.data.todo_summary && d.data.todo_summary.total > 0) {
+                        content += `<h4>📋 Todos (${d.data.todo_summary.total})</h4>`;
+                        content += `<div>Initial: ${d.data.todo_summary.initial} | Pending: ${d.data.todo_summary.pending} | Done: ${d.data.todo_summary.completed}</div>`;
+                        content += `<div>High: ${d.data.todo_summary.high_priority} | Med: ${d.data.todo_summary.medium_priority} | Low: ${d.data.todo_summary.low_priority}</div>`;
+                        
+                        if (d.data.todo_summary.recent_todos && d.data.todo_summary.recent_todos.length > 0) {
+                            content += '<div style="margin-top: 5px;"><strong>Recent todos:</strong></div>';
+                            d.data.todo_summary.recent_todos.forEach(todo => {
+                                content += `<div class="todo-item">${todo.description}</div>`;
+                            });
+                        }
+                    }
+                }
+                
+                tooltip.style('display', 'block')
+                    .html(content)
+                    .style('left', (event.pageX + 10) + 'px')
+                    .style('top', (event.pageY - 10) + 'px');
+            })
+            .on('mouseout', function() {
+                d3.select('#tooltip').style('display', 'none');
+            });
+        
+        
+        // Global functions for controls
+        window.expandAll = function() {
+            root.descendants().forEach(d => {
+                if (d._children) {
+                    d.children = d._children;
+                    d._children = null;
+                }
+            });
+            update(root);
+        };
+        
+        window.collapseAll = function() {
+            root.descendants().forEach(d => {
+                if (d.children && d.depth > 0) {
+                    d._children = d.children;
+                    d.children = null;
+                }
+            });
+            update(root);
+        };
+        
+        window.resetView = function() {
+            svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+        };
+        
+        window.toggleTodos = function() {
+            showTodos = !showTodos;
+            const button = document.getElementById('todoToggle');
+            if (button) {
+                button.classList.toggle('active', showTodos);
+                button.textContent = showTodos ? 'Hide Todos' : 'Show Todos';
+            }
+            update(root);
+        };
+        
+        // Initial render
+        root.x0 = height / 2;
+        root.y0 = 0;
+        update(root);
+        
+        // Center the view
+        svg.call(zoom.transform, d3.zoomIdentity.translate(50, 50));
+        
+    </script>
+</body>
+</html>
