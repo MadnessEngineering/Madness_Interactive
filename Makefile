@@ -1,7 +1,7 @@
 # Madness Interactive Makefile
 # Comprehensive project management and submodule workflow
 
-.PHONY: help new list-projects clean-all status centralize-cursor-rules list-cursor-rules restore-cursor-rules mindmap mindmap-interactive mindmap-with-todos mindmap-svg mindmap-svg-todos mindmap-json mindmap-json-todos mindmap-dot mindmap-dot-todos mindmap-all mindmap-all-todos mindmap-help invent omnispindle swarmdesk swarmonomicon whispermind check-vitals doctor sync-the-swarm tinker-time unleash-chaos
+.PHONY: help new list-projects clean-all status centralize-cursor-rules list-cursor-rules restore-cursor-rules mindmap mindmap-interactive mindmap-with-todos mindmap-svg mindmap-svg-todos mindmap-json mindmap-json-todos mindmap-dot mindmap-dot-todos mindmap-all mindmap-all-todos mindmap-help invent omnispindle swarmdesk swarmonomicon whispermind check-vitals doctor sync-the-swarm tinker-time unleash-chaos mindmap-with-todo-items
 
 # Default target
 help:
@@ -528,6 +528,9 @@ unleash-chaos:
 		exit 1; \
 	fi
 	@echo ""
-	@echo "🙈 Chaos Monkey is loose! Targeting Omnispindle on eaws..."
-	@ssh -o ConnectTimeout=5 eaws "pm2 restart Omnispindle" || (echo "🚨 Chaos Monkey failed to connect! Is the workshop even online?" && exit 1)
-	@echo "🐒 Omnispindle has been prodded. Check vitals to see if it recovered."
+	# do mcp call to mcp mad_tinker_mode todo
+
+mindmap-with-todo-items: ## Generate interactive HTML mind map with individual todo items (top 5 projects)
+	@echo "🧠 Generating interactive HTML mind map with individual todo items..."
+	@python3 scripts/mindmap_generator.py --format html --interactive --include-todo-items --output docs/mindmap_detailed.html
+	@echo "✨ Detailed mind map with todo items generated at docs/mindmap_detailed.html"

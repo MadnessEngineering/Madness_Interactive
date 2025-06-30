@@ -17,9 +17,11 @@ Options:
     --interactive               Add interactive features (HTML only)
     --exclude PATTERN           Exclude directories matching pattern
     --include-todos             Include todo information in mindmap
+    --include-todo-items        Include individual todo items as nodes (top 5 projects only)
     
 Examples:
     python mindmap_generator.py --format html --interactive --include-todos
+    python mindmap_generator.py --format html --include-todo-items
     python mindmap_generator.py --format svg --style hierarchical
     python mindmap_generator.py --format dot --depth 2
 """
@@ -202,18 +204,95 @@ class TodoIntegration:
             print(f"Warning: Error fetching all todos: {e}")
             return {}
 
+    def get_top_projects_by_todo_count(self, limit: int = 5) -> List[str]:
+        """Get the top N projects by todo count"""
+        if not self.mongo_available:
+            return []
+        
+        try:
+            # Connect to MongoDB
+            client = MongoClient(MONGO_HOST, MONGO_PORT)
+            db = client[MONGO_DB]
+            collection = db[MONGO_COLLECTION]
+            
+            # Aggregate to get project todo counts
+            pipeline = [
+                {"$group": {"_id": "$project", "count": {"$sum": 1}}},
+                {"$sort": {"count": -1}},
+                {"$limit": limit}
+            ]
+            
+            top_projects = []
+            for result in collection.aggregate(pipeline):
+                if result['_id']:  # Skip null/empty project names
+                    top_projects.append(result['_id'])
+            
+            client.close()
+            return top_projects
+            
+        except Exception as e:
+            print(f"Warning: Error fetching top projects: {e}")
+            return []
+    
+    def get_project_todo_items(self, project_name: str, limit: int = 10) -> List[Dict[str, Any]]:
+        """Get individual todo items for a specific project"""
+        if not self.mongo_available:
+            return []
+        
+        try:
+            # Connect to MongoDB
+            client = MongoClient(MONGO_HOST, MONGO_PORT)
+            db = client[MONGO_DB]
+            collection = db[MONGO_COLLECTION]
+            
+            # Query todos for this project, sorted by priority and creation date
+            priority_order = {"high": 1, "medium": 2, "low": 3}
+            
+            todos_cursor = collection.find({"project": project_name}).limit(limit)
+            
+            todo_items = []
+            for todo in todos_cursor:
+                todo_items.append({
+                    'id': str(todo.get('_id', '')),
+                    'description': todo.get('description', 'Untitled todo'),
+                    'status': todo.get('status', 'initial'),
+                    'priority': todo.get('priority', 'medium').lower(),
+                    'created_at': todo.get('created_at', ''),
+                    'updated_at': todo.get('updated_at', '')
+                })
+            
+            # Sort by priority then by status (initial first, then pending, then completed)
+            status_order = {"initial": 1, "pending": 2, "completed": 3}
+            todo_items.sort(key=lambda x: (
+                priority_order.get(x['priority'], 2),
+                status_order.get(x['status'], 1)
+            ))
+            
+            client.close()
+            return todo_items
+            
+        except Exception as e:
+            print(f"Warning: Error fetching todo items for project {project_name}: {e}")
+            return []
+
 class MindMapGenerator:
     """Generate mind maps from project structure"""
 
-    def __init__(self, root_path: str = ".", include_todos: bool = False):
+    def __init__(self, root_path: str = ".", include_todos: bool = False, include_todo_items: bool = False):
         self.root_path = Path(root_path).resolve()
         self.projects_path = self.root_path / "projects"
         self.include_todos = include_todos
+        self.include_todo_items = include_todo_items
         self.todo_integration = None
+        self.top_todo_projects = []
 
         # Initialize todo integration if requested
-        if include_todos:
+        if include_todos or include_todo_items:
             self.todo_integration = TodoIntegration()
+            
+            # Get top projects if we're including individual todo items
+            if include_todo_items and self.todo_integration:
+                self.top_todo_projects = self.todo_integration.get_top_projects_by_todo_count(5)
 
         # Language/technology mappings
         self.language_map = {
@@ -373,6 +452,41 @@ class MindMapGenerator:
                         description=f"{subdir.name} directory"
                     )
                     project_node.children.append(sub_node)
+
+        # Add individual todo items as child nodes for top projects
+        if self.include_todo_items and project_name in self.top_todo_projects and self.todo_integration:
+            todo_items = self.todo_integration.get_project_todo_items(project_name, 10)
+            for todo_item in todo_items:
+                # Truncate description for better display
+                description = todo_item['description']
+                if len(description) > 60:
+                    description = description[:57] + "..."
+                
+                todo_node = ProjectNode(
+                    name=f"📋 {description}",
+                    path="",  # Todos don't have file paths
+                    type="todo",
+                    language=language,
+                    description=todo_item['description'],
+                    metadata={
+                        'todo_id': todo_item['id'],
+                        'status': todo_item['status'],
+                        'priority': todo_item['priority'],
+                        'created_at': todo_item['created_at'],
+                        'updated_at': todo_item['updated_at'],
+                        'priority_color': {
+                            'high': '#ff4757',
+                            'medium': '#ffa502', 
+                            'low': '#2ed573'
+                        }.get(todo_item['priority'], '#ffa502'),
+                        'status_color': {
+                            'initial': '#5352ed',
+                            'pending': '#ffa502',
+                            'completed': '#2ed573'
+                        }.get(todo_item['status'], '#5352ed')
+                    }
+                )
+                project_node.children.append(todo_node)
 
         return project_node
 
@@ -571,10 +685,25 @@ class MindMapGenerator:
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }}
         
+        .node.todo text {{
+            font-size: 10px;
+            text-anchor: start;
+        }}
+        
+        .node.todo circle {{
+            stroke-width: 1px;
+        }}
+        
         .link {{
             fill: none;
             stroke: rgba(255, 255, 255, 0.3);
             stroke-width: 2px;
+        }}
+        
+        .link.todo {{
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 1px;
+            stroke-dasharray: 2,2;
         }}
         
         /* Todo badge styles */
@@ -836,20 +965,37 @@ class MindMapGenerator:
                     if (d.data.type === 'root') return '#ff6b6b';
                     if (d.data.type === 'category') return d.data.metadata?.color || '#4ecdc4';
                     if (d.data.type === 'project') return '#45b7d1';
+                    if (d.data.type === 'todo') return d.data.metadata?.priority_color || '#ffa502';
                     return '#96ceb4';
                 }})
-                .style('opacity', 0.8);
+                .style('opacity', 0.8)
+                .attr('class', d => d.data.type === 'todo' ? 'todo-node' : '');
             
             // Add labels
             nodeEnter.append('text')
                 .attr('dy', '.35em')
-                .attr('x', d => d.children || d._children ? -13 : 13)
-                .style('text-anchor', d => d.children || d._children ? 'end' : 'start')
+                .attr('x', d => {{
+                    if (d.data.type === 'todo') return 8;  // Todo items have text to the right
+                    return d.children || d._children ? -13 : 13;
+                }})
+                .style('text-anchor', d => {{
+                    if (d.data.type === 'todo') return 'start';
+                    return d.children || d._children ? 'end' : 'start';
+                }})
                 .text(d => {{
+                    if (d.data.type === 'todo') {{
+                        const statusIcon = {{
+                            'initial': '⭕',
+                            'pending': '🟡', 
+                            'completed': '✅'
+                        }}[d.data.metadata?.status] || '⭕';
+                        return `${{statusIcon}} ${{d.data.name.replace('📋 ', '')}}`;
+                    }}
                     const icon = d.data.metadata?.icon || '';
                     return `${{icon}} ${{d.data.name}}`;
                 }})
-                .style('fill-opacity', 1e-6);
+                .style('fill-opacity', 1e-6)
+                .style('font-size', d => d.data.type === 'todo' ? '10px' : '12px');
             
             // Add todo badges
             if (showTodos) {{
@@ -886,12 +1032,14 @@ class MindMapGenerator:
                     if (d.data.type === 'root') return 12;
                     if (d.data.type === 'category') return 10;
                     if (d.data.type === 'project') return 8;
+                    if (d.data.type === 'todo') return 5;  // Smaller circles for todos
                     return 6;
                 }})
                 .style('fill', d => {{
                     if (d.data.type === 'root') return '#ff6b6b';
                     if (d.data.type === 'category') return d.data.metadata?.color || '#4ecdc4';
                     if (d.data.type === 'project') return '#45b7d1';
+                    if (d.data.type === 'todo') return d.data.metadata?.priority_color || '#ffa502';
                     return '#96ceb4';
                 }})
                 .attr('cursor', 'pointer');
@@ -975,22 +1123,38 @@ class MindMapGenerator:
             .on('mouseover', function(event, d) {
                 const tooltip = d3.select('#tooltip');
                 let content = `<strong>${d.data.name}</strong><br>
-                               Type: ${d.data.type}<br>
-                               ${d.data.language ? `Language: ${d.data.language}<br>` : ''}
+                               Type: ${d.data.type}<br>`;
+                               
+                if (d.data.type === 'todo') {
+                    content += `Status: ${d.data.metadata?.status || 'unknown'}<br>
+                               Priority: ${d.data.metadata?.priority || 'medium'}<br>
+                               Todo ID: ${d.data.metadata?.todo_id || 'N/A'}<br>`;
+                    if (d.data.metadata?.created_at) {
+                        content += `Created: ${new Date(d.data.metadata.created_at).toLocaleDateString()}<br>`;
+                    }
+                    if (d.data.metadata?.updated_at) {
+                        content += `Updated: ${new Date(d.data.metadata.updated_at).toLocaleDateString()}<br>`;
+                    }
+                    content += `<div style="margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                               <strong>Full Description:</strong><br>${d.data.description}
+                               </div>`;
+                } else {
+                    content += `${d.data.language ? `Language: ${d.data.language}<br>` : ''}
                                ${d.data.description ? `Description: ${d.data.description}<br>` : ''}
                                ${d.data.metadata?.category ? `Category: ${d.data.metadata.category}<br>` : ''}
                                ${d.data.metadata?.size_estimate ? `Size: ${d.data.metadata.size_estimate}<br>` : ''}`;
-                
-                if (d.data.todo_summary && d.data.todo_summary.total > 0) {
-                    content += `<h4>📋 Todos (${d.data.todo_summary.total})</h4>`;
-                    content += `<div>Initial: ${d.data.todo_summary.initial} | Pending: ${d.data.todo_summary.pending} | Done: ${d.data.todo_summary.completed}</div>`;
-                    content += `<div>High: ${d.data.todo_summary.high_priority} | Med: ${d.data.todo_summary.medium_priority} | Low: ${d.data.todo_summary.low_priority}</div>`;
                     
-                    if (d.data.todo_summary.recent_todos && d.data.todo_summary.recent_todos.length > 0) {
-                        content += '<div style="margin-top: 5px;"><strong>Recent todos:</strong></div>';
-                        d.data.todo_summary.recent_todos.forEach(todo => {
-                            content += `<div class="todo-item">${todo.description}</div>`;
-                        });
+                    if (d.data.todo_summary && d.data.todo_summary.total > 0) {
+                        content += `<h4>📋 Todos (${d.data.todo_summary.total})</h4>`;
+                        content += `<div>Initial: ${d.data.todo_summary.initial} | Pending: ${d.data.todo_summary.pending} | Done: ${d.data.todo_summary.completed}</div>`;
+                        content += `<div>High: ${d.data.todo_summary.high_priority} | Med: ${d.data.todo_summary.medium_priority} | Low: ${d.data.todo_summary.low_priority}</div>`;
+                        
+                        if (d.data.todo_summary.recent_todos && d.data.todo_summary.recent_todos.length > 0) {
+                            content += '<div style="margin-top: 5px;"><strong>Recent todos:</strong></div>';
+                            d.data.todo_summary.recent_todos.forEach(todo => {
+                                content += `<div class="todo-item">${todo.description}</div>`;
+                            });
+                        }
                     }
                 }
                 
@@ -1241,6 +1405,7 @@ def main():
     parser.add_argument('--interactive', action='store_true', help='Add interactive features (HTML only)')
     parser.add_argument('--exclude', action='append', help='Exclude directories matching pattern')
     parser.add_argument('--include-todos', action='store_true', help='Include todo information in mindmap')
+    parser.add_argument('--include-todo-items', action='store_true', help='Include individual todo items as nodes (top 5 projects only)')
     parser.add_argument('--root', default='.', help='Root directory to scan (default: current directory)')
 
     args = parser.parse_args()
@@ -1257,10 +1422,12 @@ def main():
     print(f"🔍 Max depth: {args.depth}")
     if args.include_todos:
         print("📋 Todo integration: enabled")
+    if args.include_todo_items:
+        print("📋 Individual todo items: enabled (top 5 projects)")
     print("")
 
     # Generate mind map
-    generator = MindMapGenerator(args.root, args.include_todos)
+    generator = MindMapGenerator(args.root, args.include_todos, args.include_todo_items)
 
     print("🔄 Scanning project structure...")
     root_node = generator.scan_projects(args.depth, args.exclude or [])
@@ -1269,6 +1436,8 @@ def main():
     print(f"🏷️  Technologies: {', '.join(root_node.metadata.get('languages', []))}")
     if args.include_todos:
         print(f"📋 Total todos: {root_node.metadata.get('total_todos', 0)}")
+    if args.include_todo_items and generator.top_todo_projects:
+        print(f"📋 Top projects with individual todos: {', '.join(generator.top_todo_projects)}")
     print("")
 
     print(f"🎨 Generating {args.format.upper()} mind map...")

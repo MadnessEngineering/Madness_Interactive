@@ -1,21 +1,307 @@
-{
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Madness Interactive - Project Mind Map</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        #mindmap {
+            width: 100%;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .node {
+            cursor: pointer;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+        }
+        
+        .node circle {
+            stroke: white;
+            stroke-width: 2px;
+        }
+        
+        .node text {
+            font-size: 12px;
+            fill: white;
+            text-anchor: middle;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .node.todo text {
+            font-size: 10px;
+            text-anchor: start;
+        }
+        
+        .node.todo circle {
+            stroke-width: 1px;
+        }
+        
+        .link {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.3);
+            stroke-width: 2px;
+        }
+        
+        .link.todo {
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 1px;
+            stroke-dasharray: 2,2;
+        }
+        
+        /* Todo badge styles */
+        .todo-badge {
+            pointer-events: none;
+        }
+        
+        .todo-badge circle {
+            fill: #ff4757;
+            stroke: white;
+            stroke-width: 1px;
+        }
+        
+        .todo-badge text {
+            fill: white;
+            font-size: 10px;
+            font-weight: bold;
+            text-anchor: middle;
+            dominant-baseline: central;
+        }
+        
+        .priority-high { fill: #ff4757; }
+        .priority-medium { fill: #ffa502; }
+        .priority-low { fill: #2ed573; }
+        .status-initial { fill: #5352ed; }
+        .status-pending { fill: #ffa502; }
+        .status-completed { fill: #2ed573; }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 300px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .tooltip h4 {
+            margin: 0 0 5px 0;
+            color: #ffa502;
+        }
+        
+        .todo-item {
+            margin: 3px 0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .controls button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .controls button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .controls button.active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+        
+        .legend-icon {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Madness Interactive Mind Map</h1>
+            <p>A Mad Tinker's AI Project Hub Visualization</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-number">39</span>
+                <span class="stat-label">Projects</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">9</span>
+                <span class="stat-label">Technologies</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">9</span>
+                <span class="stat-label">Categories</span>
+            </div>
+            
+        </div>
+        
+        <div class="legend">
+            
+                    <div class="legend-item">
+                        <span class="legend-icon">🐍</span>
+                        <span>Python (15)</span>
+                    </div>
+                
+                    <div class="legend-item">
+                        <span class="legend-icon">📘</span>
+                        <span>Typescript (1)</span>
+                    </div>
+                
+                    <div class="legend-item">
+                        <span class="legend-icon">🦀</span>
+                        <span>Rust (2)</span>
+                    </div>
+                
+                    <div class="legend-item">
+                        <span class="legend-icon">🌙</span>
+                        <span>Lua (1)</span>
+                    </div>
+                
+                    <div class="legend-item">
+                        <span class="legend-icon">💻</span>
+                        <span>Powershell (1)</span>
+                    </div>
+                
+                    <div class="legend-item">
+                        <span class="legend-icon">🏛️</span>
+                        <span>Common (5)</span>
+                    </div>
+                
+                    <div class="legend-item">
+                        <span class="legend-icon">📱</span>
+                        <span>Mobile (2)</span>
+                    </div>
+                
+                    <div class="legend-item">
+                        <span class="legend-icon">🖥️</span>
+                        <span>Os (2)</span>
+                    </div>
+                
+                    <div class="legend-item">
+                        <span class="legend-icon">⚙️</span>
+                        <span>Tasker (10)</span>
+                    </div>
+                
+        </div>
+        
+        <div class='controls'><button onclick='expandAll()'>Expand All</button><button onclick='collapseAll()'>Collapse All</button><button onclick='resetView()'>Reset View</button></div>
+        
+        <div id="mindmap"></div>
+    </div>
+    
+    <div class="tooltip" id="tooltip" style="display: none;"></div>
+    
+    <script>
+        const data = {
   "name": "Madness Interactive",
   "type": "root",
   "language": "",
   "description": "A Mad Tinker's AI Project Hub",
   "metadata": {
-    "scan_time": "2025-06-30T18:00:42.326912",
+    "scan_time": "2025-06-30T18:08:39.718396",
     "total_projects": 39,
     "languages": [
-      "typescript",
-      "mobile",
+      "common",
       "powershell",
-      "OS",
-      "tasker",
-      "lua",
-      "python",
       "rust",
-      "common"
+      "tasker",
+      "typescript",
+      "OS",
+      "python",
+      "mobile",
+      "lua"
     ],
     "todo_enabled": false,
     "total_todos": 0
@@ -28,7 +314,7 @@
       "description": "Python projects",
       "metadata": {
         "color": "#3776ab",
-        "icon": "🐍",
+        "icon": "\ud83d\udc0d",
         "project_count": 15
       },
       "children": [
@@ -65,7 +351,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T17:58:32.500149",
+            "last_modified": "2025-06-30T18:04:33.849748",
             "size_estimate": "180.2KB"
           },
           "children": [
@@ -155,7 +441,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T17:58:34.337432",
+            "last_modified": "2025-06-30T18:04:35.747865",
             "size_estimate": "64.7KB"
           },
           "children": [
@@ -221,7 +507,7 @@
             "category": "Other",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T17:58:31.911102",
+            "last_modified": "2025-06-30T18:04:33.778310",
             "size_estimate": "83.3KB"
           },
           "children": [
@@ -254,7 +540,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T17:58:32.350406",
+            "last_modified": "2025-06-30T18:04:33.613586",
             "size_estimate": "94.5KB"
           },
           "children": [
@@ -483,7 +769,7 @@
       "description": "Typescript projects",
       "metadata": {
         "color": "#3178c6",
-        "icon": "📘",
+        "icon": "\ud83d\udcd8",
         "project_count": 1
       },
       "children": [
@@ -496,7 +782,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T17:58:32.073913",
+            "last_modified": "2025-06-30T18:04:33.823542",
             "size_estimate": "36.4MB"
           },
           "children": [
@@ -539,7 +825,7 @@
       "description": "Rust projects",
       "metadata": {
         "color": "#dea584",
-        "icon": "🦀",
+        "icon": "\ud83e\udd80",
         "project_count": 2
       },
       "children": [
@@ -636,7 +922,7 @@
       "description": "Lua projects",
       "metadata": {
         "color": "#000080",
-        "icon": "🌙",
+        "icon": "\ud83c\udf19",
         "project_count": 1
       },
       "children": [
@@ -683,7 +969,7 @@
       "description": "Powershell projects",
       "metadata": {
         "color": "#012456",
-        "icon": "💻",
+        "icon": "\ud83d\udcbb",
         "project_count": 1
       },
       "children": [
@@ -730,7 +1016,7 @@
       "description": "Common projects",
       "metadata": {
         "color": "#8b4513",
-        "icon": "🏛️",
+        "icon": "\ud83c\udfdb\ufe0f",
         "project_count": 5
       },
       "children": [
@@ -776,7 +1062,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": false,
-            "last_modified": "2025-06-30T17:58:31.931835",
+            "last_modified": "2025-06-30T18:04:33.595631",
             "size_estimate": "5.0MB"
           },
           "children": [],
@@ -800,7 +1086,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T17:58:31.856736",
+            "last_modified": "2025-06-30T18:04:33.741167",
             "size_estimate": "114.1KB"
           },
           "children": [],
@@ -857,7 +1143,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T17:58:32.237170",
+            "last_modified": "2025-06-30T18:04:33.606286",
             "size_estimate": "45.3MB"
           },
           "children": [
@@ -900,7 +1186,7 @@
       "description": "Mobile projects",
       "metadata": {
         "color": "#a4c639",
-        "icon": "📱",
+        "icon": "\ud83d\udcf1",
         "project_count": 2
       },
       "children": [
@@ -980,7 +1266,7 @@
       "description": "Os projects",
       "metadata": {
         "color": "#666666",
-        "icon": "🖥️",
+        "icon": "\ud83d\udda5\ufe0f",
         "project_count": 2
       },
       "children": [
@@ -1051,7 +1337,7 @@
       "description": "Tasker projects",
       "metadata": {
         "color": "#ff6b35",
-        "icon": "⚙️",
+        "icon": "\u2699\ufe0f",
         "project_count": 10
       },
       "children": [
@@ -1308,4 +1594,322 @@
       }
     }
   ]
-}
+};
+        let showTodos = false;
+        
+        const width = document.getElementById('mindmap').clientWidth;
+        const height = 600;
+        
+        const svg = d3.select("#mindmap")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+        
+        const g = svg.append("g");
+        
+        // Create zoom behavior
+        const zoom = d3.zoom()
+            .scaleExtent([0.1, 4])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+        
+        svg.call(zoom);
+        
+        // Create tree layout
+        const tree = d3.tree()
+            .size([height - 100, width - 200])
+            .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth);
+        
+        // Create hierarchy
+        const root = d3.hierarchy(data);
+        
+        // Collapse all nodes initially except root and first level
+        root.descendants().forEach(d => {
+            if (d.depth > 1) {
+                if (d.children) {
+                    d._children = d.children;
+                    d.children = null;
+                }
+            }
+        });
+        
+        let i = 0;
+        
+        function update(source) {
+            // Compute the new tree layout
+            const treeData = tree(root);
+            const nodes = treeData.descendants();
+            const links = treeData.descendants().slice(1);
+            
+            // Normalize for fixed-depth
+            nodes.forEach(d => {
+                d.y = d.depth * 180;
+            });
+            
+            // Update nodes
+            const node = g.selectAll('g.node')
+                .data(nodes, d => d.id || (d.id = ++i));
+            
+            // Enter new nodes
+            const nodeEnter = node.enter().append('g')
+                .attr('class', 'node')
+                .attr('transform', d => `translate(${source.y0 || 0},${source.x0 || 0})`)
+                .on('click', click);
+            
+            // Add circles
+            nodeEnter.append('circle')
+                .attr('r', 1e-6)
+                .style('fill', d => {
+                    if (d.data.type === 'root') return '#ff6b6b';
+                    if (d.data.type === 'category') return d.data.metadata?.color || '#4ecdc4';
+                    if (d.data.type === 'project') return '#45b7d1';
+                    if (d.data.type === 'todo') return d.data.metadata?.priority_color || '#ffa502';
+                    return '#96ceb4';
+                })
+                .style('opacity', 0.8)
+                .attr('class', d => d.data.type === 'todo' ? 'todo-node' : '');
+            
+            // Add labels
+            nodeEnter.append('text')
+                .attr('dy', '.35em')
+                .attr('x', d => {
+                    if (d.data.type === 'todo') return 8;  // Todo items have text to the right
+                    return d.children || d._children ? -13 : 13;
+                })
+                .style('text-anchor', d => {
+                    if (d.data.type === 'todo') return 'start';
+                    return d.children || d._children ? 'end' : 'start';
+                })
+                .text(d => {
+                    if (d.data.type === 'todo') {
+                        const statusIcon = {
+                            'initial': '⭕',
+                            'pending': '🟡', 
+                            'completed': '✅'
+                        }[d.data.metadata?.status] || '⭕';
+                        return `${statusIcon} ${d.data.name.replace('📋 ', '')}`;
+                    }
+                    const icon = d.data.metadata?.icon || '';
+                    return `${icon} ${d.data.name}`;
+                })
+                .style('fill-opacity', 1e-6)
+                .style('font-size', d => d.data.type === 'todo' ? '10px' : '12px');
+            
+            // Add todo badges
+            if (showTodos) {
+                const todoBadges = nodeEnter.filter(d => d.data.todo_summary && d.data.todo_summary.total > 0)
+                    .append('g')
+                    .attr('class', 'todo-badge')
+                    .attr('transform', 'translate(15, -15)');
+                
+                todoBadges.append('circle')
+                    .attr('r', 8)
+                    .style('fill', d => {
+                        if (d.data.todo_summary.high_priority > 0) return '#ff4757';
+                        if (d.data.todo_summary.medium_priority > 0) return '#ffa502';
+                        return '#2ed573';
+                    });
+                
+                todoBadges.append('text')
+                    .text(d => d.data.todo_summary.total)
+                    .attr('dy', '.35em')
+                    .style('font-size', '10px')
+                    .style('fill', 'white')
+                    .style('text-anchor', 'middle');
+            }
+            
+            // Transition nodes to their new position
+            const nodeUpdate = nodeEnter.merge(node);
+            
+            nodeUpdate.transition()
+                .duration(750)
+                .attr('transform', d => `translate(${d.y},${d.x})`);
+            
+            nodeUpdate.select('circle')
+                .attr('r', d => {
+                    if (d.data.type === 'root') return 12;
+                    if (d.data.type === 'category') return 10;
+                    if (d.data.type === 'project') return 8;
+                    if (d.data.type === 'todo') return 5;  // Smaller circles for todos
+                    return 6;
+                })
+                .style('fill', d => {
+                    if (d.data.type === 'root') return '#ff6b6b';
+                    if (d.data.type === 'category') return d.data.metadata?.color || '#4ecdc4';
+                    if (d.data.type === 'project') return '#45b7d1';
+                    if (d.data.type === 'todo') return d.data.metadata?.priority_color || '#ffa502';
+                    return '#96ceb4';
+                })
+                .attr('cursor', 'pointer');
+            
+            nodeUpdate.select('text')
+                .style('fill-opacity', 1);
+            
+            // Update todo badges
+            nodeUpdate.selectAll('.todo-badge')
+                .style('display', showTodos ? 'block' : 'none');
+            
+            // Remove exiting nodes
+            const nodeExit = node.exit().transition()
+                .duration(750)
+                .attr('transform', d => `translate(${source.y},${source.x})`)
+                .remove();
+            
+            nodeExit.select('circle')
+                .attr('r', 1e-6);
+            
+            nodeExit.select('text')
+                .style('fill-opacity', 1e-6);
+            
+            // Update links
+            const link = g.selectAll('path.link')
+                .data(links, d => d.id);
+            
+            // Enter new links
+            const linkEnter = link.enter().insert('path', 'g')
+                .attr('class', 'link')
+                .attr('d', d => {
+                    const o = {x: source.x0 || 0, y: source.y0 || 0};
+                    return diagonal(o, o);
+                });
+            
+            // Transition links to their new position
+            linkEnter.merge(link).transition()
+                .duration(750)
+                .attr('d', d => diagonal(d, d.parent));
+            
+            // Remove exiting links
+            link.exit().transition()
+                .duration(750)
+                .attr('d', d => {
+                    const o = {x: source.x, y: source.y};
+                    return diagonal(o, o);
+                })
+                .remove();
+            
+            // Store the old positions for transition
+            nodes.forEach(d => {
+                d.x0 = d.x;
+                d.y0 = d.y;
+            });
+        }
+        
+        // Diagonal line generator
+        function diagonal(s, d) {
+            const path = `M ${s.y} ${s.x}
+                         C ${(s.y + d.y) / 2} ${s.x},
+                           ${(s.y + d.y) / 2} ${d.x},
+                           ${d.y} ${d.x}`;
+            return path;
+        }
+        
+        // Toggle children on click
+        function click(event, d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
+            }
+            update(d);
+        }
+        
+        // Add tooltip functionality
+        
+        g.selectAll('.node')
+            .on('mouseover', function(event, d) {
+                const tooltip = d3.select('#tooltip');
+                let content = `<strong>${d.data.name}</strong><br>
+                               Type: ${d.data.type}<br>`;
+                               
+                if (d.data.type === 'todo') {
+                    content += `Status: ${d.data.metadata?.status || 'unknown'}<br>
+                               Priority: ${d.data.metadata?.priority || 'medium'}<br>
+                               Todo ID: ${d.data.metadata?.todo_id || 'N/A'}<br>`;
+                    if (d.data.metadata?.created_at) {
+                        content += `Created: ${new Date(d.data.metadata.created_at).toLocaleDateString()}<br>`;
+                    }
+                    if (d.data.metadata?.updated_at) {
+                        content += `Updated: ${new Date(d.data.metadata.updated_at).toLocaleDateString()}<br>`;
+                    }
+                    content += `<div style="margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                               <strong>Full Description:</strong><br>${d.data.description}
+                               </div>`;
+                } else {
+                    content += `${d.data.language ? `Language: ${d.data.language}<br>` : ''}
+                               ${d.data.description ? `Description: ${d.data.description}<br>` : ''}
+                               ${d.data.metadata?.category ? `Category: ${d.data.metadata.category}<br>` : ''}
+                               ${d.data.metadata?.size_estimate ? `Size: ${d.data.metadata.size_estimate}<br>` : ''}`;
+                    
+                    if (d.data.todo_summary && d.data.todo_summary.total > 0) {
+                        content += `<h4>📋 Todos (${d.data.todo_summary.total})</h4>`;
+                        content += `<div>Initial: ${d.data.todo_summary.initial} | Pending: ${d.data.todo_summary.pending} | Done: ${d.data.todo_summary.completed}</div>`;
+                        content += `<div>High: ${d.data.todo_summary.high_priority} | Med: ${d.data.todo_summary.medium_priority} | Low: ${d.data.todo_summary.low_priority}</div>`;
+                        
+                        if (d.data.todo_summary.recent_todos && d.data.todo_summary.recent_todos.length > 0) {
+                            content += '<div style="margin-top: 5px;"><strong>Recent todos:</strong></div>';
+                            d.data.todo_summary.recent_todos.forEach(todo => {
+                                content += `<div class="todo-item">${todo.description}</div>`;
+                            });
+                        }
+                    }
+                }
+                
+                tooltip.style('display', 'block')
+                    .html(content)
+                    .style('left', (event.pageX + 10) + 'px')
+                    .style('top', (event.pageY - 10) + 'px');
+            })
+            .on('mouseout', function() {
+                d3.select('#tooltip').style('display', 'none');
+            });
+        
+        
+        // Global functions for controls
+        window.expandAll = function() {
+            root.descendants().forEach(d => {
+                if (d._children) {
+                    d.children = d._children;
+                    d._children = null;
+                }
+            });
+            update(root);
+        };
+        
+        window.collapseAll = function() {
+            root.descendants().forEach(d => {
+                if (d.children && d.depth > 0) {
+                    d._children = d.children;
+                    d.children = null;
+                }
+            });
+            update(root);
+        };
+        
+        window.resetView = function() {
+            svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+        };
+        
+        window.toggleTodos = function() {
+            showTodos = !showTodos;
+            const button = document.getElementById('todoToggle');
+            if (button) {
+                button.classList.toggle('active', showTodos);
+                button.textContent = showTodos ? 'Hide Todos' : 'Show Todos';
+            }
+            update(root);
+        };
+        
+        // Initial render
+        root.x0 = height / 2;
+        root.y0 = 0;
+        update(root);
+        
+        // Center the view
+        svg.call(zoom.transform, d3.zoomIdentity.translate(50, 50));
+        
+    </script>
+</body>
+</html>
