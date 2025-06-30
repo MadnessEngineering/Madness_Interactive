@@ -104,8 +104,9 @@ fi
 # Create docs directory if it doesn't exist
 mkdir -p docs
 
-# Generate the mind map
-echo -e "${BLUE}🎨 Generating ${FORMAT^^} mind map...${NC}"
+# Generate the mind map (fix the problematic line)
+FORMAT_UPPER=$(echo "$FORMAT" | tr '[:lower:]' '[:upper:]')
+echo -e "${BLUE}🎨 Generating ${FORMAT_UPPER} mind map...${NC}"
 echo -e "${CYAN}   Format: ${FORMAT}${NC}"
 echo -e "${CYAN}   Output: ${OUTPUT}${NC}"
 echo -e "${CYAN}   Depth: ${DEPTH}${NC}"

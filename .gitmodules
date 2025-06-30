@@ -118,3 +118,6 @@
 [submodule "examples/ultimate_mcp_client"]
 	path = examples/ultimate_mcp_client
 	url = https://github.com/Dicklesworthstone/ultimate_mcp_client.git
+[submodule ".hammerspoon"]
+	path = .hammerspoon
+	url = https://github.com/DanEdens/DansHammerSpoon.git
