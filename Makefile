@@ -1,7 +1,7 @@
 # Madness Interactive Makefile
 # Comprehensive project management and submodule workflow
 
-.PHONY: help new list-projects clean-all status centralize-cursor-rules list-cursor-rules restore-cursor-rules mindmap mindmap-interactive mindmap-svg mindmap-json mindmap-all mindmap-help
+.PHONY: help new list-projects clean-all status centralize-cursor-rules list-cursor-rules restore-cursor-rules mindmap mindmap-interactive mindmap-svg mindmap-json mindmap-all mindmap-help invent omnispindle swarmdesk swarmonomicon whispermind check-vitals doctor sync-the-swarm tinker-time unleash-chaos
 
 # Default target
 help:
@@ -12,6 +12,20 @@ help:
 	@echo "  list-projects  - List all submodules"
 	@echo "  status         - Check submodule status"
 	@echo "  clean-all      - Clean build artifacts"
+	@echo ""
+	@echo "Deployment:"
+	@echo "  invent         - Deploy Inventorium project (frontend + backend)"
+	@echo "  omnispindle    - Deploy Omnispindle project"
+	@echo "  swarmdesk      - Deploy SwarmDesk project"
+	@echo "  swarmonomicon  - Deploy Swarmonomicon project to EC2"
+	@echo "  whispermind    - Install Whispermind Conduit as a Windows service"
+	@echo ""
+	@echo "Workshop & Diagnostics:"
+	@echo "  check-vitals   - Run a comprehensive health check on all services"
+	@echo "  doctor         - Check if local development environment is set up correctly"
+	@echo "  sync-the-swarm - Update the main repo and all submodules"
+	@echo "  tinker-time    - Need inspiration? Get a random Mad Tinker tip!"
+	@echo "  unleash-chaos  - Intentionally break something to test resilience (use with caution!)"
 	@echo ""
 	@echo "Cursor Rules:"
 	@echo "  list-cursor-rules      - Show projects with cursor rules"
@@ -332,3 +346,159 @@ mindmap-all: ## Generate all mind map formats
 
 mindmap-help: ## Show mind map generator help
 	@python3 scripts/mindmap_generator.py --help
+
+# Inventorium deployment target
+invent:
+	@echo "🎭 Deploying Inventorium - Madness Interactive Workshop..."
+	@echo "=================================================="
+	@if [ -d "projects/common/Inventorium" ]; then \
+		cd projects/common/Inventorium && make deploy; \
+	else \
+		echo "❌ Inventorium project not found at projects/common/Inventorium"; \
+		echo "   Make sure the Inventorium submodule is properly initialized"; \
+		exit 1; \
+	fi
+	@echo "🎉 Inventorium deployment complete!"
+	@echo "📍 Visit: https://madnessinteractive.cc"
+
+# Omnispindle deployment target
+omnispindle:
+	@echo "⚙️  Deploying Omnispindle - The Heart of the Machine..."
+	@echo "=================================================="
+	@if [ -d "projects/python/Omnispindle" ]; then \
+		cd projects/python/Omnispindle && make deploy; \
+	else \
+		echo "❌ Omnispindle project not found at projects/python/Omnispindle"; \
+		exit 1; \
+	fi
+	@echo "✅ Omnispindle deployment complete!"
+
+# SwarmDesk deployment target
+swarmdesk:
+	@echo "🕹️  Deploying SwarmDesk - The Agent Command Center..."
+	@echo "=================================================="
+	@if [ -d "projects/common/SwarmDesk" ]; then \
+		cd projects/common/SwarmDesk && make deploy; \
+	else \
+		echo "❌ SwarmDesk project not found at projects/common/SwarmDesk"; \
+		exit 1; \
+	fi
+	@echo "✅ SwarmDesk deployment complete!"
+
+# Swarmonomicon deployment target
+swarmonomicon:
+	@echo "📚 Deploying Swarmonomicon - The Great Grimoire..."
+	@echo "=================================================="
+	@if [ -d "projects/common/Swarmonomicon" ]; then \
+		cd projects/common/Swarmonomicon && ./deploy_to_ec2.sh; \
+	else \
+		echo "❌ Swarmonomicon project not found at projects/common/Swarmonomicon"; \
+		exit 1; \
+	fi
+	@echo "✅ Swarmonomicon deployment to EC2 initiated!"
+
+# Whispermind Conduit deployment target
+whispermind:
+	@echo "🧠 Installing Whispermind Conduit - The Neural Bridge..."
+	@echo "=================================================="
+	@echo "⚠️  This will install a Windows service and may require administrator privileges."
+	@if [ -d "projects/common/Whispermind_Conduit" ]; then \
+		cd projects/common/Whispermind_Conduit && npm run install-service; \
+	else \
+		echo "❌ Whispermind_Conduit project not found at projects/common/Whispermind_Conduit"; \
+		exit 1; \
+	fi
+	@echo "✅ Whispermind Conduit service installation complete!"
+
+#
+# Workshop & Diagnostics
+#__________________________________________________________________________________
+
+tinker-time:
+	@echo "                      "
+	@echo "      .---.           "
+	@echo "     /     \          "
+	@echo "    |       |         "
+	@echo "    |       |         "
+	@echo "    '-------'         "
+	@echo "     \\   //          "
+	@echo "      \\ //           "
+	@echo "       V              "
+	@echo "Tinker's Tip: If it ain't broke, you haven't added enough features yet!"
+
+sync-the-swarm:
+	@echo "🛰️  Syncing the Swarm with the Mothership..."
+	@echo "=================================================="
+	@echo "Pulling latest changes for Madness Interactive..."
+	@git pull
+	@echo "Updating all project submodules..."
+	@git submodule update --remote --merge
+	@echo "✅ Workshop is now in sync!"
+
+doctor:
+	@echo "🩺 The Doctor is in! Checking your workshop's vital signs..."
+	@echo "=========================================================="
+	@$(MAKE) -s check-tool TOOL=git
+	@$(MAKE) -s check-tool TOOL=gh
+	@$(MAKE) -s check-tool TOOL=jj
+	@$(MAKE) -s check-tool TOOL=docker
+	@$(MAKE) -s check-tool TOOL=node
+	@$(MAKE) -s check-tool TOOL=npm
+	@$(MAKE) -s check-tool TOOL=pm2
+	@$(MAKE) -s check-tool TOOL=uv
+	@$(MAKE) -s check-tool TOOL=cfcli
+	@echo "----------------------------------------------------------"
+	@echo "✅ Doctor's checkup complete!"
+
+check-tool:
+	@if command -v $(TOOL) >/dev/null 2>&1; then \
+		printf "  [✅] %-10s - Found at: %s\n" "$(TOOL)" "$$(command -v $(TOOL))"; \
+	else \
+		printf "  [❌] %-10s - Not found. Please install and configure.\n" "$(TOOL)"; \
+	fi
+
+check-vitals:
+	@echo "❤️  Checking the Vitals of the Madness Interactive Ecosystem..."
+	@echo "============================================================"
+	@echo "-> Web Services:"
+	@curl -s -o /dev/null -w "  [ Frontend      ] HTTP %{http_code} | %{url_effective}\n" https://madnessinteractive.cc/ || echo "  [ Frontend      ] ❌ FAILED"
+	@curl -s -o /dev/null -w "  [ Backend API   ] HTTP %{http_code} | %{url_effective}\n" https://madnessinteractive.cc/api/health || echo "  [ Backend API   ] ❌ FAILED"
+	@curl -s -o /dev/null -w "  [ SwarmDesk     ] HTTP %{http_code} | %{url_effective}\n" https://madnessinteractive.cc/SwarmDesk/ || echo "  [ SwarmDesk     ] ❌ FAILED"
+	@echo "-> Remote Processes (Omnispindle Servers):"
+	@ssh -o ConnectTimeout=5 eaws "pm2 ls | grep -E 'App name|online|stopped|errored'" 2>/dev/null | awk '{print "  [ eaws ] " $$0}' || echo "  [ eaws ] ❌ Could not connect or pm2 not found."
+	@ssh -o ConnectTimeout=5 saws "pm2 ls | grep -E 'App name|online|stopped|errored'" 2>/dev/null | awk '{print "  [ saws ] " $$0}' || echo "  [ saws ] ❌ Could not connect or pm2 not found."
+	@echo "============================================================"
+	@echo "✅ Vitals check complete."
+
+unleash-chaos:
+	@echo ""
+	@echo "                 ,                           ,"
+	@echo "               #_~,                         ,~_#"
+	@echo "            #_~  )a,                     ,a(  ~_#"
+	@echo "           (  ~_# \"~,                 ,~\" #_~  )"
+	@echo "            \"#_~   )a,             ,a(   ~_#\""
+	@echo "              #_~ \") ,\"#_~     ~_#\", ( \"~_#"
+	@echo "               #_~  ) ' #_~   ~_# ' (  ~_#"
+	@echo "                \"#_~ ' ( \"#_~_#\" ) ' ~_#\""
+	@echo "                  \"#_~, ' / \\ ' ,~_#\""
+	@echo "                    \"~_# | | #_~\""
+	@echo "                        | |"
+	@echo "                        | |"
+	@echo "                      ,,-' '-.,"
+	@echo "                     ( (     ) )"
+	@echo "                      '._'-'_.'"
+	@echo "                        '---'"
+	@echo ""
+	@echo "🔥🔥🔥 WARNING: YOU ARE ABOUT TO UNLEASH THE CHAOS MONKEY! 🔥🔥🔥"
+	@echo "This is not a drill. This will intentionally try to restart a critical service."
+	@echo "This is a test of resilience. Do not run this on a whim."
+	@echo ""
+	@read -p "Are you a brave enough Mad Tinker for this? (y/N) " -n 1 -r; echo
+	@if [[ ! $$REPLY =~ ^[Yy]$$ ]]; then \
+		echo "😌 Chaos averted. The machine remains stable... for now."; \
+		exit 1; \
+	fi
+	@echo ""
+	@echo "🙈 Chaos Monkey is loose! Targeting Omnispindle on eaws..."
+	@ssh -o ConnectTimeout=5 eaws "pm2 restart Omnispindle" || (echo "🚨 Chaos Monkey failed to connect! Is the workshop even online?" && exit 1)
+	@echo "🐒 Omnispindle has been prodded. Check vitals to see if it recovered."
