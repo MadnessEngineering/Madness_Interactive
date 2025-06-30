@@ -1,7 +1,7 @@
 # Madness Interactive Makefile
 # Comprehensive project management and submodule workflow
 
-.PHONY: help new list-projects clean-all status centralize-cursor-rules list-cursor-rules restore-cursor-rules mindmap mindmap-interactive mindmap-svg mindmap-json mindmap-all mindmap-help invent omnispindle swarmdesk swarmonomicon whispermind check-vitals doctor sync-the-swarm tinker-time unleash-chaos
+.PHONY: help new list-projects clean-all status centralize-cursor-rules list-cursor-rules restore-cursor-rules mindmap mindmap-interactive mindmap-with-todos mindmap-svg mindmap-svg-todos mindmap-json mindmap-json-todos mindmap-dot mindmap-dot-todos mindmap-all mindmap-all-todos mindmap-help invent omnispindle swarmdesk swarmonomicon whispermind check-vitals doctor sync-the-swarm tinker-time unleash-chaos
 
 # Default target
 help:
@@ -314,21 +314,36 @@ clean-all:
 
 # Mind Map Generation
 mindmap: ## Generate interactive HTML mind map
-	@echo "🧠 Generating Madness Interactive Mind Map..."
+	@echo "🧠 Generating interactive HTML mind map..."
 	@python3 scripts/mindmap_generator.py --format html --interactive --output docs/mindmap.html
 	@echo "✨ Mind map generated at docs/mindmap.html"
 
 mindmap-interactive: mindmap ## Alias for interactive mind map
+
+mindmap-with-todos: ## Generate interactive HTML mind map with todo information
+	@echo "🧠 Generating interactive HTML mind map with todos..."
+	@python3 scripts/mindmap_generator.py --format html --interactive --include-todos --output docs/mindmap.html
+	@echo "✨ Mind map with todos generated at docs/mindmap.html"
 
 mindmap-svg: ## Generate SVG mind map
 	@echo "🎨 Generating SVG mind map..."
 	@python3 scripts/mindmap_generator.py --format svg --output docs/mindmap.svg
 	@echo "✨ SVG mind map generated at docs/mindmap.svg"
 
+mindmap-svg-todos: ## Generate SVG mind map with todo information
+	@echo "🎨 Generating SVG mind map with todos..."
+	@python3 scripts/mindmap_generator.py --format svg --include-todos --output docs/mindmap.svg
+	@echo "✨ SVG mind map with todos generated at docs/mindmap.svg"
+
 mindmap-json: ## Generate JSON data export
 	@echo "📄 Generating JSON mind map data..."
 	@python3 scripts/mindmap_generator.py --format json --output docs/mindmap.json
 	@echo "✨ JSON data generated at docs/mindmap.json"
+
+mindmap-json-todos: ## Generate JSON data export with todo information
+	@echo "📄 Generating JSON mind map data with todos..."
+	@python3 scripts/mindmap_generator.py --format json --include-todos --output docs/mindmap.json
+	@echo "✨ JSON data with todos generated at docs/mindmap.json"
 
 mindmap-dot: ## Generate DOT/Graphviz mind map
 	@echo "🎯 Generating DOT mind map..."
@@ -336,13 +351,27 @@ mindmap-dot: ## Generate DOT/Graphviz mind map
 	@echo "✨ DOT file generated at docs/mindmap.dot"
 	@echo "   To render: dot -Tpng docs/mindmap.dot -o docs/mindmap.png"
 
+mindmap-dot-todos: ## Generate DOT/Graphviz mind map with todo information
+	@echo "🎯 Generating DOT mind map with todos..."
+	@python3 scripts/mindmap_generator.py --format dot --include-todos --output docs/mindmap.dot
+	@echo "✨ DOT file with todos generated at docs/mindmap.dot"
+	@echo "   To render: dot -Tpng docs/mindmap.dot -o docs/mindmap.png"
+
 mindmap-all: ## Generate all mind map formats
-	@echo "🚀 Generating all mind map formats..."
+	@echo "🎨 Generating all mind map formats..."
 	@make mindmap
 	@make mindmap-svg
 	@make mindmap-json
 	@make mindmap-dot
-	@echo "🎉 All mind maps generated in docs/ directory!"
+	@echo "✨ All mind map formats generated!"
+
+mindmap-all-todos: ## Generate all mind map formats with todo information
+	@echo "🎨 Generating all mind map formats with todos..."
+	@make mindmap-with-todos
+	@make mindmap-svg-todos
+	@make mindmap-json-todos
+	@make mindmap-dot-todos
+	@echo "✨ All mind map formats with todos generated!"
 
 mindmap-help: ## Show mind map generator help
 	@python3 scripts/mindmap_generator.py --help

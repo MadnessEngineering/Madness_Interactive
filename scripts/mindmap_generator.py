@@ -16,9 +16,10 @@ Options:
     --style tech|hierarchical   Mind map style (default: tech)
     --interactive               Add interactive features (HTML only)
     --exclude PATTERN           Exclude directories matching pattern
+    --include-todos             Include todo information in mindmap
     
 Examples:
-    python mindmap_generator.py --format html --interactive
+    python mindmap_generator.py --format html --interactive --include-todos
     python mindmap_generator.py --format svg --style hierarchical
     python mindmap_generator.py --format dot --depth 2
 """
@@ -27,10 +28,46 @@ import os
 import json
 import argparse
 import re
+import sys
 from pathlib import Path
-from typing import Dict, List, Any, Set
+from typing import Dict, List, Any, Set, Optional
 from dataclasses import dataclass, asdict
 from datetime import datetime
+
+# Try to import MCP todo server functionality
+try:
+    # Import MongoDB functionality if available
+    import pymongo
+    from pymongo import MongoClient
+    MONGO_AVAILABLE = True
+    
+    # Get MongoDB connection details
+    MONGO_HOST = os.getenv('AWSIP', 'localhost')
+    MONGO_PORT = 27017
+    MONGO_DB = 'swarmonomicon'  # Updated database name
+    MONGO_COLLECTION = 'todos'  # Updated collection name
+    
+except ImportError as e:
+    MONGO_AVAILABLE = False
+    print(f"Warning: MongoDB functionality not available: {e}")
+    print("Mindmap will generate without todo data.")
+    print("To enable todo integration, install pymongo: pip install pymongo")
+
+@dataclass
+class TodoSummary:
+    """Summary of todos for a project"""
+    total: int = 0
+    initial: int = 0
+    pending: int = 0
+    completed: int = 0
+    high_priority: int = 0
+    medium_priority: int = 0
+    low_priority: int = 0
+    recent_todos: List[Dict[str, Any]] = None
+
+    def __post_init__(self):
+        if self.recent_todos is None:
+            self.recent_todos = []
 
 @dataclass
 class ProjectNode:
@@ -42,20 +79,142 @@ class ProjectNode:
     description: str = ""
     children: List['ProjectNode'] = None
     metadata: Dict[str, Any] = None
-    
+    todo_summary: Optional[TodoSummary] = None
+
     def __post_init__(self):
         if self.children is None:
             self.children = []
         if self.metadata is None:
             self.metadata = {}
 
+class TodoIntegration:
+    """Handles todo data integration with mindmap"""
+    
+    def __init__(self):
+        self.mongo_available = MONGO_AVAILABLE
+    
+    def get_project_todos(self, project_name: str) -> TodoSummary:
+        """Get todo summary for a specific project"""
+        if not self.mongo_available:
+            return TodoSummary()
+        
+        try:
+            # Connect to MongoDB
+            client = MongoClient(MONGO_HOST, MONGO_PORT)
+            db = client[MONGO_DB]
+            collection = db[MONGO_COLLECTION]
+            
+            # Query todos for this project
+            todos_cursor = collection.find({"project": project_name})
+            
+            summary = TodoSummary()
+            for todo in todos_cursor:
+                summary.total += 1
+                
+                # Count by status
+                status = todo.get('status', 'initial')
+                if status == 'initial':
+                    summary.initial += 1
+                elif status == 'pending':
+                    summary.pending += 1
+                elif status == 'completed':
+                    summary.completed += 1
+                
+                # Count by priority
+                priority = todo.get('priority', 'medium').lower()
+                if priority == 'high':
+                    summary.high_priority += 1
+                elif priority == 'medium':
+                    summary.medium_priority += 1
+                elif priority == 'low':
+                    summary.low_priority += 1
+                
+                # Keep recent todos (limit to 5)
+                if len(summary.recent_todos) < 5:
+                    summary.recent_todos.append({
+                        'id': str(todo.get('_id', '')),
+                        'description': todo.get('description', '')[:100] + ('...' if len(todo.get('description', '')) > 100 else ''),
+                        'status': status,
+                        'priority': priority
+                    })
+            
+            client.close()
+            return summary
+            
+        except Exception as e:
+            print(f"Warning: Error fetching todos for project {project_name}: {e}")
+            return TodoSummary()
+    
+    def get_all_project_todos(self) -> Dict[str, TodoSummary]:
+        """Get todo summaries for all projects"""
+        if not self.mongo_available:
+            return {}
+        
+        try:
+            # Connect to MongoDB
+            client = MongoClient(MONGO_HOST, MONGO_PORT)
+            db = client[MONGO_DB]
+            collection = db[MONGO_COLLECTION]
+            
+            # Get all todos
+            todos_cursor = collection.find({})
+            
+            project_summaries = {}
+            for todo in todos_cursor:
+                project = todo.get('project', 'unknown')
+                if project not in project_summaries:
+                    project_summaries[project] = TodoSummary()
+                
+                summary = project_summaries[project]
+                summary.total += 1
+                
+                # Count by status
+                status = todo.get('status', 'initial')
+                if status == 'initial':
+                    summary.initial += 1
+                elif status == 'pending':
+                    summary.pending += 1
+                elif status == 'completed':
+                    summary.completed += 1
+                
+                # Count by priority
+                priority = todo.get('priority', 'medium').lower()
+                if priority == 'high':
+                    summary.high_priority += 1
+                elif priority == 'medium':
+                    summary.medium_priority += 1
+                elif priority == 'low':
+                    summary.low_priority += 1
+                
+                # Keep recent todos (limit to 3 per project)
+                if len(summary.recent_todos) < 3:
+                    summary.recent_todos.append({
+                        'id': str(todo.get('_id', '')),
+                        'description': todo.get('description', '')[:80] + ('...' if len(todo.get('description', '')) > 80 else ''),
+                        'status': status,
+                        'priority': priority
+                    })
+            
+            client.close()
+            return project_summaries
+            
+        except Exception as e:
+            print(f"Warning: Error fetching all todos: {e}")
+            return {}
+
 class MindMapGenerator:
     """Generate mind maps from project structure"""
-    
-    def __init__(self, root_path: str = "."):
+
+    def __init__(self, root_path: str = ".", include_todos: bool = False):
         self.root_path = Path(root_path).resolve()
         self.projects_path = self.root_path / "projects"
-        
+        self.include_todos = include_todos
+        self.todo_integration = None
+
+        # Initialize todo integration if requested
+        if include_todos:
+            self.todo_integration = TodoIntegration()
+
         # Language/technology mappings
         self.language_map = {
             'python': {'color': '#3776ab', 'icon': '🐍'},
@@ -70,7 +229,7 @@ class MindMapGenerator:
             'OS': {'color': '#666666', 'icon': '🖥️'},
             'common': {'color': '#8b4513', 'icon': '🏛️'},
         }
-        
+
         # Project categorization patterns
         self.category_patterns = {
             'AI/ML': ['ai', 'ml', 'scry', 'omnispindle', 'swarm'],
@@ -82,12 +241,17 @@ class MindMapGenerator:
             'Testing': ['test', 'pytest', 'kit'],
             'Communication': ['mqtt', 'conduit', 'bridge'],
         }
-    
+
     def scan_projects(self, max_depth: int = 3, exclude_patterns: List[str] = None) -> ProjectNode:
         """Scan the projects directory and build the project tree"""
-        exclude_patterns = exclude_patterns or [r'\.git', r'__pycache__', r'\.pytest_cache', 
+        exclude_patterns = exclude_patterns or [r'\.git', r'__pycache__', r'\.pytest_cache',
                                                r'node_modules', r'\.DS_Store', r'\.specstory']
-        
+
+        # Get all todo summaries if todo integration is enabled
+        project_todos = {}
+        if self.include_todos and self.todo_integration:
+            project_todos = self.todo_integration.get_all_project_todos()
+
         root_node = ProjectNode(
             name="Madness Interactive",
             path=str(self.root_path),
@@ -96,34 +260,36 @@ class MindMapGenerator:
             metadata={
                 'scan_time': datetime.now().isoformat(),
                 'total_projects': 0,
-                'languages': set()
+                'languages': set(),
+                'todo_enabled': self.include_todos,
+                'total_todos': sum(summary.total for summary in project_todos.values()) if project_todos else 0
             }
         )
-        
+
         if not self.projects_path.exists():
             return root_node
-        
+
         # Scan by language/technology categories
         for lang_dir in self.projects_path.iterdir():
             if not lang_dir.is_dir() or self._should_exclude(lang_dir.name, exclude_patterns):
                 continue
-                
-            lang_node = self._scan_language_category(lang_dir, max_depth - 1, exclude_patterns)
+
+            lang_node = self._scan_language_category(lang_dir, max_depth - 1, exclude_patterns, project_todos)
             if lang_node.children:  # Only add if it has projects
                 root_node.children.append(lang_node)
                 root_node.metadata['languages'].add(lang_node.language)
-        
+
         # Convert set to list for JSON serialization
         root_node.metadata['languages'] = list(root_node.metadata['languages'])
         root_node.metadata['total_projects'] = self._count_projects(root_node)
-        
+
         return root_node
-    
-    def _scan_language_category(self, lang_path: Path, max_depth: int, exclude_patterns: List[str]) -> ProjectNode:
+
+    def _scan_language_category(self, lang_path: Path, max_depth: int, exclude_patterns: List[str], project_todos: Dict[str, TodoSummary]) -> ProjectNode:
         """Scan a language category directory"""
         lang_name = lang_path.name
         lang_info = self.language_map.get(lang_name, {'color': '#666666', 'icon': '📁'})
-        
+
         lang_node = ProjectNode(
             name=lang_name.title(),
             path=str(lang_path),
@@ -136,30 +302,46 @@ class MindMapGenerator:
                 'project_count': 0
             }
         )
-        
+
         if max_depth <= 0:
             return lang_node
-        
+
+        # Aggregate todo summary for this language category
+        category_todo_summary = TodoSummary()
+
         # Scan projects in this language category
         for project_path in lang_path.iterdir():
             if not project_path.is_dir() or self._should_exclude(project_path.name, exclude_patterns):
                 continue
-            
-            project_node = self._scan_project(project_path, max_depth - 1, exclude_patterns, lang_name)
+
+            project_node = self._scan_project(project_path, max_depth - 1, exclude_patterns, lang_name, project_todos)
             if project_node:
                 lang_node.children.append(project_node)
                 lang_node.metadata['project_count'] += 1
-        
+
+                # Aggregate todos for this category
+                if project_node.todo_summary:
+                    category_todo_summary.total += project_node.todo_summary.total
+                    category_todo_summary.initial += project_node.todo_summary.initial
+                    category_todo_summary.pending += project_node.todo_summary.pending
+                    category_todo_summary.completed += project_node.todo_summary.completed
+                    category_todo_summary.high_priority += project_node.todo_summary.high_priority
+                    category_todo_summary.medium_priority += project_node.todo_summary.medium_priority
+                    category_todo_summary.low_priority += project_node.todo_summary.low_priority
+
+        # Assign aggregated todo summary to language category
+        lang_node.todo_summary = category_todo_summary
+
         return lang_node
-    
-    def _scan_project(self, project_path: Path, max_depth: int, exclude_patterns: List[str], language: str) -> ProjectNode:
+
+    def _scan_project(self, project_path: Path, max_depth: int, exclude_patterns: List[str], language: str, project_todos: Dict[str, TodoSummary]) -> ProjectNode:
         """Scan an individual project"""
         project_name = project_path.name
-        
+
         # Try to get project description from README or other sources
         description = self._get_project_description(project_path)
         category = self._categorize_project(project_name, description)
-        
+
         project_node = ProjectNode(
             name=project_name,
             path=str(project_path),
@@ -172,16 +354,17 @@ class MindMapGenerator:
                 'has_config': self._has_config_files(project_path),
                 'last_modified': self._get_last_modified(project_path),
                 'size_estimate': self._estimate_project_size(project_path)
-            }
+            },
+            todo_summary=project_todos.get(project_name, TodoSummary())
         )
-        
+
         # Optionally scan subdirectories for major components
         if max_depth > 0:
             for subdir in project_path.iterdir():
-                if (subdir.is_dir() and 
+                if (subdir.is_dir() and
                     not self._should_exclude(subdir.name, exclude_patterns) and
                     subdir.name in ['src', 'lib', 'components', 'modules', 'tools']):
-                    
+
                     sub_node = ProjectNode(
                         name=subdir.name,
                         path=str(subdir),
@@ -190,16 +373,16 @@ class MindMapGenerator:
                         description=f"{subdir.name} directory"
                     )
                     project_node.children.append(sub_node)
-        
+
         return project_node
-    
+
     def _should_exclude(self, name: str, patterns: List[str]) -> bool:
         """Check if a directory should be excluded"""
         for pattern in patterns:
             if re.search(pattern, name):
                 return True
         return False
-    
+
     def _get_project_description(self, project_path: Path) -> str:
         """Try to extract project description from various sources"""
         # Try README files
@@ -216,7 +399,7 @@ class MindMapGenerator:
                             return line[:100] + ('...' if len(line) > 100 else '')
                 except:
                     pass
-        
+
         # Try package.json for Node.js projects
         package_json = project_path / 'package.json'
         if package_json.exists():
@@ -226,7 +409,7 @@ class MindMapGenerator:
                     return data['description']
             except:
                 pass
-        
+
         # Try setup.py for Python projects
         setup_py = project_path / 'setup.py'
         if setup_py.exists():
@@ -238,20 +421,20 @@ class MindMapGenerator:
                     return match.group(1)
             except:
                 pass
-        
+
         return f"Project in {project_path.parent.name}"
-    
+
     def _categorize_project(self, name: str, description: str) -> str:
         """Categorize a project based on name and description"""
         text = (name + ' ' + description).lower()
-        
+
         for category, patterns in self.category_patterns.items():
             for pattern in patterns:
                 if pattern in text:
                     return category
-        
+
         return "Other"
-    
+
     def _has_config_files(self, project_path: Path) -> bool:
         """Check if project has common config files"""
         config_files = [
@@ -259,9 +442,9 @@ class MindMapGenerator:
             'requirements.txt', 'environment.yml', 'Dockerfile',
             '.env', 'config.json', 'config.yml'
         ]
-        
+
         return any((project_path / cf).exists() for cf in config_files)
-    
+
     def _get_last_modified(self, project_path: Path) -> str:
         """Get last modification time of the project"""
         try:
@@ -270,7 +453,7 @@ class MindMapGenerator:
             return datetime.fromtimestamp(latest).isoformat()
         except:
             return datetime.now().isoformat()
-    
+
     def _estimate_project_size(self, project_path: Path) -> str:
         """Estimate project size"""
         try:
@@ -285,16 +468,21 @@ class MindMapGenerator:
                 return f"{total_size/1024**3:.1f}GB"
         except:
             return "Unknown"
-    
+
     def _count_projects(self, node: ProjectNode) -> int:
         """Count total number of projects in the tree"""
         count = 1 if node.type == "project" else 0
         for child in node.children:
             count += self._count_projects(child)
         return count
-    
+
     def generate_html(self, root_node: ProjectNode, output_file: str, interactive: bool = True) -> None:
         """Generate an interactive HTML mind map"""
+
+        # Calculate todo statistics
+        total_todos = root_node.metadata.get('total_todos', 0)
+        todo_enabled = root_node.metadata.get('todo_enabled', False)
+
         html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -389,6 +577,32 @@ class MindMapGenerator:
             stroke-width: 2px;
         }}
         
+        /* Todo badge styles */
+        .todo-badge {{
+            pointer-events: none;
+        }}
+        
+        .todo-badge circle {{
+            fill: #ff4757;
+            stroke: white;
+            stroke-width: 1px;
+        }}
+        
+        .todo-badge text {{
+            fill: white;
+            font-size: 10px;
+            font-weight: bold;
+            text-anchor: middle;
+            dominant-baseline: central;
+        }}
+        
+        .priority-high {{ fill: #ff4757; }}
+        .priority-medium {{ fill: #ffa502; }}
+        .priority-low {{ fill: #2ed573; }}
+        .status-initial {{ fill: #5352ed; }}
+        .status-pending {{ fill: #ffa502; }}
+        .status-completed {{ fill: #2ed573; }}
+        
         .tooltip {{
             position: absolute;
             background: rgba(0, 0, 0, 0.9);
@@ -399,6 +613,18 @@ class MindMapGenerator:
             max-width: 300px;
             pointer-events: none;
             z-index: 1000;
+        }}
+        
+        .tooltip h4 {{
+            margin: 0 0 5px 0;
+            color: #ffa502;
+        }}
+        
+        .todo-item {{
+            margin: 3px 0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
         }}
         
         .controls {{
@@ -419,6 +645,10 @@ class MindMapGenerator:
         
         .controls button:hover {{
             background: rgba(255, 255, 255, 0.3);
+        }}
+        
+        .controls button.active {{
+            background: rgba(255, 255, 255, 0.4);
         }}
         
         .legend {{
@@ -464,13 +694,17 @@ class MindMapGenerator:
                 <span class="stat-number">{len(root_node.children)}</span>
                 <span class="stat-label">Categories</span>
             </div>
+            {f'''<div class="stat">
+                <span class="stat-number">{total_todos}</span>
+                <span class="stat-label">Total Todos</span>
+            </div>''' if todo_enabled else ''}
         </div>
         
         <div class="legend">
             {self._generate_legend_html(root_node)}
         </div>
         
-        {"<div class='controls'><button onclick='expandAll()'>Expand All</button><button onclick='collapseAll()'>Collapse All</button><button onclick='resetView()'>Reset View</button></div>" if interactive else ""}
+        {"<div class='controls'><button onclick='expandAll()'>Expand All</button><button onclick='collapseAll()'>Collapse All</button><button onclick='resetView()'>Reset View</button>" + ("<button id='todoToggle' onclick='toggleTodos()'>Toggle Todos</button>" if todo_enabled else "") + "</div>" if interactive else ""}
         
         <div id="mindmap"></div>
     </div>
@@ -479,20 +713,21 @@ class MindMapGenerator:
     
     <script>
         const data = {json.dumps(self._node_to_dict(root_node), indent=2)};
+        let showTodos = {str(todo_enabled).lower()};
         {self._generate_d3_script(interactive)}
     </script>
 </body>
 </html>"""
-        
+
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(html_content)
-        
+
         print(f"✨ Interactive HTML mind map generated: {output_file}")
-    
+
     def _generate_legend_html(self, root_node: ProjectNode) -> str:
         """Generate HTML for the legend"""
         legend_items = []
-        
+
         for child in root_node.children:
             if child.type == "category":
                 icon = child.metadata.get('icon', '📁')
@@ -502,12 +737,12 @@ class MindMapGenerator:
                         <span>{child.name} ({child.metadata.get('project_count', 0)})</span>
                     </div>
                 ''')
-        
+
         return ''.join(legend_items)
-    
+
     def _node_to_dict(self, node: ProjectNode) -> Dict:
         """Convert ProjectNode to dictionary for JSON serialization"""
-        return {
+        result = {
             'name': node.name,
             'type': node.type,
             'language': node.language,
@@ -515,7 +750,22 @@ class MindMapGenerator:
             'metadata': node.metadata,
             'children': [self._node_to_dict(child) for child in node.children]
         }
-    
+
+        # Include todo summary if present
+        if node.todo_summary:
+            result['todo_summary'] = {
+                'total': node.todo_summary.total,
+                'initial': node.todo_summary.initial,
+                'pending': node.todo_summary.pending,
+                'completed': node.todo_summary.completed,
+                'high_priority': node.todo_summary.high_priority,
+                'medium_priority': node.todo_summary.medium_priority,
+                'low_priority': node.todo_summary.low_priority,
+                'recent_todos': node.todo_summary.recent_todos
+            }
+
+        return result
+
     def _generate_d3_script(self, interactive: bool) -> str:
         """Generate D3.js script for the mind map"""
         return f"""
@@ -601,6 +851,29 @@ class MindMapGenerator:
                 }})
                 .style('fill-opacity', 1e-6);
             
+            // Add todo badges
+            if (showTodos) {{
+                const todoBadges = nodeEnter.filter(d => d.data.todo_summary && d.data.todo_summary.total > 0)
+                    .append('g')
+                    .attr('class', 'todo-badge')
+                    .attr('transform', 'translate(15, -15)');
+                
+                todoBadges.append('circle')
+                    .attr('r', 8)
+                    .style('fill', d => {{
+                        if (d.data.todo_summary.high_priority > 0) return '#ff4757';
+                        if (d.data.todo_summary.medium_priority > 0) return '#ffa502';
+                        return '#2ed573';
+                    }});
+                
+                todoBadges.append('text')
+                    .text(d => d.data.todo_summary.total)
+                    .attr('dy', '.35em')
+                    .style('font-size', '10px')
+                    .style('fill', 'white')
+                    .style('text-anchor', 'middle');
+            }}
+            
             // Transition nodes to their new position
             const nodeUpdate = nodeEnter.merge(node);
             
@@ -625,6 +898,10 @@ class MindMapGenerator:
             
             nodeUpdate.select('text')
                 .style('fill-opacity', 1);
+            
+            // Update todo badges
+            nodeUpdate.selectAll('.todo-badge')
+                .style('display', showTodos ? 'block' : 'none');
             
             // Remove exiting nodes
             const nodeExit = node.exit().transition()
@@ -697,15 +974,28 @@ class MindMapGenerator:
         g.selectAll('.node')
             .on('mouseover', function(event, d) {
                 const tooltip = d3.select('#tooltip');
+                let content = `<strong>${d.data.name}</strong><br>
+                               Type: ${d.data.type}<br>
+                               ${d.data.language ? `Language: ${d.data.language}<br>` : ''}
+                               ${d.data.description ? `Description: ${d.data.description}<br>` : ''}
+                               ${d.data.metadata?.category ? `Category: ${d.data.metadata.category}<br>` : ''}
+                               ${d.data.metadata?.size_estimate ? `Size: ${d.data.metadata.size_estimate}<br>` : ''}`;
+                
+                if (d.data.todo_summary && d.data.todo_summary.total > 0) {
+                    content += `<h4>📋 Todos (${d.data.todo_summary.total})</h4>`;
+                    content += `<div>Initial: ${d.data.todo_summary.initial} | Pending: ${d.data.todo_summary.pending} | Done: ${d.data.todo_summary.completed}</div>`;
+                    content += `<div>High: ${d.data.todo_summary.high_priority} | Med: ${d.data.todo_summary.medium_priority} | Low: ${d.data.todo_summary.low_priority}</div>`;
+                    
+                    if (d.data.todo_summary.recent_todos && d.data.todo_summary.recent_todos.length > 0) {
+                        content += '<div style="margin-top: 5px;"><strong>Recent todos:</strong></div>';
+                        d.data.todo_summary.recent_todos.forEach(todo => {
+                            content += `<div class="todo-item">${todo.description}</div>`;
+                        });
+                    }
+                }
+                
                 tooltip.style('display', 'block')
-                    .html(`
-                        <strong>${d.data.name}</strong><br>
-                        Type: ${d.data.type}<br>
-                        ${d.data.language ? `Language: ${d.data.language}<br>` : ''}
-                        ${d.data.description ? `Description: ${d.data.description}<br>` : ''}
-                        ${d.data.metadata?.category ? `Category: ${d.data.metadata.category}<br>` : ''}
-                        ${d.data.metadata?.size_estimate ? `Size: ${d.data.metadata.size_estimate}<br>` : ''}
-                    `)
+                    .html(content)
                     .style('left', (event.pageX + 10) + 'px')
                     .style('top', (event.pageY - 10) + 'px');
             })
@@ -739,6 +1029,16 @@ class MindMapGenerator:
             svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
         }};
         
+        window.toggleTodos = function() {{
+            showTodos = !showTodos;
+            const button = document.getElementById('todoToggle');
+            if (button) {{
+                button.classList.toggle('active', showTodos);
+                button.textContent = showTodos ? 'Hide Todos' : 'Show Todos';
+            }}
+            update(root);
+        }};
+        
         // Initial render
         root.x0 = height / 2;
         root.y0 = 0;
@@ -747,16 +1047,16 @@ class MindMapGenerator:
         // Center the view
         svg.call(zoom.transform, d3.zoomIdentity.translate(50, 50));
         """
-    
+
     def generate_json(self, root_node: ProjectNode, output_file: str) -> None:
         """Generate JSON representation of the mind map"""
         data = self._node_to_dict(root_node)
-        
+
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
-        
+
         print(f"📄 JSON mind map data generated: {output_file}")
-    
+
     def generate_dot(self, root_node: ProjectNode, output_file: str) -> None:
         """Generate DOT/Graphviz representation"""
         dot_content = ['digraph MadnessInteractive {']
@@ -764,14 +1064,14 @@ class MindMapGenerator:
         dot_content.append('  node [style=filled, fontcolor=white, fontname="Arial"];')
         dot_content.append('  edge [color=white];')
         dot_content.append('')
-        
+
         node_id = 0
-        
+
         def add_node(node: ProjectNode, parent_id: int = None) -> int:
             nonlocal node_id
             current_id = node_id
             node_id += 1
-            
+
             # Determine node color and shape
             if node.type == "root":
                 color = "#e53e3e"
@@ -785,38 +1085,42 @@ class MindMapGenerator:
             else:
                 color = "#96ceb4"
                 shape = "box"
-            
+
             # Add node
             label = node.name.replace('"', '\\"')
             if node.metadata.get('icon'):
                 label = f"{node.metadata['icon']} {label}"
-            
+
+            # Add todo info to label if present
+            if node.todo_summary and node.todo_summary.total > 0:
+                label += f"\\n📋 {node.todo_summary.total} todos"
+
             dot_content.append(f'  n{current_id} [label="{label}", fillcolor="{color}", shape={shape}];')
-            
+
             # Add edge from parent
             if parent_id is not None:
                 dot_content.append(f'  n{parent_id} -> n{current_id};')
-            
+
             # Add children
             for child in node.children:
                 add_node(child, current_id)
-            
+
             return current_id
-        
+
         add_node(root_node)
         dot_content.append('}')
-        
+
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write('\n'.join(dot_content))
-        
+
         print(f"🎯 DOT/Graphviz mind map generated: {output_file}")
         print(f"   To render: dot -Tpng {output_file} -o {output_file.replace('.dot', '.png')}")
-    
+
     def generate_svg(self, root_node: ProjectNode, output_file: str) -> None:
         """Generate SVG mind map (simplified tree layout)"""
         width = 1200
         height = 800
-        
+
         svg_content = f'''<?xml version="1.0" encoding="UTF-8"?>
 <svg width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -840,14 +1144,14 @@ class MindMapGenerator:
     </text>
     
     <text x="{width//2}" y="55" text-anchor="middle" fill="white" font-size="14" opacity="0.8">
-        {root_node.metadata.get('total_projects', 0)} Projects • {len(root_node.metadata.get('languages', []))} Technologies
+        {root_node.metadata.get('total_projects', 0)} Projects • {len(root_node.metadata.get('languages', []))} Technologies{' • ' + str(root_node.metadata.get('total_todos', 0)) + ' Todos' if root_node.metadata.get('todo_enabled') else ''}
     </text>
 '''
-        
+
         # Simple radial layout
         center_x = width // 2
         center_y = height // 2
-        
+
         # Root node
         svg_content += f'''
     <circle cx="{center_x}" cy="{center_y}" r="20" fill="#e53e3e" filter="url(#glow)"/>
@@ -855,22 +1159,22 @@ class MindMapGenerator:
         {root_node.name}
     </text>
 '''
-        
+
         # Category nodes in a circle around root
         import math
         num_categories = len(root_node.children)
         if num_categories > 0:
             angle_step = 2 * math.pi / num_categories
             radius = 150
-            
+
             for i, category in enumerate(root_node.children):
                 angle = i * angle_step
                 cat_x = center_x + radius * math.cos(angle)
                 cat_y = center_y + radius * math.sin(angle)
-                
+
                 color = category.metadata.get('color', '#4ecdc4')
                 icon = category.metadata.get('icon', '📁')
-                
+
                 # Line from root to category
                 svg_content += f'''
     <line x1="{center_x}" y1="{center_y}" x2="{cat_x}" y2="{cat_y}" stroke="white" stroke-width="2" opacity="0.6"/>
@@ -882,25 +1186,25 @@ class MindMapGenerator:
         {category.name}
     </text>
     <text x="{cat_x}" y="{cat_y + 40}" text-anchor="middle" fill="white" font-size="8" opacity="0.8">
-        {category.metadata.get('project_count', 0)} projects
+        {category.metadata.get('project_count', 0)} projects{' • ' + str(category.todo_summary.total) + ' todos' if category.todo_summary and category.todo_summary.total > 0 else ''}
     </text>
 '''
-                
+
                 # Project nodes around each category
                 projects = [child for child in category.children if child.type == "project"]
                 if projects:
                     proj_radius = 80
                     proj_angle_step = 2 * math.pi / len(projects) if len(projects) > 1 else 0
-                    
+
                     for j, project in enumerate(projects[:8]):  # Limit to 8 projects per category
                         proj_angle = angle + (j * proj_angle_step) - math.pi/2
                         proj_x = cat_x + proj_radius * math.cos(proj_angle)
                         proj_y = cat_y + proj_radius * math.sin(proj_angle)
-                        
+
                         # Ensure projects stay within bounds
                         proj_x = max(50, min(width - 50, proj_x))
                         proj_y = max(80, min(height - 30, proj_y))
-                        
+
                         svg_content += f'''
     <line x1="{cat_x}" y1="{cat_y}" x2="{proj_x}" y2="{proj_y}" stroke="white" stroke-width="1" opacity="0.4"/>
     <circle cx="{proj_x}" cy="{proj_y}" r="8" fill="#45b7d1" opacity="0.8"/>
@@ -908,12 +1212,22 @@ class MindMapGenerator:
         {project.name[:15]}{'...' if len(project.name) > 15 else ''}
     </text>
 '''
-        
+
+                        # Add todo badge for projects
+                        if project.todo_summary and project.todo_summary.total > 0:
+                            badge_color = '#ff4757' if project.todo_summary.high_priority > 0 else '#ffa502' if project.todo_summary.medium_priority > 0 else '#2ed573'
+                            svg_content += f'''
+    <circle cx="{proj_x + 12}" cy="{proj_y - 8}" r="6" fill="{badge_color}" opacity="0.9"/>
+    <text x="{proj_x + 12}" y="{proj_y - 5}" text-anchor="middle" fill="white" font-size="7" font-weight="bold">
+        {project.todo_summary.total}
+    </text>
+'''
+
         svg_content += '</svg>'
-        
+
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(svg_content)
-        
+
         print(f"🎨 SVG mind map generated: {output_file}")
 
 def main():
@@ -926,34 +1240,39 @@ def main():
                         help='Mind map style (default: tech)')
     parser.add_argument('--interactive', action='store_true', help='Add interactive features (HTML only)')
     parser.add_argument('--exclude', action='append', help='Exclude directories matching pattern')
+    parser.add_argument('--include-todos', action='store_true', help='Include todo information in mindmap')
     parser.add_argument('--root', default='.', help='Root directory to scan (default: current directory)')
-    
+
     args = parser.parse_args()
-    
+
     # Determine output file
     if not args.output:
         args.output = f"mindmap.{args.format}"
-    
+
     print("🧠 Madness Interactive Mind Map Generator")
     print("=" * 50)
     print(f"📁 Scanning projects from: {os.path.abspath(args.root)}")
     print(f"📊 Output format: {args.format}")
     print(f"📄 Output file: {args.output}")
     print(f"🔍 Max depth: {args.depth}")
+    if args.include_todos:
+        print("📋 Todo integration: enabled")
     print("")
-    
+
     # Generate mind map
-    generator = MindMapGenerator(args.root)
-    
+    generator = MindMapGenerator(args.root, args.include_todos)
+
     print("🔄 Scanning project structure...")
     root_node = generator.scan_projects(args.depth, args.exclude or [])
-    
+
     print(f"✅ Scanned {root_node.metadata.get('total_projects', 0)} projects in {len(root_node.children)} categories")
     print(f"🏷️  Technologies: {', '.join(root_node.metadata.get('languages', []))}")
+    if args.include_todos:
+        print(f"📋 Total todos: {root_node.metadata.get('total_todos', 0)}")
     print("")
-    
+
     print(f"🎨 Generating {args.format.upper()} mind map...")
-    
+
     if args.format == 'html':
         generator.generate_html(root_node, args.output, args.interactive)
     elif args.format == 'svg':
@@ -962,10 +1281,10 @@ def main():
         generator.generate_dot(root_node, args.output)
     elif args.format == 'json':
         generator.generate_json(root_node, args.output)
-    
+
     print("")
     print("🎉 Mind map generation complete!")
     print("   Open the generated file to explore your Madness Interactive ecosystem!")
 
 if __name__ == "__main__":
-    main() 
+    main()

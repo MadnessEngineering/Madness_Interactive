@@ -264,7 +264,7 @@
                 
         </div>
         
-        <div class='controls'><button onclick='expandAll()'>Expand All</button><button onclick='collapseAll()'>Collapse All</button><button onclick='resetView()'>Reset View</button><button id='todoToggle' onclick='toggleTodos()'>Toggle Todos</button></div>
+        
         
         <div id="mindmap"></div>
     </div>
@@ -278,15 +278,15 @@
   "language": "",
   "description": "A Mad Tinker's AI Project Hub",
   "metadata": {
-    "scan_time": "2025-06-30T14:08:59.157846",
+    "scan_time": "2025-06-30T14:13:17.532881",
     "total_projects": 39,
     "languages": [
-      "tasker",
-      "OS",
-      "powershell",
-      "common",
-      "python",
       "typescript",
+      "common",
+      "powershell",
+      "OS",
+      "tasker",
+      "python",
       "rust",
       "mobile",
       "lua"
@@ -339,7 +339,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T14:00:29.772022",
+            "last_modified": "2025-06-30T14:09:28.259271",
             "size_estimate": "180.2KB"
           },
           "children": [
@@ -429,7 +429,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T14:00:30.148414",
+            "last_modified": "2025-06-30T14:09:28.477068",
             "size_estimate": "64.7KB"
           },
           "children": [
@@ -495,7 +495,7 @@
             "category": "Other",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T14:00:29.880195",
+            "last_modified": "2025-06-30T14:09:28.228817",
             "size_estimate": "83.3KB"
           },
           "children": [
@@ -528,7 +528,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T14:00:29.831711",
+            "last_modified": "2025-06-30T14:09:28.217958",
             "size_estimate": "94.5KB"
           },
           "children": [
@@ -770,7 +770,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T14:00:29.856336",
+            "last_modified": "2025-06-30T14:09:28.353962",
             "size_estimate": "36.4MB"
           },
           "children": [
@@ -1050,7 +1050,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": false,
-            "last_modified": "2025-06-30T14:00:29.769097",
+            "last_modified": "2025-06-30T14:09:28.320893",
             "size_estimate": "5.0MB"
           },
           "children": [],
@@ -1074,7 +1074,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T14:00:29.842851",
+            "last_modified": "2025-06-30T14:09:28.357582",
             "size_estimate": "114.1KB"
           },
           "children": [],
@@ -1131,7 +1131,7 @@
             "category": "AI/ML",
             "has_readme": true,
             "has_config": true,
-            "last_modified": "2025-06-30T14:00:29.797305",
+            "last_modified": "2025-06-30T14:09:28.190231",
             "size_estimate": "45.3MB"
           },
           "children": [
@@ -1786,38 +1786,6 @@
         }
         
         // Add tooltip functionality
-        
-        g.selectAll('.node')
-            .on('mouseover', function(event, d) {
-                const tooltip = d3.select('#tooltip');
-                let content = `<strong>${d.data.name}</strong><br>
-                               Type: ${d.data.type}<br>
-                               ${d.data.language ? `Language: ${d.data.language}<br>` : ''}
-                               ${d.data.description ? `Description: ${d.data.description}<br>` : ''}
-                               ${d.data.metadata?.category ? `Category: ${d.data.metadata.category}<br>` : ''}
-                               ${d.data.metadata?.size_estimate ? `Size: ${d.data.metadata.size_estimate}<br>` : ''}`;
-                
-                if (d.data.todo_summary && d.data.todo_summary.total > 0) {
-                    content += `<h4>📋 Todos (${d.data.todo_summary.total})</h4>`;
-                    content += `<div>Initial: ${d.data.todo_summary.initial} | Pending: ${d.data.todo_summary.pending} | Done: ${d.data.todo_summary.completed}</div>`;
-                    content += `<div>High: ${d.data.todo_summary.high_priority} | Med: ${d.data.todo_summary.medium_priority} | Low: ${d.data.todo_summary.low_priority}</div>`;
-                    
-                    if (d.data.todo_summary.recent_todos && d.data.todo_summary.recent_todos.length > 0) {
-                        content += '<div style="margin-top: 5px;"><strong>Recent todos:</strong></div>';
-                        d.data.todo_summary.recent_todos.forEach(todo => {
-                            content += `<div class="todo-item">${todo.description}</div>`;
-                        });
-                    }
-                }
-                
-                tooltip.style('display', 'block')
-                    .html(content)
-                    .style('left', (event.pageX + 10) + 'px')
-                    .style('top', (event.pageY - 10) + 'px');
-            })
-            .on('mouseout', function() {
-                d3.select('#tooltip').style('display', 'none');
-            });
         
         
         // Global functions for controls
