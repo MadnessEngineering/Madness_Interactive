@@ -234,7 +234,7 @@
             
         </div>
         
-        <div class='controls'><button onclick='expandAll()'>Expand All</button><button onclick='collapseAll()'>Collapse All</button><button onclick='resetView()'>Reset View</button><button id='todoToggle' onclick='toggleTodos()'>Toggle Todos</button></div>
+        
         
         <div id="mindmap"></div>
     </div>
@@ -248,7 +248,7 @@
   "language": "",
   "description": "Current active projects tracked in todo system (completed todos filtered out)",
   "metadata": {
-    "scan_time": "2025-06-30T18:23:54.648030",
+    "scan_time": "2025-06-30T18:23:45.018924",
     "total_projects": 4,
     "todo_enabled": true,
     "total_todos": 129,
@@ -1750,55 +1750,6 @@
         }
         
         // Add tooltip functionality
-        
-        g.selectAll('.node')
-            .on('mouseover', function(event, d) {
-                const tooltip = d3.select('#tooltip');
-                let content = `<strong>${d.data.name}</strong><br>
-                               Type: ${d.data.type}<br>`;
-                               
-                if (d.data.type === 'todo') {
-                    content += `Status: ${d.data.metadata?.status || 'unknown'}<br>
-                               Priority: ${d.data.metadata?.priority || 'medium'}<br>
-                               Todo ID: ${d.data.metadata?.todo_id || 'N/A'}<br>`;
-                    if (d.data.metadata?.created_at) {
-                        content += `Created: ${new Date(d.data.metadata.created_at).toLocaleDateString()}<br>`;
-                    }
-                    if (d.data.metadata?.updated_at) {
-                        content += `Updated: ${new Date(d.data.metadata.updated_at).toLocaleDateString()}<br>`;
-                    }
-                    content += `<div style="margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px;">
-                               <strong>Full Description:</strong><br>${d.data.description}
-                               </div>`;
-                } else {
-                    content += `${d.data.language ? `Language: ${d.data.language}<br>` : ''}
-                               ${d.data.description ? `Description: ${d.data.description}<br>` : ''}
-                               ${d.data.metadata?.category ? `Category: ${d.data.metadata.category}<br>` : ''}
-                               ${d.data.metadata?.size_estimate ? `Size: ${d.data.metadata.size_estimate}<br>` : ''}`;
-                    
-                    if (d.data.todo_summary && d.data.todo_summary.total > 0) {
-                        content += `<h4>📋 Active Todos (${d.data.todo_summary.total})</h4>`;
-                        content += `<div>Initial: ${d.data.todo_summary.initial} | Pending: ${d.data.todo_summary.pending}</div>`;
-                        content += `<div>High: ${d.data.todo_summary.high_priority} | Med: ${d.data.todo_summary.medium_priority} | Low: ${d.data.todo_summary.low_priority}</div>`;
-                        content += `<div style="font-size: 10px; opacity: 0.8;">Completed todos filtered out</div>`;
-                        
-                        if (d.data.todo_summary.recent_todos && d.data.todo_summary.recent_todos.length > 0) {
-                            content += '<div style="margin-top: 5px;"><strong>Recent active todos:</strong></div>';
-                            d.data.todo_summary.recent_todos.forEach(todo => {
-                                content += `<div class="todo-item">${todo.description}</div>`;
-                            });
-                        }
-                    }
-                }
-                
-                tooltip.style('display', 'block')
-                    .html(content)
-                    .style('left', (event.pageX + 10) + 'px')
-                    .style('top', (event.pageY - 10) + 'px');
-            })
-            .on('mouseout', function() {
-                d3.select('#tooltip').style('display', 'none');
-            });
         
         
         // Global functions for controls

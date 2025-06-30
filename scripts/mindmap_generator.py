@@ -23,7 +23,7 @@ Options:
 Examples:
     python mindmap_generator.py --format html --interactive --include-todos
     python mindmap_generator.py --format html --include-todo-items
-    python mindmap_generator.py --todo-centric --format html --interactive
+    python mindmap_generator.py --todo-centric --format html --interactive  # Shows only active todos
     python mindmap_generator.py --format svg --style hierarchical
     python mindmap_generator.py --format dot --depth 2
 """
@@ -237,7 +237,7 @@ class TodoIntegration:
             return []
     
     def get_project_todo_items(self, project_name: str, limit: int = 10) -> List[Dict[str, Any]]:
-        """Get individual todo items for a specific project"""
+        """Get individual todo items for a specific project (excluding completed)"""
         if not self.mongo_available:
             return []
         
@@ -247,10 +247,13 @@ class TodoIntegration:
             db = client[MONGO_DB]
             collection = db[MONGO_COLLECTION]
             
-            # Query todos for this project, sorted by priority and creation date
-            priority_order = {"high": 1, "medium": 2, "low": 3}
+            # Query todos for this project, excluding completed ones
+            query = {
+                "project": project_name,
+                "status": {"$ne": "completed"}  # Exclude completed todos
+            }
             
-            todos_cursor = collection.find({"project": project_name}).limit(limit)
+            todos_cursor = collection.find(query).limit(limit)
             
             todo_items = []
             for todo in todos_cursor:
@@ -263,8 +266,9 @@ class TodoIntegration:
                     'updated_at': todo.get('updated_at', '')
                 })
             
-            # Sort by priority then by status (initial first, then pending, then completed)
-            status_order = {"initial": 1, "pending": 2, "completed": 3}
+            # Sort by priority then by status (initial first, then pending)
+            status_order = {"initial": 1, "pending": 2}
+            priority_order = {"high": 1, "medium": 2, "low": 3}
             todo_items.sort(key=lambda x: (
                 priority_order.get(x['priority'], 2),
                 status_order.get(x['status'], 1)
@@ -276,6 +280,61 @@ class TodoIntegration:
         except Exception as e:
             print(f"Warning: Error fetching todo items for project {project_name}: {e}")
             return []
+
+    def get_active_project_todos(self) -> Dict[str, TodoSummary]:
+        """Get todo summaries for all projects (excluding completed todos for active counts)"""
+        if not self.mongo_available:
+            return {}
+        
+        try:
+            # Connect to MongoDB
+            client = MongoClient(MONGO_HOST, MONGO_PORT)
+            db = client[MONGO_DB]
+            collection = db[MONGO_COLLECTION]
+            
+            # Get all non-completed todos
+            todos_cursor = collection.find({"status": {"$ne": "completed"}})
+            
+            project_summaries = {}
+            for todo in todos_cursor:
+                project = todo.get('project', 'unknown')
+                if project not in project_summaries:
+                    project_summaries[project] = TodoSummary()
+                
+                summary = project_summaries[project]
+                summary.total += 1
+                
+                # Count by status (only initial and pending now)
+                status = todo.get('status', 'initial')
+                if status == 'initial':
+                    summary.initial += 1
+                elif status == 'pending':
+                    summary.pending += 1
+                
+                # Count by priority
+                priority = todo.get('priority', 'medium').lower()
+                if priority == 'high':
+                    summary.high_priority += 1
+                elif priority == 'medium':
+                    summary.medium_priority += 1
+                elif priority == 'low':
+                    summary.low_priority += 1
+                
+                # Keep recent todos (limit to 3 per project)
+                if len(summary.recent_todos) < 3:
+                    summary.recent_todos.append({
+                        'id': str(todo.get('_id', '')),
+                        'description': todo.get('description', '')[:80] + ('...' if len(todo.get('description', '')) > 80 else ''),
+                        'status': status,
+                        'priority': priority
+                    })
+            
+            client.close()
+            return project_summaries
+            
+        except Exception as e:
+            print(f"Warning: Error fetching active todos: {e}")
+            return {}
 
 class MindMapGenerator:
     """Generate mind maps from project structure"""
@@ -827,7 +886,7 @@ class MindMapGenerator:
             </div>
             {f'''<div class="stat">
                 <span class="stat-number">{total_todos}</span>
-                <span class="stat-label">Total Todos</span>
+                <span class="stat-label">Active Todos</span>
             </div>''' if todo_enabled else ''}
         </div>
         
@@ -988,8 +1047,7 @@ class MindMapGenerator:
                     if (d.data.type === 'todo') {{
                         const statusIcon = {{
                             'initial': '⭕',
-                            'pending': '🟡', 
-                            'completed': '✅'
+                            'pending': '🟡'
                         }}[d.data.metadata?.status] || '⭕';
                         return `${{statusIcon}} ${{d.data.name.replace('📋 ', '')}}`;
                     }}
@@ -1147,12 +1205,13 @@ class MindMapGenerator:
                                ${d.data.metadata?.size_estimate ? `Size: ${d.data.metadata.size_estimate}<br>` : ''}`;
                     
                     if (d.data.todo_summary && d.data.todo_summary.total > 0) {
-                        content += `<h4>📋 Todos (${d.data.todo_summary.total})</h4>`;
-                        content += `<div>Initial: ${d.data.todo_summary.initial} | Pending: ${d.data.todo_summary.pending} | Done: ${d.data.todo_summary.completed}</div>`;
+                        content += `<h4>📋 Active Todos (${d.data.todo_summary.total})</h4>`;
+                        content += `<div>Initial: ${d.data.todo_summary.initial} | Pending: ${d.data.todo_summary.pending}</div>`;
                         content += `<div>High: ${d.data.todo_summary.high_priority} | Med: ${d.data.todo_summary.medium_priority} | Low: ${d.data.todo_summary.low_priority}</div>`;
+                        content += `<div style="font-size: 10px; opacity: 0.8;">Completed todos filtered out</div>`;
                         
                         if (d.data.todo_summary.recent_todos && d.data.todo_summary.recent_todos.length > 0) {
-                            content += '<div style="margin-top: 5px;"><strong>Recent todos:</strong></div>';
+                            content += '<div style="margin-top: 5px;"><strong>Recent active todos:</strong></div>';
                             d.data.todo_summary.recent_todos.forEach(todo => {
                                 content += `<div class="todo-item">${todo.description}</div>`;
                             });
@@ -1409,8 +1468,8 @@ class MindMapGenerator:
         # Get all todo summaries if todo integration is enabled
         project_todos = {}
         if self.todo_integration:
-            all_project_todos = self.todo_integration.get_all_project_todos()
-            # Filter to only target projects that have todos
+            all_project_todos = self.todo_integration.get_active_project_todos()
+            # Filter to only target projects that have active todos
             for project_name in target_projects:
                 if project_name in all_project_todos:
                     project_todos[project_name] = all_project_todos[project_name]
@@ -1419,7 +1478,7 @@ class MindMapGenerator:
             name="Active Todo Projects",
             path="",
             type="root",
-            description="Current active projects tracked in todo system",
+            description="Current active projects tracked in todo system (completed todos filtered out)",
             metadata={
                 'scan_time': datetime.now().isoformat(),
                 'total_projects': len(project_todos),
@@ -1443,7 +1502,7 @@ class MindMapGenerator:
                 path="",
                 type="project",
                 language="mixed",
-                description=f"Active project with {project_summary.total} todos",
+                description=f"Active project with {project_summary.total} active todos",
                 metadata={
                     'category': 'Active Project',
                     'todo_count': project_summary.total,
@@ -1452,7 +1511,7 @@ class MindMapGenerator:
                     'low_priority_count': project_summary.low_priority,
                     'status_initial': project_summary.initial,
                     'status_pending': project_summary.pending,
-                    'status_completed': project_summary.completed
+                    'status_completed': project_summary.completed  # This will be 0 now
                 },
                 todo_summary=project_summary
             )
@@ -1547,7 +1606,7 @@ def main():
     print(f"✅ Scanned {root_node.metadata.get('total_projects', 0)} projects in {len(root_node.children)} categories")
     if args.todo_centric:
         print(f"🎯 Active projects: {', '.join(root_node.metadata.get('active_projects', []))}")
-        print(f"📋 Total todos: {root_node.metadata.get('total_todos', 0)}")
+        print(f"📋 Active todos: {root_node.metadata.get('total_todos', 0)} (completed todos filtered out)")
     else:
         print(f"🏷️  Technologies: {', '.join(root_node.metadata.get('languages', []))}")
         if args.include_todos:
