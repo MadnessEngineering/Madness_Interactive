@@ -253,6 +253,16 @@ madness_interactive/
 └── README.md
 ```
 
+## 🧠 Mind Map System
+
+Visualize the entire Madness Interactive ecosystem, todos, and lessons learned with our interactive mindmap tools! See project relationships, track active work, and explore the knowledge base in a single glance.
+
+- Generate interactive HTML, SVG, DOT, or JSON mind maps
+- Integrate with the MCP todo and lessons-learned database
+- Explore by project, todo, or knowledge domain
+
+See [docs/mindmap.md](docs/mindmap.md) for full usage, features, and Makefile targets.
+
 ## 🤝 Contributing
 *"Join our council of MAD SCIENTISTS!"*
 
