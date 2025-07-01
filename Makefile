@@ -1,7 +1,7 @@
 # Madness Interactive Makefile
 # Comprehensive project management and submodule workflow
 
-.PHONY: help new list-projects clean-all status centralize-cursor-rules list-cursor-rules restore-cursor-rules mindmap mindmap-interactive mindmap-with-todos mindmap-svg mindmap-svg-todos mindmap-json mindmap-json-todos mindmap-dot mindmap-dot-todos mindmap-all mindmap-all-todos mindmap-help invent omnispindle swarmdesk swarmonomicon whispermind check-vitals doctor sync-the-swarm tinker-time unleash-chaos mindmap-with-todo-items mindmap-todo-centric
+.PHONY: help new list-projects clean-all status centralize-cursor-rules list-cursor-rules restore-cursor-rules mindmap mindmap-interactive mindmap-with-todos mindmap-svg mindmap-svg-todos mindmap-json mindmap-json-todos mindmap-dot mindmap-dot-todos mindmap-all mindmap-all-todos mindmap-help invent omnispindle swarmdesk swarmonomicon whispermind check-vitals doctor sync-the-swarm tinker-time unleash-chaos mindmap-with-todo-items mindmap-todo-centric mindmap-lessons-learned
 
 # Default target
 help:
@@ -539,3 +539,8 @@ mindmap-todo-centric: ## Generate todo-centric HTML mind map focusing on active 
 	@echo "🧠 Generating todo-centric mind map..."
 	@python3 scripts/mindmap_generator.py --todo-centric --format html --interactive --output docs/mindmap_todos.html
 	@echo "✨ Todo-centric mind map generated at docs/mindmap_todos.html"
+
+mindmap-lessons-learned: ## Generate lessons learned HTML mind map
+	@echo "🧠 Generating lessons learned mind map..."
+	@python3 scripts/mindmap_generator.py --lessons-learned --format html --interactive --output docs/mindmap_lessons.html
+	@echo "✨ Lessons learned mind map generated at docs/mindmap_lessons.html"

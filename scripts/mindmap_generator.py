@@ -19,11 +19,13 @@ Options:
     --include-todos             Include todo information in mindmap
     --include-todo-items        Include individual todo items as nodes (top 5 projects only)
     --todo-centric              Generate todo-centric mindmap focusing on active projects from database
+    --lessons-learned           Generate lessons-learned mindmap organized by languages and tags
     
 Examples:
     python mindmap_generator.py --format html --interactive --include-todos
     python mindmap_generator.py --format html --include-todo-items
     python mindmap_generator.py --todo-centric --format html --interactive  # Shows only active todos
+    python mindmap_generator.py --lessons-learned --format html --interactive  # Knowledge base
     python mindmap_generator.py --format svg --style hierarchical
     python mindmap_generator.py --format dot --depth 2
 """
@@ -334,6 +336,97 @@ class TodoIntegration:
             
         except Exception as e:
             print(f"Warning: Error fetching active todos: {e}")
+            return {}
+
+    def get_lessons_by_language_and_tags(self) -> Dict[str, Any]:
+        """Get lessons learned organized by language and tags"""
+        if not self.mongo_available:
+            return {}
+        
+        try:
+            # Connect to MongoDB
+            client = MongoClient(MONGO_HOST, MONGO_PORT)
+            db = client[MONGO_DB]
+            collection = db['lessons_learned']  # Correct collection name
+            
+            # Get all lessons
+            lessons_cursor = collection.find({})
+            
+            lessons_data = {
+                'by_language': {},
+                'by_tag': {},
+                'all_languages': set(),
+                'all_tags': set(),
+                'total_lessons': 0
+            }
+            
+            for lesson in lessons_cursor:
+                lessons_data['total_lessons'] += 1
+                
+                # Extract data
+                language = lesson.get('language', 'unknown').lower()
+                topic = lesson.get('topic', 'General')
+                lesson_text = lesson.get('lesson_learned', '')
+                tags = lesson.get('tags', [])
+                lesson_id = str(lesson.get('_id', ''))
+                created_at = lesson.get('created_at', '')
+                
+                # Organize by language
+                if language not in lessons_data['by_language']:
+                    lessons_data['by_language'][language] = {
+                        'lessons': [],
+                        'topics': set(),
+                        'total': 0
+                    }
+                
+                lessons_data['by_language'][language]['lessons'].append({
+                    'id': lesson_id,
+                    'topic': topic,
+                    'lesson': lesson_text[:100] + ('...' if len(lesson_text) > 100 else ''),
+                    'full_lesson': lesson_text,
+                    'tags': tags,
+                    'created_at': created_at
+                })
+                lessons_data['by_language'][language]['topics'].add(topic)
+                lessons_data['by_language'][language]['total'] += 1
+                lessons_data['all_languages'].add(language)
+                
+                # Organize by tags
+                for tag in tags:
+                    if tag not in lessons_data['by_tag']:
+                        lessons_data['by_tag'][tag] = {
+                            'lessons': [],
+                            'languages': set(),
+                            'total': 0
+                        }
+                    
+                    lessons_data['by_tag'][tag]['lessons'].append({
+                        'id': lesson_id,
+                        'topic': topic,
+                        'lesson': lesson_text[:80] + ('...' if len(lesson_text) > 80 else ''),
+                        'full_lesson': lesson_text,
+                        'language': language,
+                        'created_at': created_at
+                    })
+                    lessons_data['by_tag'][tag]['languages'].add(language)
+                    lessons_data['by_tag'][tag]['total'] += 1
+                    lessons_data['all_tags'].add(tag)
+            
+            # Convert sets to lists for JSON serialization
+            for lang_data in lessons_data['by_language'].values():
+                lang_data['topics'] = list(lang_data['topics'])
+            
+            for tag_data in lessons_data['by_tag'].values():
+                tag_data['languages'] = list(tag_data['languages'])
+            
+            lessons_data['all_languages'] = list(lessons_data['all_languages'])
+            lessons_data['all_tags'] = list(lessons_data['all_tags'])
+            
+            client.close()
+            return lessons_data
+            
+        except Exception as e:
+            print(f"Warning: Error fetching lessons learned: {e}")
             return {}
 
 class MindMapGenerator:
@@ -755,6 +848,23 @@ class MindMapGenerator:
             stroke-width: 1px;
         }}
         
+        .node.lesson circle {{
+            stroke-width: 1px;
+        }}
+        
+        .node.lesson text {{
+            font-size: 10px;
+            text-anchor: start;
+        }}
+        
+        .node.language circle {{
+            stroke-width: 2px;
+        }}
+        
+        .node.tag circle {{
+            stroke-width: 2px;
+        }}
+        
         .link {{
             fill: none;
             stroke: rgba(255, 255, 255, 0.3);
@@ -1027,6 +1137,9 @@ class MindMapGenerator:
                     if (d.data.type === 'category') return d.data.metadata?.color || '#4ecdc4';
                     if (d.data.type === 'project') return '#45b7d1';
                     if (d.data.type === 'todo') return d.data.metadata?.priority_color || '#ffa502';
+                    if (d.data.type === 'language') return d.data.metadata?.color || '#8e44ad';
+                    if (d.data.type === 'tag') return '#e67e22';
+                    if (d.data.type === 'lesson') return '#27ae60';
                     return '#96ceb4';
                 }})
                 .style('opacity', 0.8)
@@ -1036,11 +1149,11 @@ class MindMapGenerator:
             nodeEnter.append('text')
                 .attr('dy', '.35em')
                 .attr('x', d => {{
-                    if (d.data.type === 'todo') return 8;  // Todo items have text to the right
+                    if (d.data.type === 'todo' || d.data.type === 'lesson') return 8;  // Todo and lesson items have text to the right
                     return d.children || d._children ? -13 : 13;
                 }})
                 .style('text-anchor', d => {{
-                    if (d.data.type === 'todo') return 'start';
+                    if (d.data.type === 'todo' || d.data.type === 'lesson') return 'start';
                     return d.children || d._children ? 'end' : 'start';
                 }})
                 .text(d => {{
@@ -1051,11 +1164,24 @@ class MindMapGenerator:
                         }}[d.data.metadata?.status] || '⭕';
                         return `${{statusIcon}} ${{d.data.name.replace('📋 ', '')}}`;
                     }}
+                    if (d.data.type === 'lesson') {{
+                        return d.data.name; // Lesson name already includes 💡 icon
+                    }}
+                    if (d.data.type === 'language') {{
+                        const icon = d.data.metadata?.icon || '📝';
+                        return `${{icon}} ${{d.data.name}}`;
+                    }}
+                    if (d.data.type === 'tag') {{
+                        return `🏷️ ${{d.data.name}}`;
+                    }}
                     const icon = d.data.metadata?.icon || '';
                     return `${{icon}} ${{d.data.name}}`;
                 }})
                 .style('fill-opacity', 1e-6)
-                .style('font-size', d => d.data.type === 'todo' ? '10px' : '12px');
+                .style('font-size', d => {{
+                    if (d.data.type === 'todo' || d.data.type === 'lesson') return '10px';
+                    return '12px';
+                }});
             
             // Add todo badges
             if (showTodos) {{
@@ -1093,6 +1219,9 @@ class MindMapGenerator:
                     if (d.data.type === 'category') return 10;
                     if (d.data.type === 'project') return 8;
                     if (d.data.type === 'todo') return 5;  // Smaller circles for todos
+                    if (d.data.type === 'language') return 7;
+                    if (d.data.type === 'tag') return 6;
+                    if (d.data.type === 'lesson') return 4;  // Smallest circles for lessons
                     return 6;
                 }})
                 .style('fill', d => {{
@@ -1100,6 +1229,9 @@ class MindMapGenerator:
                     if (d.data.type === 'category') return d.data.metadata?.color || '#4ecdc4';
                     if (d.data.type === 'project') return '#45b7d1';
                     if (d.data.type === 'todo') return d.data.metadata?.priority_color || '#ffa502';
+                    if (d.data.type === 'language') return d.data.metadata?.color || '#8e44ad';
+                    if (d.data.type === 'tag') return '#e67e22';
+                    if (d.data.type === 'lesson') return '#27ae60';
                     return '#96ceb4';
                 }})
                 .attr('cursor', 'pointer');
@@ -1198,6 +1330,30 @@ class MindMapGenerator:
                     content += `<div style="margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px;">
                                <strong>Full Description:</strong><br>${d.data.description}
                                </div>`;
+                } else if (d.data.type === 'lesson') {
+                    content += `Topic: ${d.data.metadata?.topic || 'General'}<br>
+                               Language: ${d.data.metadata?.language || 'unknown'}<br>
+                               Lesson ID: ${d.data.metadata?.lesson_id || 'N/A'}<br>`;
+                    if (d.data.metadata?.tags && d.data.metadata.tags.length > 0) {
+                        content += `Tags: ${d.data.metadata.tags.join(', ')}<br>`;
+                    }
+                    if (d.data.metadata?.created_at) {
+                        content += `Created: ${new Date(d.data.metadata.created_at).toLocaleDateString()}<br>`;
+                    }
+                    content += `<div style="margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                               <strong>Full Lesson:</strong><br>${d.data.description}
+                               </div>`;
+                } else if (d.data.type === 'language') {
+                    content += `Lesson Count: ${d.data.metadata?.lesson_count || 0}<br>`;
+                    if (d.data.metadata?.topics && d.data.metadata.topics.length > 0) {
+                        content += `Topics: ${d.data.metadata.topics.slice(0, 5).join(', ')}${d.data.metadata.topics.length > 5 ? '...' : ''}<br>`;
+                    }
+                } else if (d.data.type === 'tag') {
+                    content += `Lesson Count: ${d.data.metadata?.lesson_count || 0}<br>
+                               Tag: ${d.data.metadata?.tag_name || 'unknown'}<br>`;
+                    if (d.data.metadata?.languages && d.data.metadata.languages.length > 0) {
+                        content += `Languages: ${d.data.metadata.languages.join(', ')}<br>`;
+                    }
                 } else {
                     content += `${d.data.language ? `Language: ${d.data.language}<br>` : ''}
                                ${d.data.description ? `Description: ${d.data.description}<br>` : ''}
@@ -1555,6 +1711,126 @@ class MindMapGenerator:
 
         return root_node
 
+    def scan_lessons_learned(self) -> ProjectNode:
+        """Scan lessons learned database and build a knowledge-centric tree"""
+        if not self.todo_integration:
+            return ProjectNode(
+                name="Lessons Learned", path="", type="root",
+                description="No lessons integration available"
+            )
+
+        lessons_data = self.todo_integration.get_lessons_by_language_and_tags()
+        
+        if not lessons_data:
+            return ProjectNode(
+                name="Lessons Learned", path="", type="root",
+                description="No lessons found in database"
+            )
+
+        root_node = ProjectNode(
+            name="Lessons Learned",
+            path="",
+            type="root", 
+            description="Knowledge base organized by languages and tags",
+            metadata={
+                'scan_time': datetime.now().isoformat(),
+                'total_lessons': lessons_data.get('total_lessons', 0),
+                'total_languages': len(lessons_data.get('all_languages', [])),
+                'total_tags': len(lessons_data.get('all_tags', [])),
+                'languages': lessons_data.get('all_languages', []),
+                'tags': lessons_data.get('all_tags', [])
+            }
+        )
+
+        # Create Languages branch
+        languages_node = ProjectNode(
+            name="📚 By Language",
+            path="",
+            type="category",
+            description=f"Lessons organized by {len(lessons_data.get('all_languages', []))} programming languages",
+            metadata={'category_type': 'languages'}
+        )
+
+        for language, lang_data in lessons_data.get('by_language', {}).items():
+            lang_node = ProjectNode(
+                name=f"{language.title()} ({lang_data['total']} lessons)",
+                path="",
+                type="language",
+                language=language,
+                description=f"Lessons learned in {language}",
+                metadata={
+                    'lesson_count': lang_data['total'],
+                    'topics': lang_data['topics'],
+                    'color': self.language_map.get(language, {}).get('color', '#666666'),
+                    'icon': self.language_map.get(language, {}).get('icon', '📝')
+                }
+            )
+
+            # Add individual lessons as child nodes
+            for lesson in lang_data['lessons'][:15]:  # Limit to 15 lessons per language
+                lesson_node = ProjectNode(
+                    name=f"💡 {lesson['topic']}: {lesson['lesson']}",
+                    path="",
+                    type="lesson",
+                    description=lesson['full_lesson'],
+                    metadata={
+                        'lesson_id': lesson['id'],
+                        'topic': lesson['topic'],
+                        'language': language,
+                        'tags': lesson['tags'],
+                        'created_at': lesson['created_at']
+                    }
+                )
+                lang_node.children.append(lesson_node)
+
+            languages_node.children.append(lang_node)
+
+        # Create Tags branch  
+        tags_node = ProjectNode(
+            name="🏷️ By Tag",
+            path="",
+            type="category", 
+            description=f"Lessons organized by {len(lessons_data.get('all_tags', []))} tags",
+            metadata={'category_type': 'tags'}
+        )
+
+        for tag, tag_data in lessons_data.get('by_tag', {}).items():
+            tag_node = ProjectNode(
+                name=f"#{tag} ({tag_data['total']} lessons)",
+                path="",
+                type="tag",
+                description=f"Lessons tagged with {tag}",
+                metadata={
+                    'lesson_count': tag_data['total'],
+                    'languages': tag_data['languages'],
+                    'tag_name': tag
+                }
+            )
+
+            # Add individual lessons as child nodes
+            for lesson in tag_data['lessons'][:10]:  # Limit to 10 lessons per tag
+                lesson_node = ProjectNode(
+                    name=f"💡 [{lesson['language']}] {lesson['topic']}: {lesson['lesson']}",
+                    path="",
+                    type="lesson",
+                    description=lesson['full_lesson'],
+                    metadata={
+                        'lesson_id': lesson['id'],
+                        'topic': lesson['topic'],
+                        'language': lesson['language'],
+                        'tag': tag,
+                        'created_at': lesson['created_at']
+                    }
+                )
+                tag_node.children.append(lesson_node)
+
+            tags_node.children.append(tag_node)
+
+        root_node.children.append(languages_node)
+        root_node.children.append(tags_node)
+
+        return root_node
+
 def main():
     parser = argparse.ArgumentParser(description="Generate mind maps from Madness Interactive project structure")
     parser.add_argument('--format', choices=['html', 'svg', 'dot', 'json'], default='html',
@@ -1568,6 +1844,7 @@ def main():
     parser.add_argument('--include-todos', action='store_true', help='Include todo information in mindmap')
     parser.add_argument('--include-todo-items', action='store_true', help='Include individual todo items as nodes (top 5 projects only)')
     parser.add_argument('--todo-centric', action='store_true', help='Generate todo-centric mindmap focusing on active projects from database')
+    parser.add_argument('--lessons-learned', action='store_true', help='Generate lessons-learned mindmap organized by languages and tags')
     parser.add_argument('--root', default='.', help='Root directory to scan (default: current directory)')
 
     args = parser.parse_args()
@@ -1588,18 +1865,26 @@ def main():
         print("📋 Individual todo items: enabled (top 5 projects)")
     if args.todo_centric:
         print("📋 Todo-centric: enabled")
+    if args.lessons_learned:
+        print("📚 Lessons learned: enabled")
     print("")
 
     # Generate mind map
     if args.todo_centric:
         # Force todo integration for todo-centric mode
         generator = MindMapGenerator(args.root, True, True)
+    elif args.lessons_learned:
+        # Force todo integration for lessons learned mode (uses same MongoDB connection)
+        generator = MindMapGenerator(args.root, False, False)
+        generator.todo_integration = TodoIntegration()
     else:
         generator = MindMapGenerator(args.root, args.include_todos, args.include_todo_items)
 
     print("🔄 Scanning project structure...")
     if args.todo_centric:
         root_node = generator.scan_todo_projects()
+    elif args.lessons_learned:
+        root_node = generator.scan_lessons_learned()
     else:
         root_node = generator.scan_projects(args.depth, args.exclude or [])
 
@@ -1607,6 +1892,10 @@ def main():
     if args.todo_centric:
         print(f"🎯 Active projects: {', '.join(root_node.metadata.get('active_projects', []))}")
         print(f"📋 Active todos: {root_node.metadata.get('total_todos', 0)} (completed todos filtered out)")
+    elif args.lessons_learned:
+        print(f"📚 Total lessons: {root_node.metadata.get('total_lessons', 0)}")
+        print(f"🏷️  Languages: {', '.join(root_node.metadata.get('languages', []))}")
+        print(f"🔖 Tags: {', '.join(root_node.metadata.get('tags', []))}")
     else:
         print(f"🏷️  Technologies: {', '.join(root_node.metadata.get('languages', []))}")
         if args.include_todos:
