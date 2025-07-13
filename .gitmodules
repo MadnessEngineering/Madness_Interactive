@@ -73,15 +73,12 @@
 [submodule "examples/adk-samples"]
 	path = examples/adk-samples
 	url = https://github.com/google/adk-samples.git
-[submodule "projects/python/Omnispindle"]
-	path = projects/python/Omnispindle
-	url = https://github.com/DanEdens/Omnispindle.git
 [submodule "projects/mobile/MQTTCommander"]
 	path = projects/mobile/MQTTCommander
 	url = https://github.com/DanEdens/MQTTCommander.git
 [submodule "projects/common/Inventorium"]
 	path = projects/common/Inventorium
-	url = /Users/d.edens/lab/madness_interactive/projects/common/Inventorium
+	url = https://github.com/d-edens/inventorium.git
 [submodule "examples/wcgw"]
 	path = examples/wcgw
 	url = https://github.com/rusiaaman/wcgw.git
@@ -121,3 +118,12 @@
 [submodule ".hammerspoon"]
 	path = .hammerspoon
 	url = https://github.com/DanEdens/DansHammerSpoon.git
+[submodule "examples/ruv-FANN"]
+	path = examples/ruv-FANN
+	url = https://github.com/ruvnet/ruv-FANN.git
+[submodule "examples/rl-swarm"]
+	path = examples/rl-swarm
+	url = https://github.com/gensyn-ai/rl-swarm.git
+[submodule "examples/OpenAI_Agent_Swarm"]
+	path = examples/OpenAI_Agent_Swarm
+	url = https://github.com/daveshap/OpenAI_Agent_Swarm.git

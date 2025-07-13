@@ -60,7 +60,7 @@ The central nervous system of our glorious hive mind!
   - [ ] Documentation Summoning (wip)
   - [ ] User enlightenment (wip)
 
-### 🕸️ [Omnispindle](projects/python/Omnispindle/README.md)
+### 🕸️ [Omnispindle](projects/common/Omnispindle/README.md)
 *"Genius is the ability to put into effect what is on your mind.!"*
 
 A distributed task management MCP engine that falcilitates thoughts between minds:
@@ -72,7 +72,7 @@ A distributed task management MCP engine that falcilitates thoughts between mind
 - [ ] Accept tribute from plugin disciples (wip)
 - [ ] Enable cross-project consciousness management Dashboard (Coming Very Soon!)
 
-#### 🗂️ [Todomill Projectorium](projects/python/Omnispindle/Todomill_projectorium/README.md)
+#### 🗂️ [Todomill Projectorium](projects/common/Omnispindle/Todomill_projectorium/README.md)
 *"Men of lofty genius sometimes accomplish the most when they work least, for their minds are occupied with their ideas and the perfection of their conceptions, to which they afterwards give form. - Leonardo da Vinci"*
 
 A sub-repository of Omnispindle, Todomill Projectorium is a dashboard for managing todos.
@@ -103,7 +103,7 @@ Tightly integrated with the Omnispindle MCP server. It enables AI agents to inte
 - Team Boards
 - Custom filter presets and saved views
 
-> See [Todomill_projectorium](projects/python/Omnispindle/Todomill_projectorium/) for the full subrepo and its exported flows, code, and documentation.
+> See [Todomill_projectorium](projects/common/Omnispindle/Todomill_projectorium/) for the full subrepo and its exported flows, code, and documentation.
 
 ### ⚡ Event Systems
 

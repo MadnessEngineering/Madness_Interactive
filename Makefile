@@ -394,10 +394,10 @@ invent:
 omnispindle:
 	@echo "⚙️  Deploying Omnispindle - The Heart of the Machine..."
 	@echo "=================================================="
-	@if [ -d "projects/python/Omnispindle" ]; then \
-		cd projects/python/Omnispindle && make deploy; \
+	@if [ -d "projects/common/Omnispindle" ]; then \
+		cd projects/common/Omnispindle && make deploy; \
 	else \
-		echo "❌ Omnispindle project not found at projects/python/Omnispindle"; \
+		echo "❌ Omnispindle project not found at projects/common/Omnispindle"; \
 		exit 1; \
 	fi
 	@echo "✅ Omnispindle deployment complete!"
