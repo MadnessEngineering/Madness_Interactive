@@ -19,3 +19,4 @@ eap-tls-lab/
 .env
 /node_modules
 docs/mindmap.html
+projects/python/mcp-auth-cli/mcp_auth.py
