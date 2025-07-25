@@ -133,3 +133,6 @@
 [submodule "projects/common/MechaFiberAtelier"]
 	path = projects/common/MechaFiberAtelier
 	url = https://github.com/MadnessEngineering/MechaFiberAtelier.git
+[submodule "projects/common/mcp_cli_auth_tool"]
+	path = projects/common/mcp_cli_auth_tool
+	url = https://github.com/MadnessEngineering/mcp_cli_auth_tool.git

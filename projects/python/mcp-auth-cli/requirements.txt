@@ -1,0 +1,5 @@
+# mcp-auth-cli requirements
+requests>=2.31.0
+python-jose>=3.3.0
+PyJWT>=2.8.0
+python-dotenv>=1.0.0 
