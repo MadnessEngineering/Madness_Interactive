@@ -31,6 +31,9 @@ help:
 	@echo "  list-cursor-rules      - Show projects with cursor rules"
 	@echo "  centralize-cursor-rules - Move rules to central location"
 	@echo "  restore-cursor-rules TARGET=<path> - Restore rules to project"
+	@echo ""
+	@echo "Claude Hooks:"
+	@echo "  setup-claude-hooks PROJECT_DIR=<path> - Set up Claude hooks for a project"
 
 # Variables
 NAME ?=
@@ -39,6 +42,7 @@ DESC ?= A new project in the Madness Interactive ecosystem
 PROJECTS_DIR = projects/common
 DOCS_CHAT_DIR = /Users/d.edens/lab/madness_interactive/docs/cursor_chathistory
 CURSOR_RULES_DIR = /Users/d.edens/lab/madness_interactive/cursor_rules
+ANATHESMELT_DIR = /Users/d.edens/lab/madness_interactive/Anathesmelt
 WORKSPACE_ROOT = /Users/d.edens/lab/madness_interactive
 
 # Cursor Rules Management Targets
@@ -219,6 +223,28 @@ setup-cursor-rules:
 	git add . && \
 	git commit -m "Add initial cursor rules for $(NAME)" && \
 	git push
+
+# Setup Claude Hooks for a project
+setup-claude-hooks:
+	@if [ -z "$(PROJECT_DIR)" ]; then \
+		echo "Error: PROJECT_DIR parameter is required. Usage: make setup-claude-hooks PROJECT_DIR=path/to/project"; \
+		exit 1; \
+	fi
+	@PROJECT_NAME=$$(basename "$(PROJECT_DIR)")
+	@echo "Setting up Claude hooks for $$PROJECT_NAME..."
+	@CLAUDE_HOOKS_DIR="$(ANATHESMELT_DIR)/$$PROJECT_NAME"
+	@mkdir -p "$$CLAUDE_HOOKS_DIR"
+	@cd $(PROJECT_DIR) && mkdir -p .claude
+	@echo "claude.md" > "$$CLAUDE_HOOKS_DIR/claude.md"
+	@cd $(PROJECT_DIR) && ln -s "$$CLAUDE_HOOKS_DIR" .claude/hooks
+	@echo "Claude hooks linked for $$PROJECT_NAME: .claude/hooks -> $$CLAUDE_HOOKS_DIR"
+
+	# Commit to Anathesmelt repo
+	cd $(ANATHESMELT_DIR) && \
+	git add . && \
+	git commit -m "Add initial Claude hooks for $$PROJECT_NAME" && \
+	git push
+
 
 # Setup chat history symlink system
 setup-chat-history:

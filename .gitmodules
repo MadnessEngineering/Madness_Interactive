@@ -127,3 +127,12 @@
 [submodule "examples/OpenAI_Agent_Swarm"]
 	path = examples/OpenAI_Agent_Swarm
 	url = https://github.com/daveshap/OpenAI_Agent_Swarm.git
+[submodule "docs/that_one_montage_of_the_crews_graduation_pre_villian_arc_like_hidden_inventory_jujutsu_kaisen"]
+	path = docs/that_one_montage_of_the_crews_graduation_pre_villian_arc_like_hidden_inventory_jujutsu_kaisen
+	url = https://github.com/MadnessEngineering/that_one_montage_of_the_crews_graduation_pre_villian_arc_like_hidden_inventory_jujutsu_kaisen.git
+[submodule "projects/common/MechaFiberAtelier"]
+	path = projects/common/MechaFiberAtelier
+	url = https://github.com/MadnessEngineering/MechaFiberAtelier.git
+[submodule "projects/common/mcp_cli_auth_tool"]
+	path = projects/common/mcp_cli_auth_tool
+	url = https://github.com/MadnessEngineering/mcp_cli_auth_tool.git

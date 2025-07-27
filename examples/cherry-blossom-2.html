@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Palette</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            width: 100%;
+            max-width: 1200px;
+            height: 80vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 100%;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        .upload-area {
+            background: #0F5CD4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 30px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .upload-area:hover {
+            background: #0D4DB8;
+            transform: translateY(-1px);
+        }
+
+        .upload-text {
+            margin: 0;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .palette-section {
+            flex: 1;
+        }
+
+        .palette-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .color-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .color-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .color-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .color-item.selected {
+            background-color: #0F5CD4;
+            border-color: #0D4DB8;
+            transform: translateX(4px);
+        }
+
+        .color-item.selected .color-hex {
+            color: white;
+        }
+
+        .color-item.selected .color-rgb {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .copy-feedback {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy-icon {
+            width: 12px;
+            height: 12px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .color-item:hover .copy-feedback {
+            opacity: 0.5;
+            color: #6B7280;
+        }
+
+        .copy-feedback.copied {
+            opacity: 1 !important;
+            color: #10B981;
+        }
+
+        .color-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            margin-right: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .color-info {
+            flex: 1;
+        }
+
+        .color-hex {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 2px;
+        }
+
+        .color-rgb {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 30px;
+            background: #f8fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 400px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .image-container:hover {
+            border-color: #0F5CD4;
+            background: rgba(15, 92, 212, 0.05);
+        }
+
+        .image-container.dragover {
+            border-color: #0F5CD4;
+            background: rgba(15, 92, 212, 0.05);
+        }
+
+        .image-container.has-image {
+            background: white;
+            border: none;
+            cursor: default;
+        }
+
+        .image-container.has-image:hover {
+            border: none;
+            background: white;
+        }
+
+        .placeholder {
+            text-align: center;
+            color: #9CA3AF;
+            padding: 40px;
+        }
+
+        .placeholder-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .loader {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #E5E7EB;
+            border-top: 3px solid #0F5CD4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .placeholder.loading .placeholder-icon {
+            display: none;
+        }
+
+        .placeholder.loading .loader {
+            display: block;
+        }
+
+        .loader {
+            display: none;
+        }
+
+        .placeholder-text {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #6B7280;
+            font-weight: 500;
+        }
+
+        .placeholder-hint {
+            font-size: 14px;
+            color: #9CA3AF;
+        }
+
+        .placeholder-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .placeholder-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .image-display {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .color-indicator {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+            cursor: grab;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+
+        .color-indicator:hover {
+            transform: scale(1.2);
+        }
+
+        .color-indicator:active {
+            cursor: grabbing;
+        }
+
+        .color-indicator.selected {
+            border-color: #0F5CD4;
+            border-width: 4px;
+            box-shadow: 0 0 0 2px rgba(15, 92, 212, 0.3);
+            transform: scale(1.1);
+        }
+
+        .pixel-zoom {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+        }
+
+        .pixel-zoom canvas {
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .pixel-zoom::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 2px;
+            background: rgba(0, 0, 0, 0.8);
+            transform: translate(-50%, -50%);
+            border: 1px solid white;
+        }
+
+        canvas {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .sidebar {
+                width: 100%;
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+                min-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h1 class="title">Mood palette</h1>
+            <p class="subtitle">Extract colors that match your image's vibe</p>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-text">Choose image</div>
+            </div>
+            
+            <input type="file" class="file-input" id="fileInput" accept="image/*">
+            
+            <div class="palette-section">
+                <h2 class="palette-title">Extracted colors</h2>
+                <div class="color-list" id="colorList">
+                    <div class="color-item placeholder-item">
+                        <div class="color-swatch" style="background-color: #E5E7EB"></div>
+                        <div class="color-info">
+                            <div class="color-hex" style="color: #9CA3AF">#------</div>
+                            <div class="color-rgb" style="color: #9CA3AF">RGB(---, ---, ---)</div>
+                        </div>
+                    </div>
+                    <div class="color-item placeholder-item">
+                        <div class="color-swatch" style="background-color: #E5E7EB"></div>
+                        <div class="color-info">
+                            <div class="color-hex" style="color: #9CA3AF">#------</div>
+                            <div class="color-rgb" style="color: #9CA3AF">RGB(---, ---, ---)</div>
+                        </div>
+                    </div>
+                    <div class="color-item placeholder-item">
+                        <div class="color-swatch" style="background-color: #E5E7EB"></div>
+                        <div class="color-info">
+                            <div class="color-hex" style="color: #9CA3AF">#------</div>
+                            <div class="color-rgb" style="color: #9CA3AF">RGB(---, ---, ---)</div>
+                        </div>
+                    </div>
+                    <div class="color-item placeholder-item">
+                        <div class="color-swatch" style="background-color: #E5E7EB"></div>
+                        <div class="color-info">
+                            <div class="color-hex" style="color: #9CA3AF">#------</div>
+                            <div class="color-rgb" style="color: #9CA3AF">RGB(---, ---, ---)</div>
+                        </div>
+                    </div>
+                    <div class="color-item placeholder-item">
+                        <div class="color-swatch" style="background-color: #E5E7EB"></div>
+                        <div class="color-info">
+                            <div class="color-hex" style="color: #9CA3AF">#------</div>
+                            <div class="color-rgb" style="color: #9CA3AF">RGB(---, ---, ---)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="image-container" id="imageContainer">
+                <div class="placeholder" id="placeholder">
+                    <div class="placeholder-icon">🖼️</div>
+                    <div class="loader"></div>
+                    <div class="placeholder-text">Upload an image to get started</div>
+                    <div class="placeholder-hint">Drag & drop or click "Choose image"</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <canvas id="canvas"></canvas>
+    
+    <script>
+        class ColorPaletteExtractor {
+            constructor() {
+                this.canvas = document.getElementById('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.uploadArea = document.getElementById('uploadArea');
+                this.fileInput = document.getElementById('fileInput');
+                this.imageContainer = document.getElementById('imageContainer');
+                this.colorList = document.getElementById('colorList');
+                this.currentImage = null;
+                this.colors = [];
+                this.indicators = [];
+                
+                this.initEventListeners();
+            }
+            
+            initEventListeners() {
+                this.uploadArea.addEventListener('click', () => this.fileInput.click());
+                this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+                
+                // Drag and drop on button
+                this.uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                });
+                
+                this.uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    this.handleFileSelect(e);
+                });
+                
+                // Make image container clickable when empty
+                this.imageContainer.addEventListener('click', (e) => {
+                    // Only allow clicking if no image is loaded
+                    if (!this.imageContainer.classList.contains('has-image')) {
+                        this.fileInput.click();
+                    }
+                });
+                
+                // Drag and drop on image container
+                this.imageContainer.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    this.imageContainer.classList.add('dragover');
+                });
+                
+                this.imageContainer.addEventListener('dragleave', (e) => {
+                    e.preventDefault();
+                    this.imageContainer.classList.remove('dragover');
+                });
+                
+                this.imageContainer.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    this.imageContainer.classList.remove('dragover');
+                    this.handleFileSelect(e);
+                });
+            }
+            
+            handleFileSelect(e) {
+                const file = e.target.files ? e.target.files[0] : e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    this.loadImage(file);
+                }
+            }
+            
+            loadImage(file) {
+                // Show loading state
+                this.showLoading();
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        this.currentImage = img;
+                        this.displayImage(img);
+                        this.extractColors(img);
+                        this.hideLoading();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            showLoading() {
+                const placeholder = document.getElementById('placeholder');
+                if (placeholder) {
+                    placeholder.classList.add('loading');
+                    const text = placeholder.querySelector('.placeholder-text');
+                    const hint = placeholder.querySelector('.placeholder-hint');
+                    if (text) text.textContent = 'Processing image...';
+                    if (hint) hint.textContent = 'Extracting colors and analyzing mood';
+                }
+            }
+            
+            hideLoading() {
+                const placeholder = document.getElementById('placeholder');
+                if (placeholder) {
+                    placeholder.classList.remove('loading');
+                    const text = placeholder.querySelector('.placeholder-text');
+                    const hint = placeholder.querySelector('.placeholder-hint');
+                    if (text) text.textContent = 'Upload an image to get started';
+                    if (hint) hint.textContent = 'Drag & drop or click "Choose image"';
+                }
+            }
+            
+            displayImage(img) {
+                // Clear any existing content and indicators
+                this.clearAllIndicators();
+                this.imageContainer.innerHTML = '';
+                
+                // Add has-image class to change the container styling
+                this.imageContainer.classList.add('has-image');
+                
+                const imgElement = document.createElement('img');
+                imgElement.src = img.src;
+                imgElement.className = 'image-display';
+                imgElement.id = 'displayImage';
+                this.imageContainer.appendChild(imgElement);
+            }
+            
+            extractColors(img) {
+                // Set canvas size
+                this.canvas.width = img.width;
+                this.canvas.height = img.height;
+                
+                // Fill canvas with white background first (for PNG transparency)
+                this.ctx.fillStyle = '#FFFFFF';
+                this.ctx.fillRect(0, 0, img.width, img.height);
+                
+                // Draw image to canvas
+                this.ctx.drawImage(img, 0, 0);
+                
+                // Get image data
+                const imageData = this.ctx.getImageData(0, 0, img.width, img.height);
+                const data = imageData.data;
+                
+                // Extract exactly 5 colors using k-means clustering
+                const colors = this.kMeansColors(data, 5);
+                
+                // Ensure we have exactly 5 colors
+                if (colors.length !== 5) {
+                    console.warn(`Expected 5 colors, got ${colors.length}`);
+                }
+                
+                this.colors = colors.slice(0, 5); // Ensure exactly 5 colors
+                
+                // Display colors and indicators
+                this.displayColors(this.colors);
+                this.createColorIndicators(this.colors);
+            }
+            
+            kMeansColors(data, k) {
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                
+                // Sample pixels with their positions (every 4th pixel for performance)
+                const pixels = [];
+                const pixelPositions = [];
+                for (let y = 0; y < height; y += 4) {
+                    for (let x = 0; x < width; x += 4) {
+                        const i = (y * width + x) * 4;
+                        if (i < data.length) {
+                            pixels.push([data[i], data[i + 1], data[i + 2]]);
+                            pixelPositions.push({x, y, index: pixels.length - 1});
+                        }
+                    }
+                }
+                
+                if (pixels.length === 0) {
+                    // Fallback if no pixels found
+                    return Array(k).fill().map(() => ({
+                        r: 128, g: 128, b: 128,
+                        hex: '#808080',
+                        position: {x: width / 2, y: height / 2}
+                    }));
+                }
+                
+                // Initialize exactly k centroids with better spacing
+                let centroids = this.initializeDistinctCentroids(pixels, k);
+                
+                let assignments = new Array(pixels.length);
+                
+                // K-means iterations
+                for (let iter = 0; iter < 15; iter++) {
+                    const clusters = Array(k).fill().map(() => []);
+                    
+                    // Assign pixels to clusters
+                    pixels.forEach((pixel, pixelIdx) => {
+                        let minDist = Infinity;
+                        let closestCentroid = 0;
+                        
+                        centroids.forEach((centroid, idx) => {
+                            const dist = this.colorDistance(pixel, centroid);
+                            if (dist < minDist) {
+                                minDist = dist;
+                                closestCentroid = idx;
+                            }
+                        });
+                        
+                        clusters[closestCentroid].push(pixel);
+                        assignments[pixelIdx] = closestCentroid;
+                    });
+                    
+                    // Update centroids - ensure we always have k centroids
+                    centroids = clusters.map((cluster, idx) => {
+                        if (cluster.length === 0) {
+                            // If cluster is empty, reinitialize with a random pixel
+                            const randomIndex = Math.floor(Math.random() * pixels.length);
+                            return [...pixels[randomIndex]];
+                        }
+                        
+                        const sum = cluster.reduce((acc, pixel) => [
+                            acc[0] + pixel[0],
+                            acc[1] + pixel[1],
+                            acc[2] + pixel[2]
+                        ], [0, 0, 0]);
+                        
+                        return [
+                            Math.round(sum[0] / cluster.length),
+                            Math.round(sum[1] / cluster.length),
+                            Math.round(sum[2] / cluster.length)
+                        ];
+                    });
+                }
+                
+                // Ensure colors are distinct (minimum distance of 60)
+                centroids = this.ensureDistinctColors(centroids, pixels, 60);
+                
+                // Find representative positions for each of the k colors
+                const colorPositions = centroids.map((centroid, clusterIdx) => {
+                    // Find all pixels assigned to this cluster
+                    const clusterPositions = pixelPositions.filter(pos => assignments[pos.index] === clusterIdx);
+                    
+                    if (clusterPositions.length === 0) {
+                        // Fallback: distribute evenly across image
+                        const x = (width / (k + 1)) * (clusterIdx + 1);
+                        const y = height / 2;
+                        return {x: Math.round(x), y: Math.round(y)};
+                    }
+                    
+                    // Find the position with the color closest to the centroid
+                    let bestPosition = clusterPositions[0];
+                    let minDistance = Infinity;
+                    
+                    clusterPositions.forEach(pos => {
+                        const pixel = pixels[pos.index];
+                        const dist = this.colorDistance(pixel, centroid);
+                        if (dist < minDistance) {
+                            minDistance = dist;
+                            bestPosition = pos;
+                        }
+                    });
+                    
+                    return {x: bestPosition.x, y: bestPosition.y};
+                });
+                
+                // Return exactly k colors
+                const result = centroids.slice(0, k).map((rgb, idx) => ({
+                    r: rgb[0],
+                    g: rgb[1],
+                    b: rgb[2],
+                    hex: this.rgbToHex(rgb[0], rgb[1], rgb[2]),
+                    position: colorPositions[idx] || {x: width / 2, y: height / 2}
+                }));
+                
+                // Ensure we always return exactly k colors
+                while (result.length < k) {
+                    result.push({
+                        r: 128, g: 128, b: 128,
+                        hex: '#808080',
+                        position: {x: width / 2, y: height / 2}
+                    });
+                }
+                
+                return result;
+            }
+            
+            initializeDistinctCentroids(pixels, k) {
+                const centroids = [];
+                const minDistance = 80; // Minimum distance between initial centroids
+                
+                // First centroid is random
+                centroids.push([...pixels[Math.floor(Math.random() * pixels.length)]]);
+                
+                // Subsequent centroids should be far from existing ones
+                while (centroids.length < k) {
+                    let bestCandidate = null;
+                    let maxMinDistance = 0;
+                    
+                    // Try several random candidates
+                    for (let tries = 0; tries < 50; tries++) {
+                        const candidate = pixels[Math.floor(Math.random() * pixels.length)];
+                        
+                        // Find minimum distance to existing centroids
+                        let minDistToExisting = Infinity;
+                        centroids.forEach(centroid => {
+                            const dist = this.colorDistance(candidate, centroid);
+                            minDistToExisting = Math.min(minDistToExisting, dist);
+                        });
+                        
+                        // Keep the candidate with the largest minimum distance
+                        if (minDistToExisting > maxMinDistance) {
+                            maxMinDistance = minDistToExisting;
+                            bestCandidate = candidate;
+                        }
+                    }
+                    
+                    if (bestCandidate) {
+                        centroids.push([...bestCandidate]);
+                    } else {
+                        // Fallback to random if can't find distinct enough color
+                        centroids.push([...pixels[Math.floor(Math.random() * pixels.length)]]);
+                    }
+                }
+                
+                return centroids;
+            }
+            
+            ensureDistinctColors(centroids, pixels, minDistance) {
+                const distinctColors = [];
+                
+                centroids.forEach(centroid => {
+                    let isDistinct = true;
+                    
+                    // Check if this color is too similar to any existing distinct color
+                    distinctColors.forEach(existing => {
+                        if (this.colorDistance(centroid, existing) < minDistance) {
+                            isDistinct = false;
+                        }
+                    });
+                    
+                    if (isDistinct) {
+                        distinctColors.push(centroid);
+                    } else {
+                        // Find a replacement color that's distinct
+                        let replacement = this.findDistinctReplacement(centroid, distinctColors, pixels, minDistance);
+                        if (replacement) {
+                            distinctColors.push(replacement);
+                        } else {
+                            // If can't find distinct replacement, keep original but adjust slightly
+                            const adjusted = [
+                                Math.min(255, centroid[0] + 30),
+                                Math.min(255, centroid[1] + 30),
+                                Math.min(255, centroid[2] + 30)
+                            ];
+                            distinctColors.push(adjusted);
+                        }
+                    }
+                });
+                
+                return distinctColors;
+            }
+            
+            findDistinctReplacement(originalColor, existingColors, pixels, minDistance) {
+                // Sort pixels by their usage frequency (approximate by sampling)
+                const colorCounts = new Map();
+                
+                // Sample and count colors
+                for (let i = 0; i < Math.min(pixels.length, 1000); i += 10) {
+                    const pixel = pixels[i];
+                    const key = `${pixel[0]},${pixel[1]},${pixel[2]}`;
+                    colorCounts.set(key, (colorCounts.get(key) || 0) + 1);
+                }
+                
+                // Try to find a distinct color from the most common ones
+                const sortedColors = Array.from(colorCounts.entries())
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 100); // Top 100 most common colors
+                
+                for (const [colorKey, count] of sortedColors) {
+                    const [r, g, b] = colorKey.split(',').map(Number);
+                    const candidate = [r, g, b];
+                    
+                    let isDistinct = true;
+                    existingColors.forEach(existing => {
+                        if (this.colorDistance(candidate, existing) < minDistance) {
+                            isDistinct = false;
+                        }
+                    });
+                    
+                    if (isDistinct) {
+                        return candidate;
+                    }
+                }
+                
+                return null;
+            }
+            
+            colorDistance(color1, color2) {
+                return Math.sqrt(
+                    Math.pow(color1[0] - color2[0], 2) +
+                    Math.pow(color1[1] - color2[1], 2) +
+                    Math.pow(color1[2] - color2[2], 2)
+                );
+            }
+            
+            rgbToHex(r, g, b) {
+                return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+            }
+            
+            displayColors(colors) {
+                this.colorList.innerHTML = '';
+                colors.forEach((color, index) => {
+                    const colorItem = document.createElement('div');
+                    colorItem.className = 'color-item';
+                    colorItem.dataset.colorIndex = index;
+                    colorItem.innerHTML = `
+                        <div class="color-swatch" style="background-color: ${color.hex}"></div>
+                        <div class="color-info">
+                            <div class="color-hex">${color.hex}</div>
+                            <div class="color-rgb">RGB(${color.r}, ${color.g}, ${color.b})</div>
+                        </div>
+                        <div class="copy-feedback">
+                            <svg class="copy-icon" viewBox="0 0 24 24">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </div>
+                    `;
+                    
+                    // Add click handler to copy color and select
+                    colorItem.addEventListener('mousedown', () => {
+                        this.selectColor(index);
+                    });
+                    
+                    colorItem.addEventListener('mouseup', () => {
+                        this.clearSelection();
+                    });
+                    
+                    colorItem.addEventListener('click', () => {
+                        this.copyColorToClipboard(color.hex, colorItem);
+                    });
+                    
+                    this.colorList.appendChild(colorItem);
+                });
+            }
+            
+            async copyColorToClipboard(hexColor, colorItem) {
+                try {
+                    await navigator.clipboard.writeText(hexColor);
+                    this.showCopyFeedback(colorItem);
+                } catch (err) {
+                    // Fallback for older browsers
+                    this.fallbackCopyToClipboard(hexColor, colorItem);
+                }
+            }
+            
+            fallbackCopyToClipboard(text, colorItem) {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    this.showCopyFeedback(colorItem);
+                } catch (err) {
+                    console.error('Failed to copy color:', err);
+                }
+                
+                document.body.removeChild(textArea);
+            }
+            
+            showCopyFeedback(colorItem) {
+                const feedback = colorItem.querySelector('.copy-feedback');
+                if (feedback) {
+                    feedback.innerHTML = `
+                        <svg class="copy-icon" viewBox="0 0 24 24">
+                            <polyline points="20,6 9,17 4,12"></polyline>
+                        </svg>
+                    `;
+                    feedback.classList.add('copied');
+                    setTimeout(() => {
+                        feedback.innerHTML = `
+                            <svg class="copy-icon" viewBox="0 0 24 24">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        `;
+                        feedback.classList.remove('copied');
+                    }, 1500);
+                }
+            }
+            
+            createColorIndicators(colors) {
+                // Clear ALL existing indicators first
+                this.clearAllIndicators();
+                
+                const imgElement = document.getElementById('displayImage');
+                if (!imgElement) return;
+                
+                // Ensure we only work with exactly 5 colors
+                const fiveColors = colors.slice(0, 5);
+                
+                // Position indicators immediately
+                this.positionIndicators(fiveColors, imgElement);
+            }
+            
+            clearAllIndicators() {
+                // Remove any existing indicators from the DOM by class
+                const existingIndicators = document.querySelectorAll('.color-indicator');
+                existingIndicators.forEach(indicator => indicator.remove());
+                
+                // Remove pixel zoom if it exists
+                const existingZoom = document.getElementById('pixel-zoom');
+                if (existingZoom) existingZoom.remove();
+                
+                // Clear the indicators array
+                this.indicators.forEach(indicator => {
+                    if (indicator.parentNode) {
+                        indicator.parentNode.removeChild(indicator);
+                    }
+                });
+                this.indicators = [];
+            }
+            
+            positionIndicators(colors, imgElement) {
+                // Ensure exactly 5 colors
+                colors = colors.slice(0, 5);
+                
+                const rect = imgElement.getBoundingClientRect();
+                const containerRect = this.imageContainer.getBoundingClientRect();
+                
+                // Calculate scale factors
+                const scaleX = rect.width / this.currentImage.width;
+                const scaleY = rect.height / this.currentImage.height;
+                
+                // Calculate image offset within container
+                const imageLeft = rect.left - containerRect.left;
+                const imageTop = rect.top - containerRect.top;
+                
+                colors.forEach((color, index) => {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'color-indicator';
+                    indicator.style.backgroundColor = color.hex;
+                    indicator.dataset.colorIndex = index;
+                    indicator.id = `color-dot-${index}`; // Unique ID
+                    
+                    // Position indicator at the actual color location
+                    const x = imageLeft + (color.position.x * scaleX) - 10;
+                    const y = imageTop + (color.position.y * scaleY) - 10;
+                    
+                    indicator.style.left = `${x}px`;
+                    indicator.style.top = `${y}px`;
+                    
+                    // Make indicator draggable
+                    this.makeDraggable(indicator);
+                    
+                    this.imageContainer.appendChild(indicator);
+                    this.indicators.push(indicator);
+                });
+            }
+            
+            makeDraggable(indicator) {
+                let isDragging = false;
+                let startX, startY, startLeft, startTop;
+                let wasDragged = false;
+                
+                indicator.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    isDragging = true;
+                    wasDragged = false;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startLeft = parseInt(indicator.style.left);
+                    startTop = parseInt(indicator.style.top);
+                    
+                    // Select this indicator
+                    const colorIndex = parseInt(indicator.dataset.colorIndex);
+                    this.selectColor(colorIndex);
+                    
+                    document.addEventListener('mousemove', handleMouseMove);
+                    document.addEventListener('mouseup', handleMouseUp);
+                    
+                    // Prevent text selection during drag
+                    document.body.style.userSelect = 'none';
+                    document.body.style.webkitUserSelect = 'none';
+                });
+                
+                const handleMouseMove = (e) => {
+                    if (!isDragging) return;
+                    
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    
+                    // If mouse moved more than 3px, consider it a drag
+                    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+                        wasDragged = true;
+                    }
+                    
+                    indicator.style.left = `${startLeft + dx}px`;
+                    indicator.style.top = `${startTop + dy}px`;
+                    
+                    // Update color based on new position
+                    this.updateColorFromPosition(indicator);
+                };
+                
+                const handleMouseUp = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    isDragging = false;
+                    
+                    // Clear selection when mouse up (both click and drag)
+                    this.clearSelection();
+                    
+                    // Re-enable text selection
+                    document.body.style.userSelect = '';
+                    document.body.style.webkitUserSelect = '';
+                    
+                    document.removeEventListener('mousemove', handleMouseMove);
+                    document.removeEventListener('mouseup', handleMouseUp);
+                };
+                
+                // Prevent dragging the indicator as an image
+                indicator.addEventListener('dragstart', (e) => {
+                    e.preventDefault();
+                });
+            }
+            
+            selectColor(index) {
+                // Remove previous selections
+                this.clearSelection();
+                
+                // Select the clicked color
+                const colorItem = document.querySelector(`[data-color-index="${index}"]`);
+                const indicator = document.getElementById(`color-dot-${index}`);
+                
+                if (colorItem) colorItem.classList.add('selected');
+                if (indicator) indicator.classList.add('selected');
+            }
+            
+            clearSelection() {
+                document.querySelectorAll('.color-item.selected').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                document.querySelectorAll('.color-indicator.selected').forEach(indicator => {
+                    indicator.classList.remove('selected');
+                });
+            }
+            
+            updatePixelZoom(e, zoomCtx) {
+                const imgElement = document.getElementById('displayImage');
+                if (!imgElement || !this.currentImage) return;
+                
+                const rect = imgElement.getBoundingClientRect();
+                const containerRect = this.imageContainer.getBoundingClientRect();
+                
+                const x = e.clientX - containerRect.left - (rect.left - containerRect.left);
+                const y = e.clientY - containerRect.top - (rect.top - containerRect.top);
+                
+                // Convert to image coordinates
+                const scaleX = this.currentImage.width / rect.width;
+                const scaleY = this.currentImage.height / rect.height;
+                
+                const imgX = Math.max(0, Math.min(this.currentImage.width - 1, x * scaleX));
+                const imgY = Math.max(0, Math.min(this.currentImage.height - 1, y * scaleY));
+                
+                // Extract 24x24 pixel area around the cursor
+                const size = 12; // 12 pixels in each direction
+                const sourceX = Math.max(0, Math.min(this.currentImage.width - 24, imgX - size));
+                const sourceY = Math.max(0, Math.min(this.currentImage.height - 24, imgY - size));
+                
+                try {
+                    const imageData = this.ctx.getImageData(sourceX, sourceY, 24, 24);
+                    zoomCtx.putImageData(imageData, 0, 0);
+                } catch (e) {
+                    // Fallback if getImageData fails
+                    zoomCtx.clearRect(0, 0, 24, 24);
+                }
+            }
+            
+            updateColorFromPosition(indicator) {
+                const imgElement = document.getElementById('displayImage');
+                if (!imgElement || !this.currentImage) return;
+                
+                const rect = imgElement.getBoundingClientRect();
+                const containerRect = this.imageContainer.getBoundingClientRect();
+                
+                const x = parseInt(indicator.style.left) - (rect.left - containerRect.left) + 16; // +16 for center of 32px indicator
+                const y = parseInt(indicator.style.top) - (rect.top - containerRect.top) + 16;
+                
+                // Convert to image coordinates
+                const scaleX = this.currentImage.width / rect.width;
+                const scaleY = this.currentImage.height / rect.height;
+                
+                const imgX = Math.max(0, Math.min(this.currentImage.width - 1, x * scaleX));
+                const imgY = Math.max(0, Math.min(this.currentImage.height - 1, y * scaleY));
+                
+                // Get color from canvas
+                const imageData = this.ctx.getImageData(imgX, imgY, 1, 1);
+                const pixel = imageData.data;
+                
+                const color = {
+                    r: pixel[0],
+                    g: pixel[1],
+                    b: pixel[2],
+                    hex: this.rgbToHex(pixel[0], pixel[1], pixel[2])
+                };
+                
+                // Update indicator color
+                indicator.style.backgroundColor = color.hex;
+                
+                // Update color in the list
+                const colorIndex = parseInt(indicator.dataset.colorIndex);
+                this.colors[colorIndex] = color;
+                this.displayColors(this.colors);
+                
+                // Keep the selection active during drag
+                this.selectColor(colorIndex);
+            }
+        }
+        
+        // Initialize the app
+        new ColorPaletteExtractor();
+    </script>
+</body>
+</html>

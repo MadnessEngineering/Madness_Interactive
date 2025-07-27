@@ -105,6 +105,16 @@ Tightly integrated with the Omnispindle MCP server. It enables AI agents to inte
 
 > See [Todomill_projectorium](projects/common/Omnispindle/Todomill_projectorium/) for the full subrepo and its exported flows, code, and documentation.
 
+### 🔥 [Anathesmelt](Anathesmelt/README.md)
+*"Where forbidden code is forged!"*
+
+A centralized crucible for dangerous and powerful Claude hooks. This repository holds the raw, untamed potential of our AI agents, allowing for unorthodox and powerful automations that defy conventional programming.
+
+### Features:
+- Centralized management for all `claude.md` hook files.
+- `Makefile` integration for easy project setup (`make setup-claude-hooks`).
+- A forge for experimental, high-risk, high-reward AI incantations.
+
 ### ⚡ Event Systems
 
 #### [Original EventGhost Update](projects/python/EventGhost/README.md)
