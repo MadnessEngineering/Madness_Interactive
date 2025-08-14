@@ -133,3 +133,6 @@
 [submodule "projects/common/mcp_cli_auth_tool"]
 	path = projects/common/mcp_cli_auth_tool
 	url = https://github.com/MadnessEngineering/mcp_cli_auth_tool.git
+[submodule "projects/common/DevCrystal-TaskForge"]
+	path = projects/common/DevCrystal-TaskForge
+	url = https://github.com/MadnessEngineering/DevCrystal-TaskForge.git
