@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# Staged files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+# Patterns to search for
+FORBIDDEN_PATTERNS=(
+    "ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3}"
+    "-----BEGIN RSA PRIVATE KEY-----"
+    "-----BEGIN EC PRIVATE KEY-----"
+    "-----BEGIN OPENSSH PRIVATE KEY-----"
+)
+
+# Flag to track if a forbidden pattern is found
+found_forbidden=0
+
+# Loop through each staged file
+for FILE in $STAGED_FILES; do
+    # Loop through each forbidden pattern
+    for PATTERN in "${FORBIDDEN_PATTERNS[@]}"; do
+        # Search for the pattern in the file
+        if grep -qE "$PATTERN" "$FILE"; then
+            echo "🚨 DANGER: Forbidden pattern '$PATTERN' found in '$FILE'."
+            echo "   Please remove the key before committing."
+            found_forbidden=1
+        fi
+    done
+done
+
+# If a forbidden pattern was found, exit with an error code to block the commit
+if [ "$found_forbidden" -ne 0 ]; then
+    echo "   Commit blocked due to sensitive data."
+    exit 1
+fi
+
+exit 0 
