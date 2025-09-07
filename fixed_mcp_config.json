@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "omnispindle": {
+      "command": "mcp-remote",
+      "args": ["https://madnessinteractive.cc/mcp/"]
+    }
+  }
+}
