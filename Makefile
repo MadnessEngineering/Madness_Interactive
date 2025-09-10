@@ -525,36 +525,6 @@ check-vitals:
 	@echo "============================================================"
 	@echo "✅ Vitals check complete."
 
-unleash-chaos:
-	@echo ""
-	@echo "                 ,                           ,"
-	@echo "               #_~,                         ,~_#"
-	@echo "            #_~  )a,                     ,a(  ~_#"
-	@echo "           (  ~_# \"~,                 ,~\" #_~  )"
-	@echo "            \"#_~   )a,             ,a(   ~_#\""
-	@echo "              #_~ \") ,\"#_~     ~_#\", ( \"~_#"
-	@echo "               #_~  ) ' #_~   ~_# ' (  ~_#"
-	@echo "                \"#_~ ' ( \"#_~_#\" ) ' ~_#\""
-	@echo "                  \"#_~, ' / \\ ' ,~_#\""
-	@echo "                    \"~_# | | #_~\""
-	@echo "                        | |"
-	@echo "                        | |"
-	@echo "                      ,,-' '-.,"
-	@echo "                     ( (     ) )"
-	@echo "                      '._'-'_.'"
-	@echo "                        '---'"
-	@echo ""
-	@echo "🔥🔥🔥 WARNING: YOU ARE ABOUT TO UNLEASH THE CHAOS MONKEY! 🔥🔥🔥"
-	@echo "This is not a drill. This will intentionally try to restart a critical service."
-	@echo "This is a test of resilience. Do not run this on a whim."
-	@echo ""
-	@read -p "Are you a brave enough Mad Tinker for this? (y/N) " -n 1 -r; echo
-	@if [[ ! $$REPLY =~ ^[Yy]$$ ]]; then \
-		echo "😌 Chaos averted. The machine remains stable... for now."; \
-		exit 1; \
-	fi
-	@echo ""
-	# do mcp call to mcp mad_tinker_mode todo
 
 mindmap-with-todo-items: ## Generate interactive HTML mind map with individual todo items (top 5 projects)
 	@echo "🧠 Generating interactive HTML mind map with individual todo items..."
