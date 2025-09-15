@@ -1,21 +1,21 @@
 [submodule "templates/python/games/snowball_snowman"]
 	path = projects/python/games/snowball_snowman
-	url = https://github.com/DanEdens/snowball_snowman.git
+	url = https://github.com/MadTinker/snowball_snowman.git
 [submodule "EventGhost-Rust"]
 	path = projects/rust/EventGhost-Rust
-	url = git@github.com:DanEdens/EventGhost-Rust.git
+	url = git@github.com:MadTinker/EventGhost-Rust.git
 [submodule "projects/rust/Tinker"]
 	path = projects/rust/Tinker
-	url = https://github.com/DanEdens/Tinker.git
+	url = https://github.com/MadTinker/Tinker.git
 [submodule "projects/python/dvtTestKit"]
 	path = projects/python/dvtTestKit
-  url = git@github.com:DanEdens/dvtTestKit.git
+  url = git@github.com:MadTinker/dvtTestKit.git
 [submodule "projects/lua/hammerspoon"]
 	path = projects/lua/hammerspoon
-	url = https://github.com/DanEdens/DansHammerSpoon.git
+	url = https://github.com/MadTinker/DansHammerSpoon.git
 [submodule "projects/python/SeleniumPageUtilities"]
 	path = projects/python/SeleniumPageUtilities
-	url = https://gist.github.com/DanEdens/ed5cb453bd97f6ee3eeb5b180a997502
+	url = https://gist.github.com/MadTinker/ed5cb453bd97f6ee3eeb5b180a997502
 [submodule "projects/powershell/WinSystemSnapshot"]
 	path = projects/powershell/WinSystemSnapshot
 	url = git@gist.github.com:3ac7ab5a9235dfc6260e1600e8efaba5.git
@@ -42,40 +42,40 @@
 	url = git@github.com:MadnessEngineering/Swarmonomicon.git
 [submodule "projects/common/Omnispindle"]
 	path = projects/common/Omnispindle
-	url = git@github.com:DanEdens/Omnispindle.git
+	url = git@github.com:MadTinker/Omnispindle.git
 [submodule "projects/python/LegoScry"]
 	path = projects/python/LegoScry
-	url = git@github.com:DanEdens/LegoScry.git
+	url = git@github.com:MadTinker/LegoScry.git
 [submodule "examples/mcp-memory-domain-knowledge"]
 	path = examples/mcp-memory-domain-knowledge
 	url = https://github.com/yodakeisuke/mcp-memory-domain-knowledge.git
 [submodule "projects/mobile/Cogwyrm"]
 	path = projects/mobile/Cogwyrm
-	url = https://github.com/DanEdens/Cogwyrm
+	url = https://github.com/MadTinker/Cogwyrm
 [submodule "projects/python/fastmcp-balena-cli"]
 	path = projects/python/fastmcp-balena-cli
-	url = git@github.com:DanEdens/fastmcp-balena-cli.git
+	url = git@github.com:MadTinker/fastmcp-balena-cli.git
 [submodule "projects/python/mcp-personal-jira"]
 	path = projects/python/mcp-personal-jira
-	url = git@github.com:DanEdens/mcp-personal-jira.git
+	url = git@github.com:MadTinker/mcp-personal-jira.git
 [submodule "projects/tasker"]
 	path = projects/tasker
-	url = https://github.com/DanEdens/MadTaskerTinkerbox.git
+	url = https://github.com/MadTinker/MadTaskerTinkerbox.git
 [submodule "examples/gui-crawler-macos"]
 	path = examples/gui-crawler-macos
 	url = https://github.com/michaelneale/gui-crawler-macos.git
 [submodule "docs/cursor_chathistory"]
 	path = docs/cursor_chathistory
-	url = git@github.com:DanEdens/Madness_chats-.git
+	url = git@github.com:MadTinker/Madness_chats-.git
 [submodule "projects/python/Spindlewrit"]
 	path = projects/python/Spindlewrit
-	url = git@github.com:DanEdens/Spindlewrit.git
+	url = git@github.com:MadTinker/Spindlewrit.git
 [submodule "examples/adk-samples"]
 	path = examples/adk-samples
 	url = https://github.com/google/adk-samples.git
 [submodule "projects/mobile/MQTTCommander"]
 	path = projects/mobile/MQTTCommander
-	url = https://github.com/DanEdens/MQTTCommander.git
+	url = https://github.com/MadTinker/MQTTCommander.git
 [submodule "projects/common/Inventorium"]
 	path = projects/common/Inventorium
 	url = https://github.com/d-edens/inventorium.git
@@ -93,7 +93,7 @@
 	url = https://github.com/MadnessEngineering/wyrmwatch.git
 [submodule "projects/python/dans-fastmcp-server-template"]
 	path = projects/python/dans-fastmcp-server-template
-	url = git@github.com:DanEdens/dans-fastmcp-server-template.git
+	url = git@github.com:MadTinker/dans-fastmcp-server-template.git
 [submodule "projects/common/Omnispindle-cli-bridge"]
 	path = projects/common/Omnispindle-cli-bridge
 	url = https://github.com/MadnessEngineering/Omnispindle-mcp-gem.git
@@ -105,7 +105,7 @@
 	url = https://github.com/google-gemini/cookbook.git
 [submodule "projects/common/Whispermind_Conduit"]
 	path = projects/common/Whispermind_Conduit
-	url = https://github.com/DanEdens/whispermind-conduit.git
+	url = https://github.com/MadTinker/whispermind-conduit.git
 [submodule "projects/common/SwarmDesk"]
 	path = projects/common/SwarmDesk
 	url = https://github.com/MadnessEngineering/SwarmDesk.git
@@ -114,7 +114,7 @@
 	url = https://github.com/Dicklesworthstone/ultimate_mcp_client.git
 [submodule ".hammerspoon"]
 	path = .hammerspoon
-	url = https://github.com/DanEdens/DansHammerSpoon.git
+	url = https://github.com/MadTinker/DansHammerSpoon.git
 [submodule "examples/ruv-FANN"]
 	path = examples/ruv-FANN
 	url = https://github.com/ruvnet/ruv-FANN.git
@@ -136,3 +136,6 @@
 [submodule "projects/common/DevCrystal-TaskForge"]
 	path = projects/common/DevCrystal-TaskForge
 	url = https://github.com/MadnessEngineering/DevCrystal-TaskForge.git
+[submodule "examples/crush"]
+	path = examples/crush
+	url = https://github.com/lvndry/crush.git
