@@ -139,3 +139,6 @@
 [submodule "examples/crush"]
 	path = examples/crush
 	url = https://github.com/lvndry/crush.git
+[submodule "projects/python/mqtt-ai-analyzer"]
+	path = projects/python/mqtt-ai-analyzer
+	url = https://github.com/MadTinker/mqtt-ai-analyzer.git
