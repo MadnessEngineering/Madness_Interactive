@@ -110,7 +110,7 @@ Tightly integrated with the Omnispindle MCP server. It enables AI agents to inte
 
 A 3D workspace dashboard and project management interface - the visual layer of the Madness Interactive ecosystem. Web-based interface that connects humans to AI-managed work through immersive visualization and real-time data.
 
-![Inventorium Mindmap Interface](projects/common/Inventorium/docs/assets/Screenshot%202025-10-09%20at%208.43.44%20PM.png)
+![Inventorium Mindmap Interface](docs/assets/inventorium/inventorium-mindmap-interface.png)
 
 ### Features:
 - **Interactive Mind Maps**: Visualize project relationships, todos, and knowledge domains
@@ -119,7 +119,7 @@ A 3D workspace dashboard and project management interface - the visual layer of 
 - **Multi-mode Integration**: API-first with hybrid local/remote fallback
 - **Smart Filtering**: Kingdom-based organization with status tracking
 
-![Mindmap Pathing Visualization](projects/common/Inventorium/docs/assets/mindmappathing.png)
+![Mindmap Pathing Visualization](docs/assets/inventorium/mindmap-pathing.png)
 
 The interface layer that gets out of your way - fast data access for humans, proper logging for AI agents, and immersive environments when you need deep focus.
 
