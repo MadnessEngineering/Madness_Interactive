@@ -105,6 +105,26 @@ Tightly integrated with the Omnispindle MCP server. It enables AI agents to inte
 
 > See [Todomill_projectorium](projects/common/Omnispindle/Todomill_projectorium/) for the full subrepo and its exported flows, code, and documentation.
 
+### 📊 [Inventorium](projects/common/Inventorium/README.md)
+*"Where chaos becomes visible!"*
+
+A 3D workspace dashboard and project management interface - the visual layer of the Madness Interactive ecosystem. Web-based interface that connects humans to AI-managed work through immersive visualization and real-time data.
+
+![Inventorium Mindmap Interface](projects/common/Inventorium/docs/assets/Screenshot%202025-10-09%20at%208.43.44%20PM.png)
+
+### Features:
+- **Interactive Mind Maps**: Visualize project relationships, todos, and knowledge domains
+- **3D Project Workspaces (SwarmDesk)**: Individual project environments with embedded Claude Code
+- **Real-time Dashboard**: Todo management with Auth0 user isolation
+- **Multi-mode Integration**: API-first with hybrid local/remote fallback
+- **Smart Filtering**: Kingdom-based organization with status tracking
+
+![Mindmap Pathing Visualization](projects/common/Inventorium/docs/assets/mindmappathing.png)
+
+The interface layer that gets out of your way - fast data access for humans, proper logging for AI agents, and immersive environments when you need deep focus.
+
+**Deployment**: Production at `https://madnessinteractive.cc/` with nginx, Auth0, and MongoDB backend.
+
 ### 🔥 [Anathesmelt](Anathesmelt/README.md)
 *"Where forbidden code is forged!"*
 
