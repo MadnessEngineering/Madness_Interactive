@@ -142,3 +142,6 @@
 [submodule "projects/python/mqtt-ai-analyzer"]
 	path = projects/python/mqtt-ai-analyzer
 	url = https://github.com/MadTinker/mqtt-ai-analyzer.git
+[submodule "projects/python/verified_madness"]
+	path = projects/python/verified_madness
+	url = https://github.com/MadnessEngineering/verified_madness.git
