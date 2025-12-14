@@ -1,5 +1,7 @@
 # Madness Interactive
 
+"Confidence isn’t a measure of truth — it’s a measure of how much damage we’re willing to risk."
+
 Welcome to the Mad Tinkers Workshop!
 
 A collection of interconnected projects focused on building an ecosystem of AI-powered tools and agents for local development and automation.
