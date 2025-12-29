@@ -50,7 +50,7 @@
 	path = examples/mcp-memory-domain-knowledge
 	url = https://github.com/yodakeisuke/mcp-memory-domain-knowledge.git
 [submodule "projects/mobile/Cogwyrm"]
-	path = projects/mobile/Cogwyrm
+	path = projects/mobile/Cogwyrm2/
 	url = https://github.com/MadTinker/Cogwyrm
 [submodule "projects/python/fastmcp-balena-cli"]
 	path = projects/python/fastmcp-balena-cli
@@ -145,3 +145,6 @@
 [submodule "projects/python/verified_madness"]
 	path = projects/python/verified_madness
 	url = https://github.com/MadnessEngineering/verified_madness.git
+[submodule "projects/common/Cogwyrm"]
+	path = projects/common/Cogwyrm
+	url = https://github.com/MadnessEngineering/Cogwyrm.git
