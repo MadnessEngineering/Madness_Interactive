@@ -151,3 +151,9 @@
 [submodule "projects/common/cartogomancy"]
 	path = projects/common/cartogomancy
 	url = https://github.com/MadTinker/cartogomancy.git
+[submodule "projects/mobile/Cogwyrm2"]
+	path = projects/mobile/Cogwyrm2
+	url = https://github.com/MadnessEngineering/Cogwyrm2.git
+[submodule "projects/common/Obnubilare"]
+	path = projects/common/Obnubilare
+	url = https://github.com/MadnessEngineering/Obnubilare.git
