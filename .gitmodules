@@ -157,3 +157,6 @@
 [submodule "projects/common/Obnubilare"]
 	path = projects/common/Obnubilare
 	url = https://github.com/MadnessEngineering/Obnubilare.git
+[submodule "projects/common/madnessscale"]
+	path = projects/common/madnessscale
+	url = https://github.com/MadnessEngineering/ScaleOfMadness
