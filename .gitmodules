@@ -160,3 +160,9 @@
 [submodule "projects/common/madnessscale"]
 	path = projects/common/madnessscale
 	url = https://github.com/MadnessEngineering/ScaleOfMadness
+[submodule "projects/opencode/opencode"]
+	path = projects/opencode/Whispermind_Conduit
+	url = https://github.com/anomalyco/opencode.git
+[submodule "projects/typescript/agorventorium"]
+	path = projects/typescript/agorventorium
+	url = https://github.com/preset-io/agor.git
