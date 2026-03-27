@@ -24,3 +24,5 @@ projects/python/mcp-auth-cli/mcp_auth.py
 */stripe-sample-code
 /stripe-sample-code
 /.claude/data
+/projects/archive
+.claude_temp/last_tool_use_id.txt
