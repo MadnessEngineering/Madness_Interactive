@@ -78,7 +78,7 @@
 	url = https://github.com/MadTinker/MQTTCommander.git
 [submodule "projects/common/Inventorium"]
 	path = projects/common/Inventorium
-	url = https://github.com/d-edens/inventorium.git
+	url = https://github.com/MadnessEngineering/Inventorium.git
 [submodule "examples/wcgw"]
 	path = examples/wcgw
 	url = https://github.com/rusiaaman/wcgw.git
