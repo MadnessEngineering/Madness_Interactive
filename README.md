@@ -1,330 +1,389 @@
 # Madness Interactive
 
-"Confidence isn’t a measure of truth — it’s a measure of how much damage we’re willing to risk."
+> *"Confidence isn't a measure of truth — it's a measure of how much damage we're willing to risk."*
 
-Welcome to the Mad Tinkers Workshop!
+Welcome to the **Mad Tinker's Workshop** — a living, interconnected ecosystem of AI-powered tools, agents, and interfaces built to harness the beautiful chaos of a mind with too many ideas.
 
-A collection of interconnected projects focused on building an ecosystem of AI-powered tools and agents for local development and automation.
-<!--
-This project defies the trend of making "AI" conform to logical and predictable norms, embracing the beauty of chaos and unpredictability.
+This is not a collection of isolated side projects. Every piece connects. Cartogomancy scans your code and feeds a 3D city. Omnispindle gives AI agents the tools to think out loud. Inventorium renders it all into something you can walk through. MadnessVR puts on the headset.
 
-Join us in exploring the limits of what is possible when we embrace the unknown and the chaotic nature of our own minds.
+---
 
-# Philosophy
+## The Philosophy
 
-*"There is no great genius without some touch of madness.  - Aristotle"*
+ADHD is being awake to too many possibilities at once. The right tools don't suppress that — they *capture it*. Throw every idea into the machine. Keep your focus where it belongs. Let the agents do the rest.
 
-In this Mad Era of Ai and Automation, we believe that the only way to win is to build systems that can build themselves.
-For me, ADHD is a state of being aware and awake to too many possibilities in the moment. This causes us to neglect not only the project goal, but those around us, and other priorities.
-Wouldn't it be great to toss every idea into the void, to be able to focus where you should, without losing all that potential?
+We write careful code and push ambitious boundaries. Nothing is oversold, but nothing is undersold either.
 
-Especially as AI agents assist us with increasing complexity, the run off can be chaotic, exessive, and yet brilliant.
+---
 
-I believe the only way to harness this mighty power is to equip yourself with tools that can juggle contexts and allow you to make decisions from a place of clarity.
+## Ecosystem Map
 
-# Use Cases -->
+```
+                        ┌─────────────────────────────────────┐
+                        │       MADNESS INTERACTIVE           │
+                        │     madnessinteractive.cc           │
+                        └──────────────┬──────────────────────┘
+                                       │
+          ┌────────────────────────────┼──────────────────────────┐
+          │                            │                           │
+   ┌──────▼──────┐             ┌──────▼──────┐            ┌──────▼──────┐
+   │ Inventorium │             │  SwarmDesk  │            │  Cogwyrm2   │
+   │  React Web  │◄────────────│  3D WebGL   │            │   Mobile    │
+   │  Dashboard  │             │  Workspace  │            │  React Nat. │
+   └──────┬──────┘             └──────┬──────┘            └──────┬──────┘
+          │                           │                           │
+          └───────────────────────────┼───────────────────────────┘
+                                      │ Auth0
+                               ┌──────▼──────┐
+                               │ Omnispindle │
+                               │  MCP Server │  ← AI agents talk here
+                               │  30 tools   │
+                               └──────┬──────┘
+                                      │ JSON-RPC
+                        ┌─────────────┼─────────────┐
+                        │             │              │
+                 ┌──────▼──────┐  ┌───▼────┐  ┌─────▼──────┐
+                 │  REST API   │  │ MongoDB│  │    MQTT    │
+                 │ (Express)   │  │  DB    │  │  Realtime  │
+                 └─────────────┘  └────────┘  └────────────┘
 
-## Saving Side Quests for Later
+  CODE ANALYSIS                          NATIVE RUNTIME
+  ─────────────                          ──────────────
+  ┌─────────────┐                        ┌─────────────┐
+  │ Cartogomancy│──► UML JSON ──►────────│  MadnessVR  │
+  │  CLI tool   │         │              │ Unity 6 LTS │
+  │  5 analyzers│         └──────────────│ Desktop+VR  │
+  └─────────────┘                        └─────────────┘
+                                               ▲
+                              SwarmDesk behavioral reference
 
-One of the most powerful features of our system is the ability to capture spontaneous ideas and "side quests" without derailing your main focus. Whether you're deep in a coding session and suddenly think of a brilliant feature, or you're in a meeting and realize there's a critical bug to fix later - just capture it and keep moving.
+  AGENT ORCHESTRATION         AUTOMATION BACKBONE
+  ───────────────────         ───────────────────
+  ┌──────────────┐            ┌──────────────────┐
+  │ Swarmonomicon│            │ EventGhost-Rust  │
+  │ Rust agents  │            │ EventGhost (Py)  │
+  │ Hive coord.  │            │ Tinker (testing) │
+  └──────────────┘            └──────────────────┘
 
-![Use Case Example: Saving a Side Quest for Later](docs/assets/images/Use-case-example-saving-a-side-quest-for-later.png)
+  CONFIG FORGE                GAME INTEGRATIONS
+  ────────────                ─────────────────
+  ┌─────────────┐             ┌──────────────────┐
+  │ Anathesmelt │             │ DevCrystal-      │
+  │ Claude hooks│             │ TaskForge        │
+  │ & AI config │             │ (Terraria mod)   │
+  └─────────────┘             └──────────────────┘
+```
 
-This workflow demonstrates how AI agents can seamlessly capture, categorize, and schedule ideas while you maintain your current focus. The captured tasks are automatically organized by project, prioritized by urgency, and can be reviewed when you're ready to tackle them.
-
-# Who should check this out?
-
-- You are a tinkerer, and you want to build your own tools and agents.
-- You want to use MCP tooling to help you manage your own chaos.
-- You are looking for tips and lessons-learned on building with Ai agent workflows.
-- You are a maker, and you want to build your own tools and agents.
-- You are anyone with too many ideas and not enough time.
-
+---
 
 ## Core Projects
 
 ### 📊 [Inventorium](projects/common/Inventorium/README.md)
-*"Where chaos becomes visible!"*
+*"Where chaos becomes visible."*
 
-A 3D workspace dashboard and project management interface - the visual layer of the Madness Interactive ecosystem. Web-based interface that connects humans to AI-managed work through immersive visualization and real-time data.
+The main lab management interface — a React/Node.js web app running at [madnessinteractive.cc](https://madnessinteractive.cc/). Your command center for todos, projects, lessons learned, and AI-assisted development.
 
-![Inventorium Mindmap Interface](docs/assets/inventorium/inventorium-mindmap-interface.png)
+| What it does | Key tech |
+|---|---|
+| Interactive mindmaps of project/todo relationships | React 18, Three.js, D3 |
+| War Room: RPG-style productivity map with procedural terrain | Material-UI, Framer Motion |
+| 3D code city visualization (via SwarmDesk, press `0` at /dashboard) | Auth0, MongoDB, PM2 |
+| Embedded Claude Code interface for AI development | Zustand, @ai-sdk/google |
+| Full CRUD for todos, lessons, projects, audit logs | Node.js/Express REST API |
 
-#### Features:
-- **Interactive Mind Maps**: Visualize project relationships, todos, and knowledge domains
-- **3D Project Workspaces (SwarmDesk)**: Individual project environments with embedded Claude Code
-- **Real-time Dashboard**: Todo management with Auth0 user isolation
-- **Multi-mode Integration**: API-first with hybrid local/remote fallback
-- **Smart Filtering**: Kingdom-based organization with status tracking
-
-![Mindmap Pathing Visualization](docs/assets/inventorium/mindmap-pathing.png)
-
-The interface layer that gets out of your way - fast data access for humans, proper logging for AI agents, and immersive environments when you need deep focus.
-
-**Deployment**: Production at `https://madnessinteractive.cc/` with nginx, Auth0, and MongoDB backend.
-
-### 🕸️ [Omnispindle](projects/common/Omnispindle/README.md)
-*"Genius is the ability to put into effect what is on your mind.!"*
-
-A distributed task management MCP engine that falcilitates thoughts between minds:
-
-### Features:
-- [X] Orchestrate tasks across multiple agent incarnations via MCP tooling
-- [ ] Command resources with an iron fist (Docker deployment)
-- [ ] Scry real-time metrics from the void (MQTT dials and levers)
-- [ ] Accept tribute from plugin disciples (wip)
-- [ ] Enable cross-project consciousness management Dashboard (Coming Very Soon!)
-
-#### 🗂️ [Todomill Projectorium](projects/common/Omnispindle/Todomill_projectorium/README.md)
-*"Men of lofty genius sometimes accomplish the most when they work least, for their minds are occupied with their ideas and the perfection of their conceptions, to which they afterwards give form. - Leonardo da Vinci"*
-
-A sub-repository of Omnispindle, Todomill Projectorium is a dashboard for managing todos.
-Tightly integrated with the Omnispindle MCP server. It enables AI agents to interact with a MongoDB-backed todo list, allowing for review and revision of todos.
-
-### Features:
-  - Project sidebar and overview
-  - Item editor for todos
-  - Smart suggestions tab for AI-powered redundancy reduction
-  - Control panel for project filters and refresh
-
-- **Advanced Dashboard Controls:**
-  - Filter todos by project, status, priority, and date
-  - Combine filters for complex queries
-  - MQTT-driven actions for creation, refresh, and filter management
-  - Global context variables maintain filter state
-- **Integration with Omnispindle:**
-  - Omnispindle's Python MCP server enables agent-driven automation and cross-project orchestration
-
-**Development Workflow:**
-- Edit `.js` and `.html` files for logic/UI, then copy changes into Node-RED and re-export JSON flows
-- Only edit `.json` files directly for node connections
-- Comments in JSON files document the mapping to code files
-
-**Future Directions:**
-- Enhanced AI suggestions using historical data
-- User feedback/rating for AI insights
-- Team Boards
-- Custom filter presets and saved views
-
-> See [Todomill_projectorium](projects/common/Omnispindle/Todomill_projectorium/) for the full subrepo and its exported flows, code, and documentation.
-
-### 🔥 [Anathesmelt](Anathesmelt/README.md)
-*"Where forbidden code is forged!"*
-
-A centralized crucible for dangerous and powerful Claude hooks. This repository holds the raw, untamed potential of our AI agents, allowing for unorthodox and powerful automations that defy conventional programming.
-
-#### Features:
-- Centralized management for all `claude.md` hook files.
-- `Makefile` integration for easy project setup (`make setup-claude-hooks`).
-- A forge for experimental, high-risk, high-reward AI incantations.
-
-### 🌟 [Swarmonomicon](projects/common/Swarmonomicon/README.md)
-*"Talent hits a target no one else can hit; Genius hits a target no one else can see!"*
-
-![Cover Art](docs/assets/Cover-Art.jpeg)
-
-The central nervous system of our glorious hive mind!
-
-#### Features:
-- [X] Async task casting and processing (mqtt_ingest, Operational!)
-- [ ] Multi-agent consciousness with centralized hivemind registry (currently exaggerated)
-- [ ] Persistent state management (wip)
-- [ ] Agent-to-agent telepathy (wip)
-- [ ] Pre-configured cultists for common rituals:
-  - [X] Task domination
-  - [ ] Git sacrifices (wip)
-  - [ ] Project genesis (wip)
-  - [ ] Documentation Summoning (wip)
-  - [ ] User enlightenment (wip)
-
-### ⚡ Event Systems
-
-#### [Original EventGhost Update](projects/python/EventGhost/README.md)
-*"Ancient magic renewed!"*
-- Python 3.x compatibility enchantments
-- Modern UI/UX transmutations
-- Enhanced plugin summoning circles
-- Forbidden knowledge documentation
-
-#### [EventGhost-Rust](projects/rust/EventGhost-Rust/README.md)
-*"The spirit of automation, REBORN IN IRON!"*
-- Performance that DEFIES PHYSICS
-- Modern async SORCERY
-- Cross-platform domination
-- Fortified security wards
-- Rust-forged plugin architecture
-- Swarmonomicon neural linkage
-
-### 🔍 [Tinker](projects/rust/Tinker/README.md)
-*"That which peers beyond the veil!"*
-
-A testing apparatus that BENDS REALITY to your will:
-- Headless and UI manifestations
-- Event capture and temporal manipulation
-- Agent-based testing rituals
-- Swarmonomicon neural interface
-- Cross-platform infection vectors
-- Plugin system for custom CHAOS SCEN### Mobile Projects
-
-#### Cogwyrm: The Pocket Madness Interface
-*"The eye of genius has always a plaintive expression, and its natural language is pathos!"*
-
-A handheld portal of CHAOS designed for commanding your Swarmonomicon agents from the comfort of your mobile device.
-This is a work in progress, and will be updated as we add more features. It aims to be a Tasker plugin enabled interface for mobile automation and Todo management.
-
-🌋 CORE MANIFESTATIONS:
-- Cross-dimensional reaching (iOS/Android) powered by React Native's dark arts
-- MQTT message summoning & communion circles
-- Direct neural links to your agent hivemind
-- REAL-TIME monitoring of the cosmic horror you've unleashed
-- Seamless psychic bonds with Swarmonomicon's event nexus
-
-🧪 MAD SCIENCE FEATURES:
-- Cryptographic wards and binding circles for secure agent interactions
-- Customizable command grimoires for frequent incantations
-- Temporal logging of all interdimensional communications
-- Gesture-based summoning circles for rapid agent deployment
-- Emergency containment protocols (just in case)
-
-⚡ FIELD ENHANCEMENTS:
-- Haptic feedback when your agents successfully wreak havoc
-- Dark mode that would make Lovecraft proud
-- Configurable notification runes
-- Backup sanctums for your command history
-- Quick-access ritual shortcuts
-
-
-<!-- ## 🛠️ Tools and Utilities
-*"The mad Tinkers's Grimoire!"*
-
-The `tools/` directory contains artifacts for channeling local AI power:
-
-- `git_assistant.py`: Git automation SORCERY
-- `project_agent.py`: Project management DOMINATION
-- `project_init.py`: Project GENESIS protocols
-- `setup_*.py`: Various ritual scripts for:
-  - RAG (Reality Augmentation Generators)
-  - Void Monitoring
-  - Proxy Manifestation
-  - API Gateway Summoning
-  - Knowledge Base Corruption
-  - Model Mind-Melding
-  - Dataset Transmutation
-  - Evaluation Circles -->
-
-## 🚀 Getting Started
-*"Your first steps into BEAUTIFUL MADNESS!"*
-
-1. Clone the repository (CAREFULLY):
-```bash
-git clone https://github.com/yourusername/madness_interactive.git
-cd madness_interactive  # ENTER AT YOUR OWN RISK
-```
-
-2. Initialize the sub-realities:
-```bash
-git submodule update --init --recursive  # SUMMON THOSE TRAPPED WITHIN
-```
-
-3. Prepare your development sanctum:
-```bash
-# For Rust incarnations
-cargo build  # FORGE THE BINARIES!!
-
-# For Python rituals
-pip install -r requirements.txt  # BIND THE DEPENDENCIES
-```
-
-4. Install the ELDRITCH GIT HOOKS for automatic status updates:
-```bash
-./scripts/install_git_hooks.sh [path/to/repository]  # BIND THE REPOSITORY TO OUR WILL!!
-```
-
-## 📁 Project Structure
-*"The architecture of CHAOS!"*
-
-```
-madness_interactive/
-├── projects/
-│   ├── python/
-│   │   ├── [ai_interface/](projects/python/ai_interface/README.md)
-│   │   ├── [mcp_server/](projects/python/mcp_server/README.md)
-│   │   ├── [EventGhost/](projects/python/EventGhost/README.md)
-│   │   ├── [simple-mqtt-server-agent/](projects/python/simple-mqtt-server-agent/README.md)
-│   │   ├── [mqtt-get-var/](projects/python/mqtt-get-var/README.md)
-│   │   ├── [local-ai/](projects/python/local-ai/README.md)
-│   │   ├── [dvtTestKit/](projects/python/dvtTestKit/README.md)
-│   │   ├── [SeleniumPageUtilities/](projects/python/SeleniumPageUtilities/README.md)
-│   │   ├── [MqttLogger/](projects/python/MqttLogger/README.md)
-│   │   ├── [LegoScry/](projects/python/LegoScry/README.md)
-│   │   └── games/
-│   ├── powershell/
-│   │   └── [WinSystemSnapshot/](projects/powershell/WinSystemSnapshot/README.md)
-│   ├── lua/
-│   │   ├── [hammerspoon/](projects/lua/hammerspoon/README.md)
-│   │   └── [LGS_script_template/](projects/lua/LGS_script_template/README.md)
-│   ├── rust/
-│   │   ├── [Tinker/](projects/rust/Tinker/README.md)
-│   │   └── [EventGhost-Rust/](projects/rust/EventGhost-Rust/README.md)
-│   ├── common/
-│   └── OS/
-├── templates/
-│   ├── python/
-│   ├── rust/
-│   └── [future-languages]/
-├── docs/
-│   ├── python/
-│   └── rust/
-├── scripts/
-│   ├── init_python_project.sh
-│   ├── init_rust_project.sh
-│   ├── install_git_hooks.sh
-│   └── git_hooks_template/
-├── theming/
-├── prompts/
-└── README.md
-```
-
-## 🧠 Mind Map System
-
-Visualize the entire Madness Interactive ecosystem, todos, and lessons learned with our interactive mindmap tools! See project relationships, track active work, and explore the knowledge base in a single glance.
-
-- Generate interactive HTML, SVG, DOT, or JSON mind maps
-- Integrate with the MCP todo and lessons-learned database
-- Explore by project, todo, or knowledge domain
-
-See [docs/mindmap.md](docs/mindmap.md) for full usage, features, and Makefile targets.
-
-## 🤝 Contributing
-*"Join our council of MAD SCIENTISTS!"*
-
-Each project maintains its own arcane guidelines. Consult the respective grimoires for specific instructions.
-
-## ⚖️ License
-*"The terms of our DARK BARGAIN!"*
-
-Each project may be bound by different cosmic laws. Consult individual project directories for licensing proclamations.
-
-## 🗺️ Roadmap
-*"Our path to GLORIOUS CHAOS!"*
-
-- [ ] Complete Swarmonomicon agent system
-- [x] 🔮 Unleash MQTT Commander upon an unsuspecting world
-- [x] Develop Omnispindle distributed task system - bin mcp_todo_server
-- [ ] Complete rebuild of EventGhost-Rust functionality
-- [ ] Build out Tinker browser
-- [ ] Improve local AI pipeline tools
-- [ ] Scribe comprehensive documentation
-- [ ] Forge integration tests across projects
-
-## 📬 Contact
-*"Commune with the VOID!"*
-
-For questions, suggestions, or to join our GLORIOUS CAUSE:
-1. Summon an issue in the relevant project repository
-2. Join our hivemind discussions
-3. Contact the mad scientists directly
+**Connects to:** Omnispindle (MCP tools), Cartogomancy (code city data), SwarmDesk (3D view), MadnessVR (native runtime)
 
 ---
 
-*"The difference between madness and genius is measured only by success!" - Unknown Mad Scientist*
+### 🕸️ [Omnispindle](projects/common/Omnispindle/README.md)
+*"Genius is the ability to put into effect what is on your mind."*
+
+The MCP server that gives AI agents hands. Every Claude, every agent, every chat interface that needs to interact with your real work talks through Omnispindle.
+
+| What it does | Key tech |
+|---|---|
+| 30 MCP tools across todos, lessons, projects, admin | Python, FastMCP |
+| Three modes: API-first / hybrid (API+Mongo) / local direct | PyPI package |
+| Auth0 device flow — zero-config auth for any agent | Auth0 OAuth 2.0 |
+| Configurable tool loadouts (minimal=4, basic=7, full=30) | MongoDB, MQTT |
+| Full audit logging — every agent action leaves a trail | JSON-RPC stdio |
+
+**Quick install:** `pip install omnispindle`
+
+**Connects to:** Inventorium (REST API backend), Swarmonomicon (agent coordination), every Claude/AI client via MCP
+
+#### 🗂️ [Todomill Projectorium](projects/common/Omnispindle/Todomill_projectorium/README.md)
+Node-RED visual dashboard for reviewing and editing todos. MQTT-driven, AI-suggestion-powered, tightly wired to the Omnispindle backend.
+
+---
+
+### 🔮 [Cartogomancy](projects/common/cartogomancy/README.md)
+*"Reading the entrails of your codebase."*
+
+A static analysis CLI that divines the hidden structure of your code and exports it as rich JSON — feeding the 3D code city in Inventorium and MadnessVR.
+
+| What it does | Key tech |
+|---|---|
+| Git analyzer — commit history, churn rate, bug-fix ratio | Node.js CLI |
+| Complexity analyzer — cyclomatic/cognitive threat levels | `@madnessengineering/cartogomancy` |
+| Import analyzer — exports, dead code detection | npm package |
+| Coverage analyzer — Jest/Istanbul test metrics | OAuth 2.0 device flow upload |
+| Redundancy analyzer — duplicate class/logic detection | Supports GitHub URLs |
+
+```bash
+npx @madnessengineering/cartogomancy analyze ./your-project
+```
+
+**Connects to:** Inventorium (uploads UML JSON via API), MadnessVR (JSON consumed by CodeCityPlanner)
+
+---
+
+### 🎮 [SwarmDesk](projects/common/Inventorium/SwarmDesk/README.md)
+*"The 3D workspace you didn't know you needed."*
+
+Embedded inside Inventorium as a submodule. Press `0` at `/dashboard` to enter. Three.js + CSS3D spatial command center with floating panels, chat integration, and building-based code complexity visualization.
+
+| What it does |
+|---|
+| 3D code city built from Cartogomancy UML output |
+| Chat panel with live MCP tool execution |
+| Real-time agent management and spawning |
+| MQTT-driven UI events |
+
+**Connects to:** Inventorium (host app), Cartogomancy (data source), MadnessVR (behavioral reference)
+
+---
+
+### 🥽 [MadnessVR](projects/common/Inventorium/MadnessVR/README.md)
+*"SwarmDesk — but you're inside it."*
+
+Unity 6.3 LTS project nested inside Inventorium. Desktop FPS + full VR via XR Origin/OpenXR. The same 3D code city, procedural workshop environment, and todo management — as a native runtime.
+
+| What it does | Key tech |
+|---|---|
+| Desktop FPS (WASD + mouselook) and full VR in one build | Unity 6000.3.11f1 |
+| Code city from Cartogomancy JSON via CodeCityPlanner | C#, OpenXR |
+| Procedural workshop environment | InputSystem |
+| Live todo/project data via madnessinteractive.cc/api | MadnessApiClient.cs |
+
+**Color palette:** `#00ff88` (cyan-green) · `#ff6b35` (orange) · `#ff0066` (hot pink)
+
+**Connects to:** Cartogomancy (code city data), Inventorium REST API (live data), SwarmDesk (behavioral reference, no code imports)
+
+---
+
+### 🌟 [Swarmonomicon](projects/common/Swarmonomicon/README.md)
+*"The central nervous system of the hive mind."*
+
+Rust-powered multi-agent orchestration. Specialized agents (Git Assistant, Project Init, Haiku, Browser, RL Agent) processing tasks from a MongoDB queue with MQTT real-time coordination.
+
+| What it does | Key tech |
+|---|---|
+| Priority-based async task processing (Critical/High/Medium/Low) | Rust, tokio |
+| Per-agent task queues with semaphore concurrency limiting | MongoDB, MQTT |
+| AI-powered task enhancement via GPT-4 batch processing | WebSocket |
+| Health monitoring based on task success rates | LM Studio local inference |
+
+**Connects to:** Omnispindle (task source), Inventorium (MQTT events), EventGhost-Rust (event triggers)
+
+---
+
+### 🔥 [Anathesmelt](Anathesmelt/README.md)
+*"Where forbidden code is forged."*
+
+The crucible for all Claude AI hook configuration. Manages `claude.md` files across the ecosystem, Makefile integration for setup, and a forge for experimental high-risk AI incantations.
+
+```bash
+make setup-claude-hooks  # wire the hooks
+```
+
+**Connects to:** Every Claude-powered project in the ecosystem
+
+---
+
+### 📱 [Cogwyrm2](projects/mobile/Cogwyrm2/README.md)
+*"The pocket madness command center."*
+
+React Native/Expo mobile companion. Full MCP integration with Omnispindle, session-based AI chat, MQTT agent control, and todo management — all from your phone.
+
+| What it does | Key tech |
+|---|---|
+| Todo/project/lesson management on mobile | React Native, Expo |
+| AI chat with live MCP tool execution | TypeScript, Auth0 |
+| MQTT message summoning for agent control | Full Omnispindle integration |
+
+**Connects to:** Omnispindle (MCP tools), Inventorium REST API, MQTT broker
+
+---
+
+### ⚡ [EventGhost-Rust](projects/rust/EventGhost-Rust/README.md)
+*"The spirit of automation, reborn in iron."*
+
+Modern Rust rewrite of the EventGhost automation engine. Async performance, cross-platform, Swarmonomicon neural linkage, and a plugin architecture that won't trap you in 2008.
+
+---
+
+### 🐍 [EventGhost (Python)](projects/python/EventGhost/README.md)
+*"Ancient magic renewed."*
+
+Python 3.x compatible fork of the classic EventGhost automation tool. Modern UI updates, enhanced plugin system, and the original automation power that started it all.
+
+---
+
+### 🔍 [Tinker](projects/rust/Tinker/README.md)
+*"That which peers beyond the veil."*
+
+Rust testing apparatus. Headless and UI manifestations, event capture, temporal manipulation, agent-based testing rituals, and cross-platform coverage.
+
+---
+
+### ⚒️ [DevCrystal-TaskForge](projects/common/DevCrystal-TaskForge/README.md)
+*"Your todos as loot drops."*
+
+A Terraria mod where your real development workflow becomes gameplay. Tasks crystallize into enchanted items (priority = rarity). AI agents manifest as NPCs. Projects become buildable sanctuaries. Urgent tasks fall from the sky as meteors.
+
+---
+
+### ⚗️ [madnessscale](projects/common/madnessscale/README.md)
+*"The cognitive combustion meter."*
+
+Token usage tracker for AI coding assistants. Measures consumption across Claude Code, Cursor, Gemini CLI, OpenCode, Codex, Amp — generates reports so you know exactly how much brain you're burning.
+
+---
+
+## Full Project Directory
+
+```
+madness_interactive/
+├── Anathesmelt/                    # Claude hook forge (submodule)
+├── projects/
+│   ├── common/                     # Core ecosystem projects
+│   │   ├── Inventorium/            # 🟢 Main dashboard (+ SwarmDesk, MadnessVR nested)
+│   │   ├── Omnispindle/            # 🟢 MCP server (+ Todomill_projectorium)
+│   │   ├── cartogomancy/           # 🟢 Code analysis CLI
+│   │   ├── Swarmonomicon/          # 🟡 Rust agent orchestration
+│   │   ├── Cogwyrm/                # 🟡 Mobile app (v1)
+│   │   ├── DevCrystal-TaskForge/   # 🟡 Terraria mod
+│   │   ├── madnessscale/           # 🟡 Token usage tracker
+│   │   ├── Whispermind_Conduit/    # 🔵 Cross-system neural linkage
+│   │   ├── Obnubilare/             # 🔵 Experimental
+│   │   ├── mcp_cli_auth_tool/      # 🔵 MCP auth utility
+│   │   └── Omnispindle-cli-bridge/ # 🔵 CLI-to-MCP bridge (Ruby)
+│   ├── python/                     # Python projects (19 submodules)
+│   │   ├── EventGhost/             # 🟢 Automation engine (Python 3.x)
+│   │   ├── Spindlewrit/            # Documentation generation
+│   │   ├── dvtTestKit/             # Dev testing utilities
+│   │   ├── LegoScry/               # LEGO/code interaction CLI
+│   │   ├── MqttLogger/             # MQTT message logging
+│   │   ├── mqtt-ai-analyzer/       # AI-powered MQTT analysis
+│   │   ├── simple-mqtt-server-agent/
+│   │   ├── SeleniumPageUtilities/
+│   │   ├── verified_madness/       # Verification framework
+│   │   ├── wyrmwatch/              # System monitoring
+│   │   └── fastmcp-balena-cli/     # balena + FastMCP integration
+│   ├── rust/
+│   │   ├── EventGhost-Rust/        # 🟡 Automation engine rewrite
+│   │   └── Tinker/                 # 🟡 Testing apparatus
+│   ├── mobile/
+│   │   ├── Cogwyrm2/               # 🟡 Mobile app (current)
+│   │   └── MQTTCommander/          # 🔵 MQTT device control
+│   ├── typescript/
+│   │   ├── RaidShadowLegendsButItsMCP/  # Game-AI agent demo
+│   │   └── agorventorium/          # Analytics/visualization
+│   ├── lua/
+│   │   ├── hammerspoon/            # macOS automation (submodule)
+│   │   └── LGS_script_template/    # Logitech Gaming Software
+│   ├── powershell/
+│   │   └── WinSystemSnapshot/      # Windows system capture
+│   └── nodeJS/
+├── docs/                           # Documentation & cursor chat history
+├── scripts/                        # Utility + git hook scripts
+├── examples/                       # Reference implementations
+└── Makefile                        # Monorepo task runner
+
+Status: 🟢 Production  🟡 Active Development  🔵 Integration/Experimental
+```
+
+---
+
+## How the Pieces Connect
+
+```
+YOU have an idea
+      │
+      ▼
+Captured via Omnispindle MCP tools
+(Claude, Cogwyrm2, Inventorium chat)
+      │
+      ▼
+Stored in MongoDB, visible in Inventorium dashboard
+      │
+      ├──► Swarmonomicon agents pick up tasks, coordinate via MQTT
+      │
+      ├──► Cartogomancy analyzes the affected codebase
+      │         └──► UML JSON → SwarmDesk 3D city → MadnessVR
+      │
+      └──► DevCrystal-TaskForge: the task falls from the sky in Terraria
+```
+
+---
+
+## Getting Started
+
+**Clone with submodules:**
+```bash
+git clone --recurse-submodules https://github.com/madnessengineering/madness_interactive.git
+cd madness_interactive
+```
+
+**Or init submodules after cloning:**
+```bash
+git submodule update --init --recursive
+```
+
+**Jump into a specific project:**
+```bash
+# The main web dashboard
+cd projects/common/Inventorium && npm install && npm run dev
+
+# The MCP server (for AI agent integration)
+pip install omnispindle
+omnispindle --help
+
+# Code analysis CLI
+npx @madnessengineering/cartogomancy analyze ./your-project
+```
+
+**Wire up Claude hooks:**
+```bash
+make setup-claude-hooks
+```
+
+See each project's own README for full setup instructions.
+
+---
+
+## Deployment
+
+Production runs at **[madnessinteractive.cc](https://madnessinteractive.cc/)** on AWS EC2:
+- **Nginx** — reverse proxy + SSL (Let's Encrypt)
+- **PM2** — Node.js process management
+- **MongoDB** — per-user isolated collections via Auth0 `sub`
+- **Auth0** — authentication across web, mobile, and MCP clients
+- **Git hooks** — auto-deploy on push
+
+---
+
+## Contributing
+
+Each project has its own guidelines. The meta-rule: read the code first, ask before "fixing" anything that touches multiple systems — connections run deeper than they look.
+
+---
+
+## License
+
+Each project may carry different terms. Check the individual project directory.
+
+---
+
+*"The difference between madness and genius is measured only by success."* — Unknown Mad Scientist
