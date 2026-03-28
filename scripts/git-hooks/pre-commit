@@ -16,10 +16,13 @@ found_forbidden=0
 
 # Loop through each staged file
 for FILE in $STAGED_FILES; do
+    # Skip the hook file itself (it contains these strings as pattern literals)
+    [[ "$FILE" == scripts/git-hooks/* ]] && continue
+
     # Loop through each forbidden pattern
     for PATTERN in "${FORBIDDEN_PATTERNS[@]}"; do
         # Search for the pattern in the file
-        if grep -qE "$PATTERN" "$FILE"; then
+        if grep -qE -e "$PATTERN" "$FILE"; then
             echo "🚨 DANGER: Forbidden pattern '$PATTERN' found in '$FILE'."
             echo "   Please remove the key before committing."
             found_forbidden=1
