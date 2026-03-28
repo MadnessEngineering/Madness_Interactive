@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Staged files
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
