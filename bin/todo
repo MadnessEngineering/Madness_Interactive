@@ -1,0 +1,26 @@
+#!/usr/bin/env zsh
+# todo - Launch a Claude session to work on a specific todo by UUID
+# Usage: todo <uuid>
+
+set -e
+
+if [[ -z "$1" ]]; then
+  echo "Usage: todo <uuid>"
+  exit 1
+fi
+
+UUID="$1"
+TOPIC="status/${DeNa:-macbook}/claude/sessions/${UUID}"
+PAYLOAD="{\"uuid\":\"${UUID}\",\"status\":\"started\",\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}"
+
+# Publish session start to MQTT
+mosquitto_pub -h localhost -t "$TOPIC" -m "$PAYLOAD" -r
+
+echo "Published to $TOPIC"
+echo "Launching Claude session: $UUID"
+
+# Launch Claude with the todo prompt
+exec claude \
+  --dangerously-skip-permissions \
+  --session-id "$UUID" \
+  "Lets work on todo: ${UUID} — pull the info, and update it as you go. Use tags to group it as needed."
