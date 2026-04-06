@@ -131,7 +131,7 @@ A static analysis CLI that divines the hidden structure of your code and exports
 | Redundancy analyzer — duplicate class/logic detection | Supports GitHub URLs |
 
 ```bash
-npx @madnessengineering/cartogomancy analyze ./your-project
+npx @madnessengineering/cartogomancy ./your-project
 ```
 
 **Connects to:** Inventorium (uploads UML JSON via API), MadnessVR (JSON consumed by CodeCityPlanner)
@@ -351,7 +351,7 @@ pip install omnispindle
 omnispindle --help
 
 # Code analysis CLI
-npx @madnessengineering/cartogomancy analyze ./your-project
+npx @madnessengineering/cartogomancy ./your-project
 ```
 
 **Wire up Claude hooks:**
