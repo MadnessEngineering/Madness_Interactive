@@ -37,7 +37,7 @@ We write careful code and push ambitious boundaries. Nothing is oversold, but no
                                ┌──────▼──────┐
                                │ Omnispindle │
                                │  MCP Server │  ← AI agents talk here
-                               │  30 tools   │
+                               │  33 tools   │
                                └──────┬──────┘
                                       │ JSON-RPC
                         ┌─────────────┼─────────────┐
@@ -102,18 +102,15 @@ The MCP server that gives AI agents hands. Every Claude, every agent, every chat
 
 | What it does | Key tech |
 |---|---|
-| 30 MCP tools across todos, lessons, projects, admin | Python, FastMCP |
+| 33 MCP tools across todos, lessons, projects, admin | Python, FastMCP |
 | Three modes: API-first / hybrid (API+Mongo) / local direct | PyPI package |
 | Auth0 device flow — zero-config auth for any agent | Auth0 OAuth 2.0 |
-| Configurable tool loadouts (minimal=4, basic=7, full=30) | MongoDB, MQTT |
+| Configurable tool loadouts (minimal=4, basic=10, full=33) | MongoDB, MQTT |
 | Full audit logging — every agent action leaves a trail | JSON-RPC stdio |
 
 **Quick install:** `pip install omnispindle`
 
 **Connects to:** Inventorium (REST API backend), Swarmonomicon (agent coordination), every Claude/AI client via MCP
-
-#### 🗂️ [Todomill Projectorium](projects/common/Omnispindle/Todomill_projectorium/README.md)
-Node-RED visual dashboard for reviewing and editing todos. MQTT-driven, AI-suggestion-powered, tightly wired to the Omnispindle backend.
 
 ---
 
@@ -259,17 +256,18 @@ madness_interactive/
 ├── projects/
 │   ├── common/                     # Core ecosystem projects
 │   │   ├── Inventorium/            # 🟢 Main dashboard (+ SwarmDesk, MadnessVR nested)
-│   │   ├── Omnispindle/            # 🟢 MCP server (+ Todomill_projectorium)
+│   │   ├── Omnispindle/            # 🟢 MCP server
 │   │   ├── cartogomancy/           # 🟢 Code analysis CLI
 │   │   ├── Swarmonomicon/          # 🟡 Rust agent orchestration
 │   │   ├── Cogwyrm/                # 🟡 Mobile app (v1)
+│   │   ├── MechaFiberAtelier/      # 🔵 Experimental atelier systems
 │   │   ├── DevCrystal-TaskForge/   # 🟡 Terraria mod
 │   │   ├── madnessscale/           # 🟡 Token usage tracker
 │   │   ├── Whispermind_Conduit/    # 🔵 Cross-system neural linkage
 │   │   ├── Obnubilare/             # 🔵 Experimental
 │   │   ├── mcp_cli_auth_tool/      # 🔵 MCP auth utility
 │   │   └── Omnispindle-cli-bridge/ # 🔵 CLI-to-MCP bridge (Ruby)
-│   ├── python/                     # Python projects (19 submodules)
+│   ├── python/                     # Python projects (16 checked out)
 │   │   ├── EventGhost/             # 🟢 Automation engine (Python 3.x)
 │   │   ├── Spindlewrit/            # Documentation generation
 │   │   ├── dvtTestKit/             # Dev testing utilities
@@ -278,6 +276,9 @@ madness_interactive/
 │   │   ├── mqtt-ai-analyzer/       # AI-powered MQTT analysis
 │   │   ├── simple-mqtt-server-agent/
 │   │   ├── SeleniumPageUtilities/
+│   │   ├── mcp-auth-cli/           # CLI auth utility
+│   │   ├── mcp-personal-jira/      # MCP Jira integration
+│   │   ├── local-ai/               # Local AI experiments
 │   │   ├── verified_madness/       # Verification framework
 │   │   ├── wyrmwatch/              # System monitoring
 │   │   └── fastmcp-balena-cli/     # balena + FastMCP integration
@@ -291,11 +292,31 @@ madness_interactive/
 │   │   ├── RaidShadowLegendsButItsMCP/  # Game-AI agent demo
 │   │   └── agorventorium/          # Analytics/visualization
 │   ├── lua/
-│   │   ├── hammerspoon/            # macOS automation (submodule)
 │   │   └── LGS_script_template/    # Logitech Gaming Software
 │   ├── powershell/
 │   │   └── WinSystemSnapshot/      # Windows system capture
-│   └── nodeJS/
+│   ├── tasker/                     # MadTaskerTinkerbox modules
+│   │   ├── AnathemaHexVault/
+│   │   ├── ContextOfficium/
+│   │   ├── EntropyVector/
+│   │   ├── Fragmentarium/
+│   │   ├── InvocationTome/
+│   │   ├── Ludomancery/
+│   │   ├── PhilosophersAmpoule/
+│   │   ├── RunedManifold/
+│   │   └── Verbatex/
+│   ├── OS/                         # Host/platform configs
+│   │   ├── barrier-configs/
+│   │   └── windows/
+│   ├── archive/                    # Archived/legacy projects
+│   │   ├── Saws-flow/
+│   │   ├── evernance/
+│   │   └── saws-flow-clean/
+│   ├── opencode/
+│   │   └── Whispermind_Conduit/
+│   ├── personal/
+│   │   └── conc/
+│   └── nodeJS/                     # Reserved for future Node.js projects
 ├── docs/                           # Documentation & cursor chat history
 ├── scripts/                        # Utility + git hook scripts
 ├── examples/                       # Reference implementations

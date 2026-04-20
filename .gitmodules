@@ -166,3 +166,6 @@
 [submodule "projects/typescript/agorventorium"]
 	path = projects/typescript/agorventorium
 	url = https://github.com/preset-io/agor.git
+[submodule "projects/common/madman"]
+	path = projects/common/madman
+	url = https://github.com/MadnessEngineering/madman.git
