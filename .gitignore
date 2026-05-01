@@ -26,3 +26,8 @@ projects/python/mcp-auth-cli/mcp_auth.py
 /.claude/data
 /projects/archive
 .claude_temp/last_tool_use_id.txt
+ellie-monorepo-uml.json
+ellie-guardian-uml.json
+ellie-app-uml.json
+DOH_Core-uml.json
+DOH-EllieHub-uml.json

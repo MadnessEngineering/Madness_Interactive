@@ -169,3 +169,6 @@
 [submodule "projects/common/madman"]
 	path = projects/common/madman
 	url = https://github.com/MadnessEngineering/madman.git
+[submodule "projects/common/madnessDesktop"]
+	path = projects/common/madnessDesktop
+	url = https://github.com/MadTinker/desktop.git
