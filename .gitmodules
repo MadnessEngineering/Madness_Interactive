@@ -1,6 +1,3 @@
-[submodule "templates/python/games/snowball_snowman"]
-	path = projects/python/games/snowball_snowman
-	url = https://github.com/MadTinker/snowball_snowman.git
 [submodule "EventGhost-Rust"]
 	path = projects/rust/EventGhost-Rust
 	url = git@github.com:MadTinker/EventGhost-Rust.git
@@ -43,9 +40,6 @@
 [submodule "projects/common/Omnispindle"]
 	path = projects/common/Omnispindle
 	url = git@github.com:MadTinker/Omnispindle.git
-[submodule "projects/python/LegoScry"]
-	path = projects/python/LegoScry
-	url = git@github.com:MadTinker/LegoScry.git
 [submodule "examples/mcp-memory-domain-knowledge"]
 	path = examples/mcp-memory-domain-knowledge
 	url = https://github.com/yodakeisuke/mcp-memory-domain-knowledge.git
@@ -109,9 +103,6 @@
 [submodule "projects/common/SwarmDesk"]
 	path = projects/common/SwarmDesk
 	url = https://github.com/MadnessEngineering/SwarmDesk.git
-[submodule "examples/ultimate_mcp_client"]
-	path = examples/ultimate_mcp_client
-	url = https://github.com/Dicklesworthstone/ultimate_mcp_client.git
 [submodule ".hammerspoon"]
 	path = .hammerspoon
 	url = https://github.com/MadTinker/DansHammerSpoon.git
@@ -121,15 +112,6 @@
 [submodule "examples/OpenAI_Agent_Swarm"]
 	path = examples/OpenAI_Agent_Swarm
 	url = https://github.com/daveshap/OpenAI_Agent_Swarm.git
-[submodule "docs/that_one_montage_of_the_crews_graduation_pre_villian_arc_like_hidden_inventory_jujutsu_kaisen"]
-	path = docs/that_one_montage_of_the_crews_graduation_pre_villian_arc_like_hidden_inventory_jujutsu_kaisen
-	url = https://github.com/MadnessEngineering/that_one_montage_of_the_crews_graduation_pre_villian_arc_like_hidden_inventory_jujutsu_kaisen.git
-[submodule "projects/common/MechaFiberAtelier"]
-	path = projects/common/MechaFiberAtelier
-	url = https://github.com/MadnessEngineering/MechaFiberAtelier.git
-[submodule "projects/common/mcp_cli_auth_tool"]
-	path = projects/common/mcp_cli_auth_tool
-	url = https://github.com/MadnessEngineering/mcp_cli_auth_tool.git
 [submodule "projects/common/DevCrystal-TaskForge"]
 	path = projects/common/DevCrystal-TaskForge
 	url = https://github.com/MadnessEngineering/DevCrystal-TaskForge.git

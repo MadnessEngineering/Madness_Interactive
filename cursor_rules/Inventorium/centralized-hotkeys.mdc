@@ -1,0 +1,66 @@
+---
+description: Centralized hotkey system architecture and current React Hook errors
+---
+
+# Centralized Hotkey System
+
+## Architecture Overview
+
+The application uses a centralized hotkey configuration system to prevent conflicts and improve maintainability:
+
+### Core Files
+- [src/config/hotkeys.js](mdc:src/config/hotkeys.js) - Central configuration with conflict detection
+- [src/hooks/useHotkeys.js](mdc:src/hooks/useHotkeys.js) - Custom hooks wrapping react-hotkeys-hook
+- [src/components/HotkeyGuide.jsx](mdc:src/components/HotkeyGuide.jsx) - Documentation component
+
+### Updated Components
+- [src/components/Dashboard.js](mdc:src/components/Dashboard.js) - Uses centralized panel and navigation hotkeys
+- [src/components/ProjectNavigator.jsx](mdc:src/components/ProjectNavigator.jsx) - Uses context-aware hotkeys
+
+## Current Issues - React Hook Violations
+
+**CRITICAL**: The custom hooks in [src/hooks/useHotkeys.js](mdc:src/hooks/useHotkeys.js) violate React Hook rules:
+
+```
+Line 29:5: React Hook "useReactHotkeys" is called conditionally (after early return)
+Line 51:9: React Hook "useReactHotkeys" cannot be called inside a callback (forEach loop)  
+Line 80:5: React Hook "useReactHotkeys" is called conditionally (after early return)
+```
+
+### Root Cause
+- Hooks are called conditionally after early returns
+- `useReactHotkeys` called inside `forEach` loop in `useCentralizedHotkeyCategory`
+- Context checking logic causes conditional hook calls
+
+### Fix Strategy
+1. Remove early returns before hook calls
+2. Replace forEach with individual hook calls or restructure
+3. Use conditional logic inside hook callbacks, not in hook registration
+
+## Hotkey Configuration Structure
+
+```javascript
+HOTKEY_CATEGORIES = {
+  PANELS: { /* Dashboard panel toggles 1-9 */ },
+  PROJECT_NAVIGATION: { /* Ctrl+Shift+Arrow navigation */ },
+  PROJECT_NAVIGATOR: { /* Arrow keys, Enter, Space, r, m, 1-9 with context */ },
+  GLOBAL: { /* Escape to unfocus inputs */ }
+}
+```
+
+## Context System
+- `context: 'project-navigator'` - Only active in project navigator
+- `context: 'global'` or undefined - Active everywhere
+- Prevents number key conflicts between Dashboard and ProjectNavigator
+
+## Previous Focus Loss Issue (RESOLVED)
+- Text fields losing focus after single character input
+- **CAUSE**: `preventDefault: false` in hotkey configurations
+- **FIX**: Changed to `preventDefault: true` in Dashboard.js and ProjectNavigator.jsx
+- Issue was hotkey handlers interfering with text input focus management
+
+## Implementation Notes
+- All hotkey options use `enableOnFormTags: false` and `preventDefault: true`
+- Context-aware hotkeys prevent conflicts between different UI modes
+- Automatic conflict detection in development mode
+- Self-documenting system with built-in guide generation

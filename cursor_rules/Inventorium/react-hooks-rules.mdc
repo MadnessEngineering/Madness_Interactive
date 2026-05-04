@@ -1,0 +1,74 @@
+# React Hooks Rules and Debugging
+
+## Critical Hook Violations to Fix
+
+The [src/hooks/useHotkeys.js](mdc:src/hooks/useHotkeys.js) file has these violations:
+
+1. **Conditional Hook Calls**: Hooks called after early returns
+2. **Hooks in Callbacks**: `useReactHotkeys` called inside `forEach` loop
+3. **Dynamic Hook Registration**: Context-dependent hook registration
+
+## React Hook Rules
+- Hooks must be called in the same order every render
+- Hooks cannot be called conditionally
+- Hooks cannot be called inside loops, conditions, or nested functions
+- Hooks must be called at the top level of React functions
+
+## Fix Patterns for Hotkey System
+
+### ❌ Wrong - Conditional Hook Call
+```javascript
+export const useCentralizedHotkey = (category, hotkeyName, callback) => {
+    const hotkeyConfig = getHotkey(category, hotkeyName);
+    
+    if (!hotkeyConfig) {
+        console.warn(`Hotkey not found: ${category}.${hotkeyName}`);
+        return; // ❌ Early return before hook
+    }
+
+    useReactHotkeys(hotkeyConfig.keys, callback, hotkeyConfig.options); // ❌ Called conditionally
+};
+```
+
+### ✅ Correct - Always Call Hook
+```javascript
+export const useCentralizedHotkey = (category, hotkeyName, callback) => {
+    const hotkeyConfig = getHotkey(category, hotkeyName);
+    
+    useReactHotkeys(
+        hotkeyConfig?.keys || [], 
+        hotkeyConfig ? callback : () => {}, 
+        hotkeyConfig?.options || { enabled: false }
+    );
+    
+    // Logging after hook call
+    if (!hotkeyConfig) {
+        console.warn(`Hotkey not found: ${category}.${hotkeyName}`);
+    }
+};
+```
+
+### ❌ Wrong - Hooks in Loop
+```javascript
+Object.entries(hotkeyCallbacks).forEach(([hotkeyName, callback]) => {
+    useReactHotkeys(keys, callback, options); // ❌ Hook inside forEach
+});
+```
+
+### ✅ Correct - Pre-process or Individual Hooks
+```javascript
+// Option 1: Pre-process into arrays
+const allKeys = Object.entries(hotkeyCallbacks).map(([name, cb]) => getKeys(name));
+const allCallbacks = Object.entries(hotkeyCallbacks).map(([name, cb]) => cb);
+allKeys.forEach((keys, index) => {
+    useReactHotkeys(keys, allCallbacks[index], options);
+});
+
+// Option 2: Fixed number of individual hooks
+useReactHotkeys(keys1, callback1, options);
+useReactHotkeys(keys2, callback2, options);
+// ... etc
+```
+---
+globs: *.js,*.jsx,*.ts,*.tsx
+---
