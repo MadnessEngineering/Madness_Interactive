@@ -139,3 +139,6 @@
 [submodule "examples/crush"]
 	path = examples/crush
 	url = https://github.com/lvndry/crush.git
+[submodule "projects/common/dnd-mad-tinker"]
+	path = projects/common/dnd-mad-tinker
+	url = https://github.com/MadnessEngineering/dnd-mad-tinker
