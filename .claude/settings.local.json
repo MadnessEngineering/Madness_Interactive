@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git submodule:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git pull:*)",
+      "Bash(git rm:*)",
+      "Bash(git fetch:*)",
+      "Bash(ls:*)",
+      "Bash(git stash:*)",
+      "Bash(uv --version:*)",
+      "Bash(pip install:*)",
+      "Bash(python -m uv:*)",
+      "Bash(python:*)",
+      "Bash(echo:*)",
+      "Read(//c/Users/Dan/**)",
+      "Bash(claude mcp:*)",
+      "Bash(\"C:\\Users\\Dan\\AppData\\Roaming\\Python\\Python313\\Scripts\\omnispindle-stdio.exe\" --help)",
+      "Bash(pip show:*)",
+      "Bash(cat:*)",
+      "Bash(\"C:\\Users\\Dan\\AppData\\Roaming\\Python\\Python313\\Scripts\\omnispindle-stdio.exe\")",
+      "Bash(git config *)",
+      "Bash(xargs grep *)",
+      "Bash(git -C projects/common/Inventorium/MadnessVR log -1 --oneline)",
+      "Bash(git -C projects/common/Inventorium/MadnessVR status --short)",
+      "Bash(git -C projects/common/Inventorium/MadnessVR pull origin main)",
+      "mcp__madness_interactive__complete_todo"
+    ],
+    "deny": []
+  }
+}

@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'requirements*.txt'
+
+jobs:
+  test:
+    name: Test and validate build
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          pip install -e ".[dev]"
+          pip install pytest-asyncio
+
+      - name: Run tests
+        run: pytest tests/ -x -v
+        env:
+          OMNISPINDLE_MODE: local
+          MONGODB_URI: mongodb://localhost:27017
+          MONGODB_DB: swarmonomicon
+          MCP_USER_EMAIL: ci@madnessinteractive.cc
+
+      - name: Validate build
+        run: python -m build
+        env:
+          # Prevent hatch from trying to read git tags for dynamic version
+          HATCH_BUILD_CLEAN: "true"

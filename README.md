@@ -210,6 +210,17 @@ The `tools/` directory contains artifacts for channeling local AI power:
   - Dataset Transmutation
   - Evaluation Circles -->
 
+## 🎲 [Madness Interactive — The Character](projects/common/dnd-mad-tinker/README.md)
+*"The Inventorium is not fictional. It already exists. The D&D character is just the in-world version."*
+
+Meet **Madness Interactive** — a Warforged Artificer whose distributed sensor-mesh mind bootstrapped itself into sentience and has been in a joyful recursive loop ever since. A D&D character built in the image of this very project: the Inventorium, the Swarmdesk, the expansive loop, the object permanence problem, the fellow testers.
+
+The lore wrote itself.
+
+> See [`projects/common/dnd-mad-tinker/`](projects/common/dnd-mad-tinker/) for the full character build, evolution paths, and roleplay guide.
+
+---
+
 ## 🚀 Getting Started
 *"Your first steps into BEAUTIFUL MADNESS!"*
 
