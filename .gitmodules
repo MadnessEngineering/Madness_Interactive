@@ -170,3 +170,6 @@
 [submodule "projects/common/madnessDesktop"]
 	path = projects/common/madnessDesktop
 	url = https://github.com/MadTinker/desktop.git
+[submodule "Anathesmelt"]
+	path = Anathesmelt
+	url = https://github.com/MadnessEngineering/Anathesmelt.git
