@@ -12,7 +12,7 @@
   url = git@github.com:MadTinker/dvtTestKit.git
 [submodule "projects/lua/hammerspoon"]
 	path = projects/lua/hammerspoon
-	url = https://github.com/MadTinker/DansHammerSpoon.git
+	url = C:\\Users\\Dan\\lab\\madness_interactive\\projects\\lua\\hammerspoon
 [submodule "projects/python/SeleniumPageUtilities"]
 	path = projects/python/SeleniumPageUtilities
 	url = https://gist.github.com/MadTinker/ed5cb453bd97f6ee3eeb5b180a997502
