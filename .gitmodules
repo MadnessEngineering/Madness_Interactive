@@ -115,9 +115,6 @@
 [submodule ".hammerspoon"]
 	path = .hammerspoon
 	url = https://github.com/MadTinker/DansHammerSpoon.git
-[submodule "examples/ruv-FANN"]
-	path = examples/ruv-FANN
-	url = https://github.com/ruvnet/ruv-FANN.git
 [submodule "examples/rl-swarm"]
 	path = examples/rl-swarm
 	url = https://github.com/gensyn-ai/rl-swarm.git
