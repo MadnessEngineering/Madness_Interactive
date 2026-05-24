@@ -16,6 +16,12 @@ We write careful code and push ambitious boundaries. Nothing is oversold, but no
 
 ---
 
+## Operational Notes
+
+- [Guarded machine update flow](docs/machine-update-flow.md) - restart-safe plan for Homebrew, npm/Node, language tools, macOS updates, and agent-reviewed package safety checks.
+
+---
+
 ## Ecosystem Map
 
 ```
