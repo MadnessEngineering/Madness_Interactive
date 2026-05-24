@@ -61,6 +61,9 @@
 [submodule "docs/cursor_chathistory"]
 	path = docs/cursor_chathistory
 	url = git@github.com:MadTinker/Madness_chats-.git
+[submodule "docs/that_one_montage_of_the_crews_graduation_pre_villian_arc_like_hidden_inventory_jujutsu_kaisen"]
+	path = docs/that_one_montage_of_the_crews_graduation_pre_villian_arc_like_hidden_inventory_jujutsu_kaisen
+	url = https://github.com/MadnessEngineering/that_one_montage_of_the_crews_graduation_pre_villian_arc_like_hidden_inventory_jujutsu_kaisen.git
 [submodule "projects/python/Spindlewrit"]
 	path = projects/python/Spindlewrit
 	url = git@github.com:MadTinker/Spindlewrit.git
