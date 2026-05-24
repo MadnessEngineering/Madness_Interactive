@@ -155,3 +155,6 @@
 [submodule "Anathesmelt"]
 	path = Anathesmelt
 	url = https://github.com/MadnessEngineering/Anathesmelt.git
+[submodule "projects/common/Chronicler"]
+	path = projects/common/Chronicler
+	url = https://github.com/MadnessEngineering/Chronicler.git
