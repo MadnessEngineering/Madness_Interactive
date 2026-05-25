@@ -161,3 +161,6 @@
 [submodule "projects/common/Chronicler"]
 	path = projects/common/Chronicler
 	url = https://github.com/MadnessEngineering/Chronicler.git
+[submodule "projects/common/MadQTT"]
+	path = projects/common/MadQTT
+	url = https://github.com/MadnessEngineering/MadQTT
