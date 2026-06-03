@@ -167,3 +167,6 @@
 [submodule "examples/claude-code-meter"]
 	path = examples/claude-code-meter
 	url = https://github.com/gxjansen/claude-code-meter.git
+[submodule "projects/common/voice-of-madness"]
+	path = projects/common/voice-of-madness
+	url = https://github.com/MadnessEngineering/voice-of-madness.git
