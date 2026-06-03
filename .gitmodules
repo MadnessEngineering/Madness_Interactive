@@ -164,3 +164,6 @@
 [submodule "projects/common/MadQTT"]
 	path = projects/common/MadQTT
 	url = https://github.com/MadnessEngineering/MadQTT
+[submodule "examples/claude-code-meter"]
+	path = examples/claude-code-meter
+	url = https://github.com/gxjansen/claude-code-meter.git
