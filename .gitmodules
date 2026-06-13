@@ -170,3 +170,9 @@
 [submodule "projects/common/voice-of-madness"]
 	path = projects/common/voice-of-madness
 	url = https://github.com/MadnessEngineering/voice-of-madness.git
+[submodule "examples/soft-serve"]
+	path = examples/soft-serve
+	url = https://github.com/charmbracelet/soft-serve.git
+[submodule "examples/warp"]
+	path = examples/warp
+	url = https://github.com/warpdotdev/warp.git
