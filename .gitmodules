@@ -176,3 +176,9 @@
 [submodule "examples/warp"]
 	path = examples/warp
 	url = https://github.com/warpdotdev/warp.git
+[submodule "projects/common/AlloyForkInventorium"]
+	path = projects/common/AlloyForkInventorium
+	url = https://github.com/EM-Alloy/EllieInteractive
+[submodule "projects/common/platform-interface"]
+	path = projects/common/platform-interface
+	url = https://github.com/MadnessEngineering/platform-interface
