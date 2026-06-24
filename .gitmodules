@@ -182,3 +182,6 @@
 [submodule "projects/common/platform-interface"]
 	path = projects/common/platform-interface
 	url = https://github.com/MadnessEngineering/platform-interface
+[submodule "projects/common/titancall"]
+	path = projects/common/titancall
+	url = https://github.com/MadnessEngineering/Titancall
