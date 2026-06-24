@@ -185,3 +185,6 @@
 [submodule "projects/common/titancall"]
 	path = projects/common/titancall
 	url = https://github.com/MadnessEngineering/Titancall
+[submodule "marketing"]
+	path = marketing
+	url = https://github.com/MadnessEngineering/Marketing-Repo
