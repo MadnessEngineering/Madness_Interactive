@@ -188,3 +188,6 @@
 [submodule "marketing"]
 	path = marketing
 	url = https://github.com/MadnessEngineering/Marketing-Repo
+[submodule "examples/YehThatRocks"]
+	path = examples/YehThatRocks
+	url = https://github.com/SimonJamesOdell/YehThatRocks.git
