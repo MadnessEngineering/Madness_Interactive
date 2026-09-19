@@ -191,3 +191,6 @@
 [submodule "examples/YehThatRocks"]
 	path = examples/YehThatRocks
 	url = https://github.com/SimonJamesOdell/YehThatRocks.git
+[submodule "projects/common/ThinkingNebula"]
+	path = projects/common/ThinkingNebula
+	url = https://github.com/MadnessEngineering/ThinkingNebula.git
