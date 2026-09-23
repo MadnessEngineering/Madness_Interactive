@@ -191,3 +191,6 @@
 [submodule "examples/YehThatRocks"]
 	path = examples/YehThatRocks
 	url = https://github.com/SimonJamesOdell/YehThatRocks.git
+[submodule "projects/common/dnd-mad-tinker"]
+	path = projects/common/dnd-mad-tinker
+	url = https://github.com/MadnessEngineering/dnd-mad-tinker
