@@ -60,13 +60,13 @@
 	url = https://github.com/michaelneale/gui-crawler-macos.git
 [submodule "docs/cursor_chathistory"]
 	path = docs/cursor_chathistory
-	url = git@github.com:MadTinker/Madness_chats-.git
+	url = https://github.com/MadnessEngineering/Madness_chats.git
 [submodule "docs/that_one_montage_of_the_crews_graduation_pre_villian_arc_like_hidden_inventory_jujutsu_kaisen"]
 	path = docs/that_one_montage_of_the_crews_graduation_pre_villian_arc_like_hidden_inventory_jujutsu_kaisen
 	url = https://github.com/MadnessEngineering/that_one_montage_of_the_crews_graduation_pre_villian_arc_like_hidden_inventory_jujutsu_kaisen.git
 [submodule "projects/python/Spindlewrit"]
 	path = projects/python/Spindlewrit
-	url = git@github.com:MadTinker/Spindlewrit.git
+	url = https://github.com/MadnessEngineering/Spindlewrit.git
 [submodule "examples/adk-samples"]
 	path = examples/adk-samples
 	url = https://github.com/google/adk-samples.git
@@ -102,7 +102,7 @@
 	url = https://github.com/google-gemini/cookbook.git
 [submodule "projects/common/Whispermind_Conduit"]
 	path = projects/common/Whispermind_Conduit
-	url = https://github.com/MadTinker/whispermind-conduit.git
+	url = https://github.com/MadnessEngineering/whispermind-conduit.git
 [submodule "projects/common/SwarmDesk"]
 	path = projects/common/SwarmDesk
 	url = https://github.com/MadnessEngineering/SwarmDesk.git
