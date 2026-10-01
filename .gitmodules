@@ -194,3 +194,6 @@
 [submodule "projects/common/ThinkingNebula"]
 	path = projects/common/ThinkingNebula
 	url = https://github.com/MadnessEngineering/ThinkingNebula.git
+[submodule "projects/common/homebrew-tap"]
+	path = projects/common/homebrew-tap
+	url = https://github.com/MadnessEngineering/homebrew-tap.git
