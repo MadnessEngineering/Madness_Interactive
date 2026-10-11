@@ -200,3 +200,6 @@
 [submodule "projects/common/dnd-mad-tinker"]
 	path = projects/common/dnd-mad-tinker
 	url = https://github.com/MadnessEngineering/dnd-mad-tinker
+[submodule "projects/mobile/Digitomancy"]
+	path = projects/mobile/Digitomancy
+	url = https://github.com/MadnessEngineering/Digitomancy.git
