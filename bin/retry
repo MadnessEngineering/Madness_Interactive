@@ -1,0 +1,40 @@
+#!/bin/sh
+# retry — rerun a command until it succeeds, waiting longer each time.
+#
+#   retry [-n TRIES] [-d DELAY] [-m MAXDELAY] [--] COMMAND [ARGS...]
+#
+# Up to TRIES attempts (default 5). Waits DELAY seconds after the first
+# failure (default 1), doubling each time up to MAXDELAY (default 60).
+# Exits with the command's last status. Each failure is noted on stderr.
+#
+#   retry curl -fsS https://example.com/health
+#   retry -n 10 -d 5 git push
+
+usage() { sed -n '2,11s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+
+tries=5 delay=1 max=60
+while getopts n:d:m:h opt; do
+    case $opt in
+        n) tries=$OPTARG ;;
+        d) delay=$OPTARG ;;
+        m) max=$OPTARG ;;
+        *) usage ;;
+    esac
+done
+shift $((OPTIND - 1))
+[ "$1" = "--" ] && shift
+[ $# -ge 1 ] || usage
+
+attempt=1
+while :; do
+    "$@"; status=$?
+    [ $status -eq 0 ] && exit 0
+    if [ $attempt -ge "$tries" ]; then
+        echo "retry: gave up after $attempt attempts (exit $status)" >&2
+        exit $status
+    fi
+    echo "retry: attempt $attempt/$tries failed (exit $status), waiting ${delay}s" >&2
+    sleep "$delay"
+    attempt=$((attempt + 1))
+    delay=$((delay * 2)); [ $delay -gt "$max" ] && delay=$max
+done

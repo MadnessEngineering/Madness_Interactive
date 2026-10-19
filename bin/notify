@@ -1,0 +1,64 @@
+#!/bin/sh
+# notify — pop a Mac notification and publish it over MQTT for the phone.
+#
+#   notify [-t TITLE] [-s] MESSAGE...
+#   notify [-t TITLE] [-s] --after COMMAND [ARGS...]
+#
+# --after runs COMMAND, then notifies "✓ COMMAND (12s)" or "✗ COMMAND — exit 2
+# (12s)", and exits with COMMAND's status. -s plays a sound.
+# MQTT: publishes "TITLE: MESSAGE" to $NOTIFY_TOPIC (default "notify") on
+# MQTT_HOST:MQTT_PORT, defaulting to AWSIP:AWSPORT. Tasker's Mqtt Listener
+# turns it into a "notify=:=..." command once the phone subscribes to the topic.
+# NOTIFY_NO_MQTT=1 keeps it on the Mac.
+#
+#   notify "coffee's ready"
+#   notify -s --after make build
+
+usage() { sed -n '2,15s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+
+title=$(hostname -s) sound= after=
+while [ $# -gt 0 ]; do
+    case $1 in
+        -t) title=$2; shift ;;
+        -s) sound=1 ;;
+        --after) after=1; shift; break ;;
+        -h|--help) usage ;;
+        --) shift; break ;;
+        *) break ;;
+    esac
+    shift
+done
+[ $# -ge 1 ] || usage
+
+status=0
+if [ -n "$after" ]; then
+    start=$(date +%s)
+    "$@"; status=$?
+    took=$(( $(date +%s) - start ))s
+    if [ $status -eq 0 ]; then msg="✓ $* ($took)"; else msg="✗ $* — exit $status ($took)"; fi
+else
+    msg=$*
+fi
+
+if command -v osascript >/dev/null 2>&1; then
+    osascript - "$msg" "$title" "${sound:+Glass}" >/dev/null <<'EOF'
+on run argv
+    if item 3 of argv is "" then
+        display notification (item 1 of argv) with title (item 2 of argv)
+    else
+        display notification (item 1 of argv) with title (item 2 of argv) sound name (item 3 of argv)
+    end if
+end run
+EOF
+elif command -v notify-send >/dev/null 2>&1; then
+    notify-send "$title" "$msg"
+fi
+
+mqtt_host=${MQTT_HOST:-$AWSIP}
+if [ -z "$NOTIFY_NO_MQTT" ] && [ -n "$mqtt_host" ] && command -v mosquitto_pub >/dev/null 2>&1; then
+    set -- -h "$mqtt_host" -p "${MQTT_PORT:-${AWSPORT:-1883}}" -t "${NOTIFY_TOPIC:-notify}" -m "$title: $msg"
+    [ -n "$MQTT_USER" ] && set -- "$@" -u "$MQTT_USER" -P "$MQTT_PASS"
+    mosquitto_pub "$@" || echo "notify: MQTT publish failed" >&2
+fi
+
+exit $status

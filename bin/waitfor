@@ -1,0 +1,69 @@
+#!/bin/sh
+# waitfor — block until something is ready, then exit 0 (or 1 on timeout).
+#
+#   waitfor [-t SECS] [-i SECS] [-q] host HOST       answers ping
+#   waitfor [-t SECS] [-i SECS] [-q] port HOST:PORT  accepts TCP connections
+#   waitfor [-t SECS] [-i SECS] [-q] url URL         returns HTTP 2xx/3xx
+#   waitfor [-t SECS] [-i SECS] [-q] file PATH       exists
+#   waitfor [-t SECS] [-i SECS] [-q] adb             phone ready over adb
+#   waitfor [-t SECS] [-i SECS] [-q] cmd COMMAND...  exits 0
+#
+# -t timeout (default 60, 0 = forever), -i check interval (default 1).
+# Prints "ready after Ns" to stderr unless -q.
+#
+#   waitfor port eaws.example:443 && deploy
+#   waitfor -t 0 file build/done.flag; notify "build finished"
+
+usage() { sed -n '2,15s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+
+timeout=60 interval=1 quiet=
+while getopts t:i:qh opt; do
+    case $opt in
+        t) timeout=$OPTARG ;;
+        i) interval=$OPTARG ;;
+        q) quiet=1 ;;
+        *) usage ;;
+    esac
+done
+shift $((OPTIND - 1))
+[ $# -ge 1 ] || usage
+kind=$1; shift
+
+case $kind in
+    host)
+        [ $# -eq 1 ] || usage
+        case $(uname) in
+            Darwin|*BSD) check() { ping -c 1 -t 2 "$1" >/dev/null 2>&1; } ;;
+            *)           check() { ping -c 1 -W 2 "$1" >/dev/null 2>&1; } ;;
+        esac ;;
+    port)
+        [ $# -eq 1 ] || usage
+        case $1 in *:*) ;; *) usage ;; esac
+        check() { nc -z -w 2 "${1%:*}" "${1##*:}" >/dev/null 2>&1; } ;;
+    url)
+        [ $# -eq 1 ] || usage
+        check() { curl -fsS -o /dev/null --max-time 5 "$1" 2>/dev/null; } ;;
+    file)
+        [ $# -eq 1 ] || usage
+        check() { [ -e "$1" ]; } ;;
+    adb)
+        [ $# -eq 0 ] || usage
+        check() { [ "$(adb get-state 2>/dev/null)" = device ]; } ;;
+    cmd)
+        [ $# -ge 1 ] || usage
+        check() { "$@" >/dev/null 2>&1 </dev/null; } ;;
+    *) usage ;;
+esac
+
+start=$(date +%s)
+while :; do
+    if check "$@"; then
+        [ -n "$quiet" ] || echo "waitfor: $kind ready after $(( $(date +%s) - start ))s" >&2
+        exit 0
+    fi
+    if [ "$timeout" != 0 ] && [ $(( $(date +%s) - start )) -ge "$timeout" ]; then
+        [ -n "$quiet" ] || echo "waitfor: $kind not ready after ${timeout}s" >&2
+        exit 1
+    fi
+    sleep "$interval"
+done

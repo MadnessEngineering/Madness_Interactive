@@ -1,0 +1,27 @@
+#!/bin/sh
+# standup — what you committed since the last working day, ready to paste.
+#
+#   standup [worklog options]
+#
+# Runs `worklog` from midnight of the previous working day (Friday when it's
+# Monday, so weekend work shows up too) through now, across $STANDUP_ROOTS
+# (default: $SEAT_OF_MADNESS and ~/.hammerspoon). Copies the result to the
+# clipboard. Extra options go to worklog, e.g. `standup -c` for counts.
+
+case $1 in -h|--help) sed -n '2,9s/^# \{0,1\}//p' "$0" >&2; exit 2 ;; esac
+
+back=1
+[ "$(date +%u)" = 1 ] && back=3
+since=$(date -v-${back}d +%Y-%m-%d 2>/dev/null || date -d "$back days ago" +%Y-%m-%d)
+
+roots=${STANDUP_ROOTS:-"${SEAT_OF_MADNESS:-$HOME/lab/madness_interactive} $HOME/.hammerspoon"}
+set -- "$@"
+for r in $roots; do
+    [ -d "$r" ] && set -- -C "$r" "$@"
+done
+
+out=$("$(dirname "$0")/worklog" "$@" "$since 00:00")
+printf '%s\n' "$out"
+if command -v pbcopy >/dev/null 2>&1; then
+    printf '%s\n' "$out" | pbcopy && echo "(copied)" >&2
+fi

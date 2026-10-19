@@ -1,0 +1,60 @@
+#!/bin/sh
+# phone — small things to do to the phone over adb.
+#
+#   phone url URL         open URL on the phone
+#   phone text TEXT...    type TEXT into whatever field has focus
+#   phone paste           type the Mac clipboard into the focused field
+#   phone shot [FILE]     screenshot to FILE (default ~/Desktop/phone-<time>.png)
+#   phone key NAME        press a key: home, back, power, enter, menu, …
+#                         (Android silently ignores names it doesn't know)
+#
+# With USB and wireless both connected the USB phone is used; set
+# ANDROID_SERIAL to pick another.
+#
+#   phone url https://madnessinteractive.cc
+#   phone key home
+
+usage() { sed -n '2,15s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+
+# adb refuses to guess between two devices; prefer USB (-d) then.
+adb_() {
+    if [ -z "$ANDROID_SERIAL" ] && [ "$(adb devices | grep -c 'device$')" -gt 1 ]; then
+        adb -d "$@"
+    else
+        adb "$@"
+    fi
+}
+
+# Quote for the phone's shell: wrap in '...' and escape inner single quotes.
+shq() { printf "'%s'" "$(printf '%s' "$1" | sed "s/'/'\\\\''/g")"; }
+
+type_text() {
+    # `input text` reads %s as a space and can't take a literal space.
+    text=$(printf '%s' "$1" | sed 's/%/\\%/g; s/ /%s/g')
+    adb_ shell input text "$(shq "$text")"
+}
+
+cmd=$1; [ $# -gt 0 ] && shift
+case $cmd in
+    url)
+        [ $# -eq 1 ] || usage
+        out=$(adb_ shell am start -W -a android.intent.action.VIEW -d "$(shq "$1")" 2>&1)
+        case $out in
+            *"Status: ok"*) ;;
+            *) printf '%s\n' "$out" >&2; exit 1 ;;
+        esac ;;
+    text)
+        [ $# -ge 1 ] || usage
+        type_text "$*" ;;
+    paste)
+        clip=$(pbpaste 2>/dev/null) || { echo "phone: can't read the clipboard" >&2; exit 1; }
+        [ -n "$clip" ] || { echo "phone: clipboard is empty" >&2; exit 1; }
+        type_text "$clip" ;;
+    shot)
+        out=${1:-$HOME/Desktop/phone-$(date +%Y%m%d-%H%M%S).png}
+        adb_ exec-out screencap -p > "$out" && [ -s "$out" ] && echo "$out" ;;
+    key)
+        [ $# -eq 1 ] || usage
+        adb_ shell input keyevent "KEYCODE_$(printf '%s' "$1" | tr '[:lower:]' '[:upper:]')" ;;
+    *) usage ;;
+esac
