@@ -1,0 +1,50 @@
+#!/bin/sh
+# mqtt-pipe — run a command for every MQTT message on a topic.
+#
+#   mqtt-pipe [-c SECS] TOPIC [--] COMMAND [ARGS...]
+#
+# Each message runs  COMMAND ARGS... PAYLOAD  with MQTT_TOPIC set to the
+# topic it arrived on (handy with + and # wildcards). Messages are handled
+# one at a time, in order. Retained messages already on the broker are
+# skipped, so starting the pipe doesn't replay old commands.
+# -c SECS drops messages that arrive within SECS of the last run (`cooldown`).
+# A multi-line payload runs COMMAND once per line.
+#
+# Broker: MQTT_HOST:MQTT_PORT, defaulting to AWSIP:AWSPORT. Optional
+# MQTT_USER / MQTT_PASS.
+#
+#   mqtt-pipe 'say' say
+#   mqtt-pipe -c 2 'phone/+/plugged' -- osascript -e 'beep'
+
+usage() { sed -n '2,17s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+
+cool=
+if [ "$1" = "-c" ]; then cool=$2; shift 2; fi
+[ $# -ge 2 ] || usage
+topic=$1; shift
+[ "$1" = "--" ] && shift
+[ $# -ge 1 ] || usage
+
+mqtt_host=${MQTT_HOST:-$AWSIP}
+mqtt_port=${MQTT_PORT:-${AWSPORT:-1883}}
+[ -n "$mqtt_host" ] || { echo "mqtt-pipe: no broker (set MQTT_HOST or AWSIP)" >&2; exit 1; }
+
+# One cooldown key per pipe (topic + command), not per payload.
+key=mqtt-pipe.$(printf '%s\0' "$topic" "$@" | cksum | cut -d' ' -f1)
+here=$(dirname "$0")
+
+auth=
+[ -n "$MQTT_USER" ] && auth=1
+mosquitto_sub -h "$mqtt_host" -p "$mqtt_port" -R -t "$topic" -F '%t\t%p' \
+    ${auth:+-u "$MQTT_USER" -P "$MQTT_PASS"} |
+while IFS= read -r line; do
+    MQTT_TOPIC=${line%%"	"*}
+    payload=${line#*"	"}
+    export MQTT_TOPIC
+    # </dev/null: the command must not eat the message stream.
+    if [ -n "$cool" ]; then
+        "$here/cooldown" "$cool" -k "$key" "$@" "$payload" </dev/null
+    else
+        "$@" "$payload" </dev/null
+    fi
+done

@@ -1,0 +1,90 @@
+#!/bin/sh
+# phonepull — copy photos & screenshots off the phone over adb, optionally clear them.
+#
+#   phonepull [-n] [-d DEST] [--purge] [FOLDER...]
+#
+# FOLDER is relative to /sdcard (default: DCIM/Camera DCIM/Screenshots
+# Pictures/Screenshots). Files land in DEST/FOLDER (default ~/Pictures/phonepull).
+# Missing folders are skipped. -n lists what would be pulled and stops.
+# --purge then deletes from the phone only files now on the Mac with a
+# matching size; anything that didn't copy cleanly stays on the phone.
+# ANDROID_SERIAL=<id> picks the phone when several are connected.
+#
+#   phonepull
+#   phonepull --purge DCIM/Camera Download
+
+usage() { sed -n '2,14s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+
+dest=$HOME/Pictures/phonepull purge= dry=
+while [ $# -gt 0 ]; do
+    case $1 in
+        -n) dry=1 ;;
+        -d) dest=$2; shift ;;
+        --purge) purge=1 ;;
+        -h|--help) usage ;;
+        -*) usage ;;
+        *) break ;;
+    esac
+    shift
+done
+[ $# -gt 0 ] || set -- DCIM/Camera DCIM/Screenshots Pictures/Screenshots
+
+state=$(adb get-state 2>&1)
+[ "$state" = device ] || { echo "phonepull: no phone ($state)" >&2; exit 1; }
+
+tmp=$(mktemp -d) || exit 1
+trap 'rm -rf "$tmp"' EXIT
+total_pulled=0 total_purged=0 total_kept=0
+
+for folder in "$@"; do
+    folder=${folder#/sdcard/}; folder=${folder%/}
+    remote=/sdcard/$folder
+
+    # "size ./path" for every file, as the phone sees it.
+    adb shell "cd '$remote' 2>/dev/null && find . -type f -exec stat -c '%s %n' {} +" \
+        > "$tmp/list" 2>/dev/null
+    count=$(grep -c . "$tmp/list")
+    if [ "$count" -eq 0 ]; then
+        echo "$folder: empty or missing, skipped"
+        continue
+    fi
+
+    if [ -n "$dry" ]; then
+        bytes=$(awk '{ s += $1 } END { printf "%.1f MB", s / 1048576 }' "$tmp/list")
+        echo "$folder: $count files, $bytes"
+        continue
+    fi
+
+    echo "$folder: pulling $count files"
+    parent=$dest/$(dirname "$folder")
+    mkdir -p "$parent" || exit 1
+    adb pull "$remote" "$parent/" | tail -n 1
+    total_pulled=$((total_pulled + count))
+
+    [ -n "$purge" ] || continue
+
+    # Delete only files that made it across with the same size.
+    : > "$tmp/ok"
+    kept=0
+    while IFS= read -r line; do
+        size=${line%% *}; name=${line#* }
+        local_file=$dest/$folder/${name#./}
+        if [ -f "$local_file" ] && [ "$(wc -c < "$local_file" | tr -d ' ')" = "$size" ]; then
+            printf '%s\0' "$name" >> "$tmp/ok"
+        else
+            echo "  kept on phone (copy mismatch): ${name#./}" >&2
+            kept=$((kept + 1))
+        fi
+    done < "$tmp/list"
+
+    adb shell "cd '$remote' && xargs -0 rm -f --" < "$tmp/ok"
+    left=$(adb shell "cd '$remote' && find . -type f | wc -l" | tr -d ' \r')
+    purged=$((count - left))
+    echo "  purged $purged from phone, $left left there"
+    total_purged=$((total_purged + purged))
+    total_kept=$((total_kept + kept))
+done
+
+[ -n "$dry" ] && exit 0
+echo "done: $total_pulled pulled to $dest${purge:+, $total_purged purged}"
+[ "$total_kept" -eq 0 ]
