@@ -1,0 +1,59 @@
+#!/bin/sh
+# cooldown — run a command at most once per N seconds (leading-edge debounce).
+#
+#   cooldown SECONDS [-k KEY] [--] COMMAND [ARGS...]
+#
+# The first call runs COMMAND. Calls with the same KEY within SECONDS are
+# dropped silently (exit 0). KEY defaults to a hash of the command line.
+# SECONDS may be fractional (0.5). Safe when several calls race at once,
+# e.g. a USB device re-enumerating 3x on plug-in.
+#
+#   cooldown 2 -k phone scrcpy --stay-awake
+#   cooldown 30 notify-send "build done"
+#
+# State: ${XDG_STATE_HOME:-~/.local/state}/cooldown/<key>
+
+usage() { sed -n '2,13s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+
+[ $# -ge 2 ] || usage
+secs=$1; shift
+case $secs in ''|*[!0-9.]*) usage ;; esac
+
+key=
+if [ "$1" = "-k" ]; then key=$2; shift 2; fi
+[ "$1" = "--" ] && shift
+[ $# -ge 1 ] || usage
+
+[ -n "$key" ] || key=$(printf '%s\0' "$@" | cksum | cut -d' ' -f1)
+key=$(printf '%s' "$key" | tr -c 'A-Za-z0-9._-' '_')
+
+dir=${XDG_STATE_HOME:-$HOME/.local/state}/cooldown
+mkdir -p "$dir" || exit 1
+stamp=$dir/$key
+lock=$dir/$key.lock
+
+now_ms() {
+    perl -MTime::HiRes=time -e 'printf "%d", time*1000' 2>/dev/null ||
+        echo $(( $(date +%s) * 1000 ))
+}
+window_ms=$(awk -v s="$secs" 'BEGIN { printf "%d", s * 1000 }')
+
+# mkdir is atomic: whoever creates the lock dir does the check-and-stamp.
+# Break the lock after ~1s in case a holder was killed mid-section.
+tries=0
+until mkdir "$lock" 2>/dev/null; do
+    tries=$((tries + 1))
+    if [ $tries -ge 50 ]; then rm -rf "$lock"; tries=0; fi
+    sleep 0.02
+done
+
+now=$(now_ms)
+last=$(cat "$stamp" 2>/dev/null || echo 0)
+if [ $((now - last)) -lt "$window_ms" ]; then
+    rmdir "$lock"
+    exit 0
+fi
+echo "$now" > "$stamp"
+rmdir "$lock"
+
+exec "$@"
