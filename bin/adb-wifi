@@ -1,0 +1,57 @@
+#!/bin/sh
+# adb-wifi — move the USB-connected phone onto wireless adb, or back.
+#
+#   adb-wifi [-p PORT]     switch to wireless adb (default port 5555)
+#   adb-wifi --off         disconnect wireless devices, put adbd back on USB
+#
+# Needs the phone on USB and on the same Wi-Fi as this machine. Prints the
+# wireless serial (IP:PORT) when connected; unplug after that. With both
+# connections up, pick one: adb -d (USB) / adb -e (wireless), or
+# ANDROID_SERIAL=IP:PORT. Survives until the phone reboots.
+
+usage() { sed -n '2,11s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+
+port=5555
+case $1 in
+    -p) port=$2 ;;
+    --off)
+        found=
+        for serial in $(adb devices | awk 'NR > 1 && $1 ~ /:[0-9]+$/ { print $1 }'); do
+            found=1
+            adb -s "$serial" usb >/dev/null 2>&1   # adbd back to USB-only
+            adb disconnect "$serial"
+        done
+        [ -n "$found" ] || echo "no wireless devices connected"
+        exit 0 ;;
+    '') ;;
+    *) usage ;;
+esac
+
+state=$(adb -d get-state 2>&1)
+[ "$state" = device ] || { echo "adb-wifi: no phone on USB ($state)" >&2; exit 1; }
+
+ip=$(adb -d shell ip -f inet addr show wlan0 2>/dev/null |
+    awk '/inet / { sub(/\/.*/, "", $2); print $2; exit }')
+if [ -z "$ip" ]; then
+    echo "adb-wifi: phone has no Wi-Fi address — Wi-Fi off or not joined." >&2
+    echo "          turn it on, or: adb -d shell svc wifi enable" >&2
+    exit 1
+fi
+
+serial=$ip:$port
+if adb devices | grep -q "^$serial[[:space:]]*device"; then
+    echo "already connected: $serial"
+    exit 0
+fi
+
+adb -d tcpip "$port" >/dev/null || exit 1
+
+# adbd restarts into TCP mode; give it a few seconds to listen.
+for _ in 1 2 3 4 5 6 7 8 9 10; do
+    sleep 1
+    case $(adb connect "$serial" 2>&1) in
+        *"connected to"*) echo "connected: $serial — safe to unplug"; exit 0 ;;
+    esac
+done
+echo "adb-wifi: could not reach $serial (same network? client isolation?)" >&2
+exit 1

@@ -1,0 +1,92 @@
+#!/bin/sh
+# adb-grants — give Tasker & friends their adb-only permissions.
+#
+#   adb-grants [--check] [--force]
+#
+# Run after a fresh install or a new phone. Apps that aren't installed are
+# skipped; already-granted permissions are left alone. --check only reports.
+# App-op toggles you switched off by hand (e.g. "display over other apps")
+# stay off unless --force.
+#
+# Edit the GRANTS / APPOPS tables below to add apps.
+
+usage() { sed -n '2,11s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+
+# package                          permissions (android.permission.*)
+GRANTS='
+net.dinglisch.android.taskerm      WRITE_SECURE_SETTINGS READ_LOGS SET_VOLUME_KEY_LONG_PRESS_LISTENER CHANGE_CONFIGURATION
+com.joaomgcd.autotools             WRITE_SECURE_SETTINGS READ_LOGS
+com.joaomgcd.autoinput             WRITE_SECURE_SETTINGS
+com.joaomgcd.autowear              WRITE_SECURE_SETTINGS
+com.joaomgcd.join                  WRITE_SECURE_SETTINGS READ_LOGS
+flar2.homebutton                   WRITE_SECURE_SETTINGS SET_VOLUME_KEY_LONG_PRESS_LISTENER
+com.asdoi.quicktiles               WRITE_SECURE_SETTINGS
+'
+# package                          app-ops to allow
+APPOPS='
+net.dinglisch.android.taskerm      GET_USAGE_STATS SYSTEM_ALERT_WINDOW
+com.joaomgcd.autoinput             PROJECT_MEDIA
+com.joaomgcd.join                  SYSTEM_ALERT_WINDOW
+'
+
+check= force=
+for arg; do
+    case $arg in
+        --check) check=1 ;;
+        --force) force=1 ;;
+        *) usage ;;
+    esac
+done
+
+state=$(adb get-state 2>&1)
+[ "$state" = device ] || { echo "adb-grants: no phone ($state)" >&2; exit 1; }
+
+installed=$(adb shell pm list packages | tr -d '\r' | sed 's/^package://')
+is_installed() { printf '%s\n' "$installed" | grep -qx "$1"; }
+
+report() { printf '  %-44s %s\n' "$1" "$2"; }
+
+printf '%s\n' "$GRANTS" | while read -r pkg perms; do
+    [ -n "$pkg" ] || continue
+    is_installed "$pkg" || { echo "$pkg: not installed, skipped"; continue; }
+    echo "$pkg"
+    dump=$(adb shell dumpsys package "$pkg" </dev/null | tr -d '\r')
+    requested=$(printf '%s\n' "$dump" | sed -n '/requested permissions:/,/install permissions:/p')
+    granted() { printf '%s\n' "$1" | grep -q "android.permission.$2: granted=true"; }
+    for p in $perms; do
+        if granted "$dump" "$p"; then
+            report "$p" ok
+        elif ! printf '%s\n' "$requested" | grep -q "android.permission.$p\$"; then
+            # pm grant "succeeds" silently for permissions the app never declares.
+            report "$p" "not requested by this app version, skipped"
+        elif [ -n "$check" ]; then
+            report "$p" MISSING
+        else
+            out=$(adb shell pm grant "$pkg" "android.permission.$p" </dev/null 2>&1 | tr -d '\r')
+            if granted "$(adb shell dumpsys package "$pkg" </dev/null | tr -d '\r')" "$p"; then
+                report "$p" "granted now"
+            else
+                report "$p" "FAILED: $(printf '%s' "${out:-no effect}" | head -n 1)"
+            fi
+        fi
+    done
+done
+
+printf '%s\n' "$APPOPS" | while read -r pkg ops; do
+    [ -n "$pkg" ] || continue
+    is_installed "$pkg" || continue
+    echo "$pkg (app-ops)"
+    for op in $ops; do
+        mode=$(adb shell appops get "$pkg" "$op" </dev/null | tr -d '\r')
+        case $mode in
+            *": allow"*) report "$op" ok ;;
+            *) if [ -n "$check" ]; then
+                   report "$op" "off (${mode##*: })"
+               elif [ -z "$force" ] && case $mode in *ignore*|*deny*) true ;; *) false ;; esac; then
+                   report "$op" "off by hand, left alone (--force to allow)"
+               else
+                   adb shell appops set "$pkg" "$op" allow </dev/null && report "$op" "allowed now"
+               fi ;;
+        esac
+    done
+done
