@@ -1,0 +1,98 @@
+#!/bin/sh
+# slot — named holding shelves for files: park them now, drop them somewhere later.
+#
+#   slot                       list every slot and what's in it
+#   slot ls    [S]             list slot S (default 1)
+#   slot put   [S] FILE...     move files into slot S       (old mt1)
+#   slot add   [S] FILE...     copy files into slot S       (old copy1)
+#   slot drop  [S] [DIR]       move slot contents into DIR (default .)  (old dump1)
+#   slot paste [S] [DIR]       copy slot contents into DIR, slot keeps them
+#   slot path  [S]             print the slot's folder:  cd "$(slot path 2)"
+#   slot open  [S]             open the slot in Finder
+#   slot clear [S]             empty the slot (to the Trash on macOS)
+#
+# S is any short name: 1, 2, wip, photos. Nothing is ever overwritten; a
+# name clash is reported and that file stays where it was.
+# Slots live in ${XDG_DATA_HOME:-~/.local/share}/slots/.
+
+usage() { sed -n '2,17s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+
+root=${XDG_DATA_HOME:-$HOME/.local/share}/slots
+mkdir -p "$root" || exit 1
+
+# Is $1 a slot name? Yes if it's short and has no path characters, and
+# (for put/add) isn't an existing file in the current directory.
+is_slot_name() {
+    case $1 in ''|*/*|.*|-*) return 1 ;; esac
+    [ ${#1} -le 20 ] || return 1
+    [ -n "$2" ] && [ -e "$1" ] && return 1
+    return 0
+}
+
+list() {
+    dir=$root/$1
+    n=$(ls -A "$dir" 2>/dev/null | wc -l | tr -d ' ')
+    echo "slot $1 ($n)"
+    [ "$n" -gt 0 ] && ls -At "$dir" | sed 's/^/  /'
+}
+
+# Move or copy each source into a target dir without clobbering.
+transfer() {  # mode(mv|cp) target sources...
+    mode=$1 target=$2 failed=0; shift 2
+    for src; do
+        name=$(basename "$src")
+        if [ -e "$target/$name" ] || [ -L "$target/$name" ]; then
+            echo "  skipped (already there): $name" >&2; failed=1; continue
+        fi
+        if [ "$mode" = mv ]; then mv "$src" "$target/" || failed=1
+        else cp -R "$src" "$target/" || failed=1; fi
+    done
+    return $failed
+}
+
+cmd=${1:-all}; [ $# -gt 0 ] && shift
+case $cmd in
+    all)
+        found=
+        for d in "$root"/*/; do
+            [ -d "$d" ] || continue
+            found=1; list "$(basename "$d")"
+        done
+        [ -n "$found" ] || echo "no slots yet — try: slot put FILE"
+        ;;
+    ls)
+        list "${1:-1}" ;;
+    put|add)
+        s=1
+        if [ $# -ge 2 ] && is_slot_name "$1" check-file; then s=$1; shift; fi
+        [ $# -ge 1 ] || usage
+        mkdir -p "$root/$s"
+        if [ "$cmd" = put ]; then transfer mv "$root/$s" "$@"; else transfer cp "$root/$s" "$@"; fi
+        rc=$?; list "$s"; exit $rc
+        ;;
+    drop|paste)
+        s=1
+        if [ $# -ge 1 ] && is_slot_name "$1"; then s=$1; shift; fi
+        dest=${1:-.}
+        [ -d "$dest" ] || { echo "slot: no such folder: $dest" >&2; exit 1; }
+        [ -n "$(ls -A "$root/$s" 2>/dev/null)" ] || { echo "slot $s is empty"; exit 0; }
+        set --
+        for f in "$root/$s"/* "$root/$s"/.[!.]*; do [ -e "$f" ] && set -- "$@" "$f"; done
+        if [ "$cmd" = drop ]; then transfer mv "$dest" "$@"; else transfer cp "$dest" "$@"; fi
+        rc=$?; echo "$# item(s) from slot $s -> $dest"; exit $rc
+        ;;
+    path)
+        mkdir -p "$root/${1:-1}" && echo "$root/${1:-1}" ;;
+    open)
+        mkdir -p "$root/${1:-1}" && open "$root/${1:-1}" ;;
+    clear)
+        s=${1:-1}
+        [ -d "$root/$s" ] || { echo "slot $s doesn't exist"; exit 0; }
+        if [ -d "$HOME/.Trash" ]; then
+            mv "$root/$s" "$HOME/.Trash/slot-$s-$(date +%Y%m%d-%H%M%S)" && echo "slot $s -> Trash"
+        else
+            rm -rf "${root:?}/$s" && echo "slot $s cleared"
+        fi ;;
+    -h|--help|help) usage ;;
+    *) usage ;;
+esac
