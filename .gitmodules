@@ -206,3 +206,6 @@
 [submodule "projects/mobile/digitomancy-plugin"]
 	path = projects/mobile/digitomancy-plugin
 	url = https://github.com/MadnessEngineering/digitomancy-plugin.git
+[submodule "projects/mobile/Digitomancy-sync"]
+	path = projects/mobile/Digitomancy-sync
+	url = https://github.com/MadnessEngineering/Digitomancy.git
