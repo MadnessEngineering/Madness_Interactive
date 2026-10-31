@@ -33,3 +33,5 @@ DOH_Core-uml.json
 DOH-EllieHub-uml.json
 examples/claude-code-meter
 /projects/.claude_temp
+projects/common/.claude_temp/last_tool_use_id.txt
+/projects/common/.claude/data
