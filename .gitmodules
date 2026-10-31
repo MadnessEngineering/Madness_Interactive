@@ -209,3 +209,6 @@
 [submodule "projects/mobile/Digitomancy-sync"]
 	path = projects/mobile/Digitomancy-sync
 	url = https://github.com/MadnessEngineering/Digitomancy.git
+[submodule "projects/common/shellomancy"]
+	path = projects/common/shellomancy
+	url = git@github.com:MadnessEngineering/shellomancy.git
