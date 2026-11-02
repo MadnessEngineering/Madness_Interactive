@@ -15,6 +15,12 @@
 
 usage() { sed -n '2,14s/^# \{0,1\}//p' "$0" >&2; exit 2; }
 
+# USB + wireless/tunnel connected at once makes plain adb refuse to guess
+# ("more than one device"); use the USB phone unless ANDROID_SERIAL says otherwise.
+if [ -z "$ANDROID_SERIAL" ] && [ "$(adb devices 2>/dev/null | awk 'NR > 1 && NF' | wc -l)" -gt 1 ]; then
+    ANDROID_SERIAL=$(adb -d get-serialno 2>/dev/null) && export ANDROID_SERIAL || unset ANDROID_SERIAL
+fi
+
 dest=$HOME/Pictures/phonepull purge= dry=
 while [ $# -gt 0 ]; do
     case $1 in

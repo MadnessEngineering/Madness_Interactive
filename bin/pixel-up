@@ -1,0 +1,68 @@
+#!/bin/sh
+# pixel-up — bring a USB-connected phone fully online: wireless adb, the eaws
+# tunnel, permissions and settings. Safe to run any time; it only redoes what
+# a reboot undid.
+#
+#   pixel-up [-q]
+#
+# 1. adb tcpip 5555 over USB, only if the phone isn't in TCP mode already
+#    (a reboot clears it; restarting adbd for nothing would re-trigger the
+#    USB plug-in watcher).
+# 2. starts the ssh tunnel to the phone's tailnet adb if it isn't running:
+#    localhost:$PIXEL_TUNNEL_PORT -> $PIXEL_TS_IP:5555 via $PIXEL_TUNNEL_HOST
+# 3. adb connect localhost:PORT (needs Tailscale up on the phone)
+# 4. adb-grants: permissions + settings (always-on Tailscale VPN)
+# -q prints only problems. Exit 1 if there's no USB phone.
+
+usage() { sed -n '2,16s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+
+quiet=
+case $1 in -q) quiet=1 ;; '') ;; *) usage ;; esac
+say() { [ -n "$quiet" ] || echo "pixel-up: $*"; }
+warn() { echo "pixel-up: $*" >&2; }
+
+ts_ip=${PIXEL_TS_IP:-100.94.204.108}
+port=${PIXEL_TUNNEL_PORT:-15555}
+jump=${PIXEL_TUNNEL_HOST:-eaws}
+here=$(dirname "$0")
+
+serial=$(adb -d get-serialno 2>/dev/null) || { warn "no phone on USB"; exit 1; }
+export ANDROID_SERIAL=$serial
+
+# 1. wireless adb
+if [ "$(adb shell getprop service.adb.tcp.port </dev/null | tr -d '\r')" = 5555 ]; then
+    say "adb already listening on 5555"
+else
+    say "enabling adb tcpip 5555 (cleared by reboot)"
+    adb tcpip 5555 >/dev/null || warn "adb tcpip failed"
+    "$here/waitfor" -q -t 15 adb || warn "phone didn't come back after tcpip"
+fi
+
+# 2. tunnel
+if pgrep -f "ssh.*-L ?$port:" >/dev/null; then
+    say "tunnel already up on :$port"
+else
+    say "starting tunnel :$port -> $ts_ip:5555 via $jump"
+    ssh -f -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 \
+        -L "$port:$ts_ip:5555" "$jump" || warn "tunnel failed to start"
+fi
+
+# 3. tunnel adb connection. Leave a working one alone; stale entries stay
+#    "offline" until disconnected and reconnected.
+if [ "$(adb -s "127.0.0.1:$port" get-state 2>/dev/null)" = device ]; then
+    say "tailscale adb already connected (127.0.0.1:$port)"
+else
+    adb disconnect "127.0.0.1:$port" >/dev/null 2>&1
+    case $(adb connect "127.0.0.1:$port" 2>&1) in
+        *"connected to"*) say "tailscale adb connected (127.0.0.1:$port)" ;;
+        *) warn "tailscale adb not reachable — is Tailscale connected on the phone?" ;;
+    esac
+fi
+
+# 4. permissions + settings
+if [ -n "$quiet" ]; then
+    "$here/adb-grants" | grep -E 'granted now|allowed now|set \(was|FAILED' | sed 's/^ */pixel-up: /'
+else
+    "$here/adb-grants" | grep -vE ' ok$|skipped|^[a-z0-9_.]+( \(app-ops\))?$|^settings$'
+fi
+exit 0

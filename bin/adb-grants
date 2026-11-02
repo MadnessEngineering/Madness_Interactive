@@ -1,5 +1,6 @@
 #!/bin/sh
-# adb-grants — give Tasker & friends their adb-only permissions.
+# adb-grants — give Tasker & friends their adb-only permissions, and apply
+# the phone settings we rely on (Tailscale as always-on VPN, …).
 #
 #   adb-grants [--check] [--force]
 #
@@ -8,9 +9,15 @@
 # App-op toggles you switched off by hand (e.g. "display over other apps")
 # stay off unless --force.
 #
-# Edit the GRANTS / APPOPS tables below to add apps.
+# Edit the GRANTS / APPOPS / SETTINGS tables below to add more.
 
-usage() { sed -n '2,11s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+usage() { sed -n '2,12s/^# \{0,1\}//p' "$0" >&2; exit 2; }
+
+# USB + wireless/tunnel connected at once makes plain adb refuse to guess
+# ("more than one device"); use the USB phone unless ANDROID_SERIAL says otherwise.
+if [ -z "$ANDROID_SERIAL" ] && [ "$(adb devices 2>/dev/null | awk 'NR > 1 && NF' | wc -l)" -gt 1 ]; then
+    ANDROID_SERIAL=$(adb -d get-serialno 2>/dev/null) && export ANDROID_SERIAL || unset ANDROID_SERIAL
+fi
 
 # package                          permissions (android.permission.*)
 GRANTS='
@@ -27,6 +34,11 @@ APPOPS='
 net.dinglisch.android.taskerm      GET_USAGE_STATS SYSTEM_ALERT_WINDOW
 com.joaomgcd.autoinput             PROJECT_MEDIA
 com.joaomgcd.join                  SYSTEM_ALERT_WINDOW
+'
+# namespace key                     value    (`settings put`; persists across reboots)
+SETTINGS='
+secure  always_on_vpn_app           com.tailscale.ipn
+secure  always_on_vpn_lockdown      0
 '
 
 check= force=
@@ -89,4 +101,18 @@ printf '%s\n' "$APPOPS" | while read -r pkg ops; do
                fi ;;
         esac
     done
+done
+
+echo "settings"
+printf '%s\n' "$SETTINGS" | while read -r ns key value; do
+    [ -n "$ns" ] || continue
+    current=$(adb shell settings get "$ns" "$key" </dev/null | tr -d '\r')
+    if [ "$current" = "$value" ]; then
+        report "$ns $key" ok
+    elif [ -n "$check" ]; then
+        report "$ns $key" "is '$current', want '$value'"
+    else
+        adb shell settings put "$ns" "$key" "$value" </dev/null &&
+            report "$ns $key" "set (was '$current')"
+    fi
 done

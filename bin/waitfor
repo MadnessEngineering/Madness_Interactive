@@ -48,6 +48,11 @@ case $kind in
         check() { [ -e "$1" ]; } ;;
     adb)
         [ $# -eq 0 ] || usage
+        # USB + wireless/tunnel connected at once makes plain adb refuse to guess
+        # ("more than one device"); use the USB phone unless ANDROID_SERIAL says otherwise.
+        if [ -z "$ANDROID_SERIAL" ] && [ "$(adb devices 2>/dev/null | awk 'NR > 1 && NF' | wc -l)" -gt 1 ]; then
+            ANDROID_SERIAL=$(adb -d get-serialno 2>/dev/null) && export ANDROID_SERIAL || unset ANDROID_SERIAL
+        fi
         check() { [ "$(adb get-state 2>/dev/null)" = device ]; } ;;
     cmd)
         [ $# -ge 1 ] || usage
