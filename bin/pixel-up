@@ -30,7 +30,9 @@ serial=$(adb -d get-serialno 2>/dev/null) || { warn "no phone on USB"; exit 1; }
 export ANDROID_SERIAL=$serial
 
 # 1. wireless adb
-if [ "$(adb shell getprop service.adb.tcp.port </dev/null | tr -d '\r')" = 5555 ]; then
+# Ask the port itself: the service.adb.tcp.port property can say 5555 while
+# nothing listens.
+if adb shell 'nc -z -w 2 127.0.0.1 5555' </dev/null >/dev/null 2>&1; then
     say "adb already listening on 5555"
 else
     say "enabling adb tcpip 5555 (cleared by reboot)"
@@ -39,7 +41,9 @@ else
 fi
 
 # 2. tunnel
-if pgrep -f "ssh.*-L ?$port:" >/dev/null; then
+# Anchored on "ssh": a loose pattern also matches any shell whose command
+# line merely mentions the tunnel.
+if pgrep -f "^ssh .*-L ?$port:" >/dev/null; then
     say "tunnel already up on :$port"
 else
     say "starting tunnel :$port -> $ts_ip:5555 via $jump"
