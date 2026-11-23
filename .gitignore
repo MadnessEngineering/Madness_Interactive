@@ -36,3 +36,4 @@ examples/claude-code-meter
 projects/common/.claude_temp/last_tool_use_id.txt
 /projects/common/.claude/data
 examples/warp
+.claude_temp/
